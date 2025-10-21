@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { User, AuthState } from '../../types';
 import { mockUsers, mockCredentials } from '../../mocks/user';
+import { UserPreferences } from '../../utils/userPreferences';
 
 const initialState: AuthState = {
   user: null,

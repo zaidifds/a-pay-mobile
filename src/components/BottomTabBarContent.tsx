@@ -19,6 +19,8 @@ const BottomTabBarContent = ({
         return <Icon name="send" size={size} color={color} />;
       case 'history':
         return <Icon name="history" size={size} color={color} />;
+      case 'profile':
+        return <Icon name="person" size={size} color={color} />;
       default:
         return <Icon name="account-balance-wallet" size={size} color={color} />;
     }
@@ -32,6 +34,8 @@ const BottomTabBarContent = ({
         return 'Send';
       case 'history':
         return 'History';
+      case 'profile':
+        return 'Profile';
       default:
         return 'Wallet';
     }
@@ -70,7 +74,7 @@ const BottomTabBarContent = ({
               {getTabIcon(
                 route.name,
                 isFocused ? COLORS.PRIMARY : COLORS.TEXT_SECONDARY,
-                18,
+                20,
               )}
             </View>
             <Text
@@ -98,8 +102,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.SURFACE,
     borderTopColor: '#E5E5EA',
     borderTopWidth: 1,
-    height: 60,
-    paddingTop: 4,
+    height: 70,
+    paddingTop: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -1 },
     shadowOpacity: 0.03,
@@ -110,8 +114,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 4,
+    paddingVertical: 8,
     paddingHorizontal: 2,
+    minHeight: 54,
   },
   iconContainer: {
     height: 24,
@@ -119,7 +124,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 12,
-    marginBottom: 2,
+    marginBottom: 4,
   },
   iconContainerActive: {
     backgroundColor: 'rgba(0, 122, 255, 0.1)',
@@ -129,6 +134,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginTop: 1,
     letterSpacing: 0.1,
+    textAlign: 'center',
   },
 });
 

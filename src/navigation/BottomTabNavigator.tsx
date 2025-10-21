@@ -7,6 +7,7 @@ import BottomTabBarContent from '../components/BottomTabBarContent';
 import WalletScreen from '../screens/WalletScreen';
 import SendScreen from '../screens/SendScreen';
 import HistoryScreen from '../screens/HistoryScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const { width, height } = Dimensions.get('window');
 
@@ -14,6 +15,7 @@ export type BottomTabParamList = {
   wallet: undefined;
   send: undefined;
   history: undefined;
+  profile: undefined;
 };
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
@@ -32,6 +34,7 @@ const BottomTabNavigator: React.FC = () => {
         <Tab.Screen name="wallet" component={WalletScreen} />
         <Tab.Screen name="send" component={SendScreen} />
         <Tab.Screen name="history" component={HistoryScreen} />
+        <Tab.Screen name="profile" component={ProfileScreen} />
       </Tab.Navigator>
     </View>
   );

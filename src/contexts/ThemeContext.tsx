@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, ReactNode } from 'react';
+import { useSelector } from 'react-redux';
 import { lightTheme, darkTheme } from '../theme';
 import { Theme } from '../types';
+import { RootState } from '../redux/store';
 
 interface ThemeContextType {
   theme: Theme;
-  toggleTheme: () => void;
   isDark: boolean;
 }
 
@@ -15,15 +16,10 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [isDark, setIsDark] = useState(false);
-
-  const toggleTheme = () => {
-    setIsDark(prev => !prev);
-  };
+  const { isDark } = useSelector((state: RootState) => state.theme);
 
   const value = {
     theme: isDark ? darkTheme : lightTheme,
-    toggleTheme,
     isDark,
   };
 

@@ -3,13 +3,14 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { COLORS } from '../constants';
+import { useTheme } from '../hooks/useTheme';
 
 const BottomTabBarContent = ({
   state: tabState,
   navigation,
 }: BottomTabBarProps) => {
   const insets = useSafeAreaInsets();
+  const { theme } = useTheme();
 
   const getTabIcon = (routeName: string, color: string, size: number) => {
     switch (routeName) {
@@ -53,8 +54,34 @@ const BottomTabBarContent = ({
     }
   };
 
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      backgroundColor: theme.colors.tabBar,
+      borderTopColor: theme.colors.tabBarBorder,
+      borderTopWidth: 1,
+      height: 70,
+      paddingTop: 2,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: -1 },
+      shadowOpacity: 0.03,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    label: {
+      fontSize: 10,
+      fontWeight: '500',
+      marginTop: 1,
+      letterSpacing: 0.1,
+      textAlign: 'center',
+    },
+    iconContainerActive: {
+      backgroundColor: `${theme.colors.tabBarActive}20`,
+    },
+  });
+
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+    <View style={[dynamicStyles.container, { paddingBottom: insets.bottom }]}>
       {tabState.routes.map((route, index) => {
         const isFocused = tabState.index === index;
         const onPress = () => handleTabPress(route);
@@ -68,12 +95,14 @@ const BottomTabBarContent = ({
             <View
               style={[
                 styles.iconContainer,
-                isFocused && styles.iconContainerActive,
+                isFocused && dynamicStyles.iconContainerActive,
               ]}
             >
               {getTabIcon(
                 route.name,
-                isFocused ? COLORS.PRIMARY : COLORS.TEXT_SECONDARY,
+                isFocused
+                  ? theme.colors.tabBarActive
+                  : theme.colors.tabBarInactive,
                 20,
               )}
             </View>
@@ -81,9 +110,11 @@ const BottomTabBarContent = ({
               numberOfLines={1}
               adjustsFontSizeToFit={true}
               style={[
-                styles.label,
+                dynamicStyles.label,
                 {
-                  color: isFocused ? COLORS.PRIMARY : COLORS.TEXT_SECONDARY,
+                  color: isFocused
+                    ? theme.colors.tabBarActive
+                    : theme.colors.tabBarInactive,
                 },
               ]}
             >
@@ -97,19 +128,6 @@ const BottomTabBarContent = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    backgroundColor: COLORS.SURFACE,
-    borderTopColor: '#E5E5EA',
-    borderTopWidth: 1,
-    height: 70,
-    paddingTop: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -1 },
-    shadowOpacity: 0.03,
-    shadowRadius: 4,
-    elevation: 3,
-  },
   tabItem: {
     flex: 1,
     justifyContent: 'center',
@@ -125,16 +143,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 12,
     marginBottom: 4,
-  },
-  iconContainerActive: {
-    backgroundColor: 'rgba(0, 122, 255, 0.1)',
-  },
-  label: {
-    fontSize: 10,
-    fontWeight: '500',
-    marginTop: 1,
-    letterSpacing: 0.1,
-    textAlign: 'center',
   },
 });
 

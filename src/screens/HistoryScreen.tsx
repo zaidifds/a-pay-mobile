@@ -13,11 +13,14 @@ import { useAppSelector } from '../redux/store';
 import { Transaction } from '../types';
 import { fp, rp } from '../utils/responsive';
 import Header from '../components/Header';
+import { useTheme } from '../hooks/useTheme';
 
 type FilterType = 'all' | 'send' | 'receive' | 'swap';
 
 const HistoryScreen: React.FC = () => {
   const walletState = useAppSelector(state => state.wallet);
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const { transactions = [] } = walletState || {};
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
   const [showFilters, setShowFilters] = useState(false);
@@ -62,26 +65,34 @@ const HistoryScreen: React.FC = () => {
   const getTransactionIcon = (type: string) => {
     switch (type) {
       case 'send':
-        return <Icon name="arrow-upward" size={16} color="#FF3B30" />;
+        return (
+          <Icon name="arrow-upward" size={16} color={theme.colors.error} />
+        );
       case 'receive':
-        return <Icon name="arrow-downward" size={16} color="#34C759" />;
+        return (
+          <Icon name="arrow-downward" size={16} color={theme.colors.success} />
+        );
       case 'swap':
-        return <Icon name="swap-horiz" size={16} color="#007AFF" />;
+        return (
+          <Icon name="swap-horiz" size={16} color={theme.colors.primary} />
+        );
       default:
-        return <Icon name="help" size={16} color="#8E8E93" />;
+        return (
+          <Icon name="help" size={16} color={theme.colors.textSecondary} />
+        );
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return '#34C759';
+        return theme.colors.success;
       case 'pending':
-        return '#FF9500';
+        return theme.colors.warning;
       case 'failed':
-        return '#FF3B30';
+        return theme.colors.error;
       default:
-        return '#8E8E93';
+        return theme.colors.textSecondary;
     }
   };
 
@@ -205,7 +216,7 @@ const HistoryScreen: React.FC = () => {
         },
       ]}
     >
-      <Icon name="history" size={48} color="#C7C7CC" />
+      <Icon name="history" size={48} color={theme.colors.iconSecondary} />
       <Text style={styles.emptyStateTitle}>No Transactions</Text>
       <Text style={styles.emptyStateMessage}>
         {selectedFilter === 'all'
@@ -226,7 +237,7 @@ const HistoryScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.emptyState}>
-            <Icon name="error" size={48} color="#C7C7CC" />
+            <Icon name="error" size={48} color={theme.colors.iconSecondary} />
             <Text style={styles.emptyStateTitle}>Loading...</Text>
             <Text style={styles.emptyStateMessage}>
               Please wait while we load your transaction history
@@ -286,172 +297,173 @@ const HistoryScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F9FA',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: rp(12),
-    paddingBottom: rp(16),
-    paddingTop: rp(8),
-  },
-  filterModal: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'flex-end',
-    zIndex: 1000,
-  },
-  filterModalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  filterModalContent: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: rp(16),
-    borderTopRightRadius: rp(16),
-    padding: rp(20),
-    paddingBottom: rp(30),
-  },
-  filterModalTitle: {
-    fontSize: fp(16),
-    fontWeight: '600',
-    color: '#1A1A1A',
-    marginBottom: rp(16),
-    textAlign: 'center',
-  },
-  filterButtonsContainer: {
-    flexDirection: 'row',
-    gap: rp(8),
-  },
-  filterButton: {
-    flex: 1,
-    paddingVertical: rp(6),
-    paddingHorizontal: rp(12),
-    borderRadius: rp(16),
-    backgroundColor: '#F8F9FA',
-    borderWidth: 1,
-    borderColor: '#E5E5EA',
-    alignItems: 'center',
-  },
-  filterButtonSelected: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
-    shadowColor: '#007AFF',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.15,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  filterButtonText: {
-    fontSize: fp(11),
-    fontWeight: '500',
-    color: '#8E8E93',
-  },
-  filterButtonTextSelected: {
-    color: '#FFFFFF',
-  },
-  listContainer: {
-    paddingHorizontal: rp(0),
-    paddingBottom: rp(0),
-  },
-  transactionItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: rp(12),
-    borderRadius: rp(8),
-    marginBottom: rp(6),
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E5E5EA',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.03,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  transactionLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  transactionIcon: {
-    width: rp(28),
-    height: rp(28),
-    borderRadius: rp(14),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: rp(8),
-    backgroundColor: '#F8F9FA',
-  },
-  transactionDetails: {
-    flex: 1,
-  },
-  transactionDescription: {
-    fontSize: fp(13),
-    fontWeight: '500',
-    color: '#1A1A1A',
-    marginBottom: rp(2),
-  },
-  transactionTime: {
-    fontSize: fp(10),
-    color: '#8E8E93',
-  },
-  transactionRight: {
-    alignItems: 'flex-end',
-  },
-  transactionAmount: {
-    fontSize: fp(13),
-    fontWeight: '600',
-    marginBottom: rp(2),
-  },
-  transactionAmountSend: {
-    color: '#FF3B30',
-  },
-  transactionAmountReceive: {
-    color: '#34C759',
-  },
-  statusContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  statusDot: {
-    width: rp(6),
-    height: rp(6),
-    borderRadius: rp(3),
-    marginRight: rp(4),
-  },
-  transactionStatus: {
-    fontSize: fp(9),
-    fontWeight: '500',
-    textTransform: 'capitalize',
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: rp(60),
-  },
-  emptyStateTitle: {
-    fontSize: fp(16),
-    fontWeight: '600',
-    color: '#1A1A1A',
-    marginTop: rp(12),
-    marginBottom: rp(4),
-  },
-  emptyStateMessage: {
-    fontSize: fp(12),
-    color: '#8E8E93',
-    textAlign: 'center',
-    lineHeight: fp(16),
-  },
-});
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingHorizontal: rp(12),
+      paddingBottom: rp(16),
+      paddingTop: rp(8),
+    },
+    filterModal: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      justifyContent: 'flex-end',
+      zIndex: 1000,
+    },
+    filterModalOverlay: {
+      flex: 1,
+      backgroundColor: theme.colors.modalOverlay,
+    },
+    filterModalContent: {
+      backgroundColor: theme.colors.card,
+      borderTopLeftRadius: rp(16),
+      borderTopRightRadius: rp(16),
+      padding: rp(20),
+      paddingBottom: rp(30),
+    },
+    filterModalTitle: {
+      fontSize: fp(16),
+      fontWeight: '600',
+      color: theme.colors.text,
+      marginBottom: rp(16),
+      textAlign: 'center',
+    },
+    filterButtonsContainer: {
+      flexDirection: 'row',
+      gap: rp(8),
+    },
+    filterButton: {
+      flex: 1,
+      paddingVertical: rp(6),
+      paddingHorizontal: rp(12),
+      borderRadius: rp(16),
+      backgroundColor: theme.colors.background,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      alignItems: 'center',
+    },
+    filterButtonSelected: {
+      backgroundColor: theme.colors.primary,
+      borderColor: theme.colors.primary,
+      shadowColor: theme.colors.primary,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.15,
+      shadowRadius: 2,
+      elevation: 2,
+    },
+    filterButtonText: {
+      fontSize: fp(11),
+      fontWeight: '500',
+      color: theme.colors.textSecondary,
+    },
+    filterButtonTextSelected: {
+      color: theme.colors.buttonText,
+    },
+    listContainer: {
+      paddingHorizontal: rp(0),
+      paddingBottom: rp(0),
+    },
+    transactionItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: rp(12),
+      borderRadius: rp(8),
+      marginBottom: rp(6),
+      backgroundColor: theme.colors.card,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.03,
+      shadowRadius: 2,
+      elevation: 1,
+    },
+    transactionLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+    },
+    transactionIcon: {
+      width: rp(28),
+      height: rp(28),
+      borderRadius: rp(14),
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: rp(8),
+      backgroundColor: theme.colors.background,
+    },
+    transactionDetails: {
+      flex: 1,
+    },
+    transactionDescription: {
+      fontSize: fp(13),
+      fontWeight: '500',
+      color: theme.colors.text,
+      marginBottom: rp(2),
+    },
+    transactionTime: {
+      fontSize: fp(10),
+      color: theme.colors.textSecondary,
+    },
+    transactionRight: {
+      alignItems: 'flex-end',
+    },
+    transactionAmount: {
+      fontSize: fp(13),
+      fontWeight: '600',
+      marginBottom: rp(2),
+    },
+    transactionAmountSend: {
+      color: theme.colors.error,
+    },
+    transactionAmountReceive: {
+      color: theme.colors.success,
+    },
+    statusContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    statusDot: {
+      width: rp(6),
+      height: rp(6),
+      borderRadius: rp(3),
+      marginRight: rp(4),
+    },
+    transactionStatus: {
+      fontSize: fp(9),
+      fontWeight: '500',
+      textTransform: 'capitalize',
+    },
+    emptyState: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: rp(60),
+    },
+    emptyStateTitle: {
+      fontSize: fp(16),
+      fontWeight: '600',
+      color: theme.colors.text,
+      marginTop: rp(12),
+      marginBottom: rp(4),
+    },
+    emptyStateMessage: {
+      fontSize: fp(12),
+      color: theme.colors.textSecondary,
+      textAlign: 'center',
+      lineHeight: fp(16),
+    },
+  });
 
 export default HistoryScreen;

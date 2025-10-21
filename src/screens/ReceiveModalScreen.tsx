@@ -8,25 +8,18 @@ import {
   Alert,
   ScrollView,
   Animated,
-  Modal,
   Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fp, rp } from '../utils/responsive';
 import { useTheme } from '../hooks/useTheme';
+import { useNavigation } from '@react-navigation/native';
+import { TabStackNavigationProp } from '../navigation/navigationTypes';
 
-interface ReceiveModalProps {
-  visible: boolean;
-  onClose: () => void;
-  onReceive: (amount: string, currency: string) => void;
-}
-
-const ReceiveModal: React.FC<ReceiveModalProps> = ({
-  visible,
-  onClose,
-  onReceive,
-}) => {
+const ReceiveModalScreen: React.FC = () => {
   const { theme } = useTheme();
+  const navigation = useNavigation<TabStackNavigationProp>();
+
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('BTC');
   const [cardNumber, setCardNumber] = useState('');
@@ -40,26 +33,19 @@ const ReceiveModal: React.FC<ReceiveModalProps> = ({
   const qrScaleAnim = useMemo(() => new Animated.Value(0), []);
 
   useEffect(() => {
-    if (visible) {
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 600,
-          useNativeDriver: true,
-        }),
-        Animated.timing(slideAnim, {
-          toValue: 0,
-          duration: 600,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    } else {
-      fadeAnim.setValue(0);
-      slideAnim.setValue(30);
-      qrScaleAnim.setValue(0);
-      setQrCodeVisible(false);
-    }
-  }, [visible, fadeAnim, slideAnim, qrScaleAnim]);
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, slideAnim]);
 
   useEffect(() => {
     if (amount && currency) {
@@ -76,18 +62,27 @@ const ReceiveModal: React.FC<ReceiveModalProps> = ({
     }
   }, [amount, currency, qrScaleAnim]);
 
+  const handleClose = () => {
+    navigation.goBack();
+  };
+
   const handleReceive = () => {
     if (!amount || !cardNumber || !expiry || !cvc) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
-    onReceive(amount, currency);
+    // Handle receive logic here
+    Alert.alert(
+      'Success',
+      `Receive request generated for ${amount} ${currency}`,
+    );
+
     setAmount('');
     setCardNumber('');
     setExpiry('');
     setCvc('');
-    onClose();
+    handleClose();
   };
 
   const styles = StyleSheet.create({
@@ -97,7 +92,7 @@ const ReceiveModal: React.FC<ReceiveModalProps> = ({
       justifyContent: 'flex-end',
     },
     modalContainer: {
-      backgroundColor: theme.colors.background,
+      backgroundColor: theme.colors.modalBackground,
       borderTopLeftRadius: rp(20),
       borderTopRightRadius: rp(20),
       maxHeight: Dimensions.get('window').height * 0.85,
@@ -120,7 +115,7 @@ const ReceiveModal: React.FC<ReceiveModalProps> = ({
     closeButton: {
       padding: rp(8),
       borderRadius: rp(20),
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.card,
     },
     container: {
       flex: 1,
@@ -158,8 +153,8 @@ const ReceiveModal: React.FC<ReceiveModalProps> = ({
       paddingVertical: rp(12),
       fontSize: fp(16),
       color: theme.colors.text,
-      backgroundColor: theme.colors.background,
-      shadowColor: theme.colors.shadow,
+      backgroundColor: theme.colors.modalBackground,
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.05,
       shadowRadius: 2,
@@ -183,8 +178,8 @@ const ReceiveModal: React.FC<ReceiveModalProps> = ({
       borderRadius: rp(20),
       borderWidth: 1,
       borderColor: theme.colors.border,
-      backgroundColor: theme.colors.background,
-      shadowColor: theme.colors.shadow,
+      backgroundColor: theme.colors.modalBackground,
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.05,
       shadowRadius: 2,
@@ -203,12 +198,12 @@ const ReceiveModal: React.FC<ReceiveModalProps> = ({
       letterSpacing: 0.5,
     },
     currencyTextSelected: {
-      color: theme.colors.buttonText,
+      color: '#FFFFFF',
     },
     qrSection: {
       alignItems: 'center',
       padding: rp(14),
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.card,
       borderRadius: rp(12),
       marginBottom: rp(10),
       borderWidth: 1,
@@ -248,13 +243,13 @@ const ReceiveModal: React.FC<ReceiveModalProps> = ({
       elevation: 4,
     },
     buttonText: {
-      color: theme.colors.buttonText,
+      color: '#FFFFFF',
       fontSize: fp(16),
       fontWeight: '700',
       letterSpacing: 0.5,
     },
     amountContainer: {
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.card,
       borderRadius: rp(12),
       padding: rp(14),
       marginBottom: rp(10),
@@ -267,13 +262,13 @@ const ReceiveModal: React.FC<ReceiveModalProps> = ({
       elevation: 4,
     },
     paymentContainer: {
-      backgroundColor: theme.colors.surface,
+      backgroundColor: theme.colors.card,
       borderRadius: rp(12),
       padding: rp(14),
       marginBottom: rp(10),
       borderWidth: 1,
       borderColor: theme.colors.border,
-      shadowColor: theme.colors.shadow,
+      shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.05,
       shadowRadius: 4,
@@ -288,127 +283,120 @@ const ReceiveModal: React.FC<ReceiveModalProps> = ({
   });
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={onClose}
-    >
-      <View style={styles.modalOverlay}>
-        <Animated.View
-          style={[
-            styles.modalContainer,
-            {
-              opacity: fadeAnim,
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
+    <View style={styles.modalOverlay}>
+      <Animated.View
+        style={[
+          styles.modalContainer,
+          {
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
+          },
+        ]}
+      >
+        <View style={styles.modalHeader}>
+          <Text style={styles.modalTitle}>Receive</Text>
+          <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+            <Icon name="close" size={rp(24)} color={theme.colors.text} />
+          </TouchableOpacity>
+        </View>
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
         >
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Receive</Text>
-            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-              <Icon name="close" size={rp(24)} color={theme.colors.text} />
+          <View style={styles.container}>
+            {/* Amount Section */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Amount to Receive</Text>
+              <View style={styles.amountContainer}>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.label}>Amount</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter amount"
+                    value={amount}
+                    onChangeText={setAmount}
+                    keyboardType="numeric"
+                    placeholderTextColor={theme.colors.textSecondary}
+                  />
+                </View>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.label}>Currency</Text>
+                  <View style={styles.currencySelector}>
+                    {currencies.map(curr => (
+                      <TouchableOpacity
+                        key={curr}
+                        style={[
+                          styles.currencyOption,
+                          currency === curr && styles.currencyOptionSelected,
+                        ]}
+                        onPress={() => setCurrency(curr)}
+                      >
+                        <Text
+                          style={[
+                            styles.currencyText,
+                            currency === curr && styles.currencyTextSelected,
+                          ]}
+                        >
+                          {curr}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            {/* Payment Method Section */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Payment Method</Text>
+              <View style={styles.paymentContainer}>
+                <View style={styles.inputGroup}>
+                  <Text style={styles.label}>Card Number</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="1234 5678 9012 3456"
+                    value={cardNumber}
+                    onChangeText={setCardNumber}
+                    keyboardType="numeric"
+                    placeholderTextColor={theme.colors.textSecondary}
+                  />
+                </View>
+                <View style={styles.inputRow}>
+                  <View style={styles.inputHalf}>
+                    <Text style={styles.label}>Expiry</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="MM/YY"
+                      value={expiry}
+                      onChangeText={setExpiry}
+                      placeholderTextColor={theme.colors.textSecondary}
+                    />
+                  </View>
+                  <View style={styles.inputHalf}>
+                    <Text style={styles.label}>CVC</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="123"
+                      value={cvc}
+                      onChangeText={setCvc}
+                      keyboardType="numeric"
+                      secureTextEntry
+                      placeholderTextColor={theme.colors.textSecondary}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={handleReceive}>
+              <Text style={styles.buttonText}>Generate Receive Request</Text>
             </TouchableOpacity>
           </View>
-
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}
-          >
-            <View style={styles.container}>
-              {/* Amount Section */}
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Amount to Receive</Text>
-                <View style={styles.amountContainer}>
-                  <View style={styles.inputGroup}>
-                    <Text style={styles.label}>Amount</Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Enter amount"
-                      value={amount}
-                      onChangeText={setAmount}
-                      keyboardType="numeric"
-                      placeholderTextColor={theme.colors.textSecondary}
-                    />
-                  </View>
-                  <View style={styles.inputGroup}>
-                    <Text style={styles.label}>Currency</Text>
-                    <View style={styles.currencySelector}>
-                      {currencies.map(curr => (
-                        <TouchableOpacity
-                          key={curr}
-                          style={[
-                            styles.currencyOption,
-                            currency === curr && styles.currencyOptionSelected,
-                          ]}
-                          onPress={() => setCurrency(curr)}
-                        >
-                          <Text
-                            style={[
-                              styles.currencyText,
-                              currency === curr && styles.currencyTextSelected,
-                            ]}
-                          >
-                            {curr}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  </View>
-                </View>
-              </View>
-
-              {/* Payment Method Section */}
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Payment Method</Text>
-                <View style={styles.paymentContainer}>
-                  <View style={styles.inputGroup}>
-                    <Text style={styles.label}>Card Number</Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="1234 5678 9012 3456"
-                      value={cardNumber}
-                      onChangeText={setCardNumber}
-                      keyboardType="numeric"
-                      placeholderTextColor={theme.colors.textSecondary}
-                    />
-                  </View>
-                  <View style={styles.inputRow}>
-                    <View style={styles.inputHalf}>
-                      <Text style={styles.label}>Expiry</Text>
-                      <TextInput
-                        style={styles.input}
-                        placeholder="MM/YY"
-                        value={expiry}
-                        onChangeText={setExpiry}
-                        placeholderTextColor={theme.colors.textSecondary}
-                      />
-                    </View>
-                    <View style={styles.inputHalf}>
-                      <Text style={styles.label}>CVC</Text>
-                      <TextInput
-                        style={styles.input}
-                        placeholder="123"
-                        value={cvc}
-                        onChangeText={setCvc}
-                        keyboardType="numeric"
-                        secureTextEntry
-                        placeholderTextColor={theme.colors.textSecondary}
-                      />
-                    </View>
-                  </View>
-                </View>
-              </View>
-
-              <TouchableOpacity style={styles.button} onPress={handleReceive}>
-                <Text style={styles.buttonText}>Generate Receive Request</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </Animated.View>
-      </View>
-    </Modal>
+        </ScrollView>
+      </Animated.View>
+    </View>
   );
 };
 
-export default ReceiveModal;
+export default ReceiveModalScreen;

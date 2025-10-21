@@ -50,19 +50,19 @@ const AuthButton: React.FC<AuthButtonProps> = ({
     const variantStyles: Record<string, ViewStyle> = {
       primary: {
         backgroundColor: disabled
-          ? theme.colors.textSecondary
-          : theme.colors.primary,
+          ? theme.colors.buttonDisabled
+          : theme.colors.button,
       },
       secondary: {
         backgroundColor: disabled
-          ? theme.colors.textSecondary
+          ? theme.colors.buttonDisabled
           : theme.colors.secondary,
       },
       outline: {
         backgroundColor: 'transparent',
         borderWidth: 2,
         borderColor: disabled
-          ? theme.colors.textSecondary
+          ? theme.colors.buttonDisabled
           : theme.colors.primary,
       },
     };
@@ -88,10 +88,10 @@ const AuthButton: React.FC<AuthButtonProps> = ({
 
     const variantStyles: Record<string, TextStyle> = {
       primary: {
-        color: '#FFFFFF',
+        color: theme.colors.buttonText,
       },
       secondary: {
-        color: '#FFFFFF',
+        color: theme.colors.buttonText,
       },
       outline: {
         color: disabled ? theme.colors.textSecondary : theme.colors.primary,
@@ -115,7 +115,11 @@ const AuthButton: React.FC<AuthButtonProps> = ({
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'outline' ? theme.colors.primary : '#FFFFFF'}
+          color={
+            variant === 'outline'
+              ? theme.colors.primary
+              : theme.colors.buttonText
+          }
         />
       ) : (
         <Text style={[getTextStyle(), textStyle]}>{title}</Text>

@@ -1,32 +1,37 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
+  ActionSheetIOS,
   Alert,
+  Animated,
+  Image,
+  Platform,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  Animated,
-  Image,
-  Switch,
-  ActionSheetIOS,
-  Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useAppDispatch, useAppSelector } from '../redux/store';
-import { logoutUser, setUser } from '../redux/slices/authSlice';
-import { toggleTheme, setTheme } from '../redux/slices/themeSlice';
+import AuthButton from '../components/AuthButton';
+import Header from '../components/Header';
+import { useTheme } from '../hooks/useTheme';
+import { useImagePicker } from '../hooks/useImagePicker';
+import {
+  logoutUser,
+  setUser,
+  updateUserProfilePicture,
+} from '../redux/slices/authSlice';
 import {
   setLanguage,
   updateNotifications,
   updatePrivacy,
 } from '../redux/slices/settingsSlice';
+import { toggleTheme } from '../redux/slices/themeSlice';
+import { useAppDispatch, useAppSelector } from '../redux/store';
 import { fp, rp } from '../utils/responsive';
 import { UserPreferences } from '../utils/userPreferences';
-import Header from '../components/Header';
-import AuthButton from '../components/AuthButton';
-import { useTheme } from '../hooks/useTheme';
 
 const ProfileScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -43,6 +48,14 @@ const ProfileScreen: React.FC = () => {
   const [email, setEmail] = useState(user?.email || '');
   const [phone, setPhone] = useState(user?.phone || '');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Image picker functionality
+  const handleImageSelected = (uri: string) => {
+    dispatch(updateUserProfilePicture(uri));
+  };
+
+  const { pickImage, isLoading: isImageLoading } =
+    useImagePicker(handleImageSelected);
 
   // Animation values
   const fadeAnim = useMemo(() => new Animated.Value(0), []);
@@ -180,7 +193,7 @@ const ProfileScreen: React.FC = () => {
 
       <View style={styles.profileImageContainer}>
         <TouchableOpacity
-          onPress={handleImagePicker}
+          onPress={pickImage}
           style={styles.profileImageWrapper}
         >
           {user?.avatar ? (
@@ -203,7 +216,15 @@ const ProfileScreen: React.FC = () => {
               { backgroundColor: theme.colors.primary },
             ]}
           >
-            <Icon name="edit" size={16} color="#FFFFFF" />
+            {isImageLoading ? (
+              <Icon
+                name="hourglass-empty"
+                size={16}
+                color={theme.colors.buttonText}
+              />
+            ) : (
+              <Icon name="edit" size={16} color={theme.colors.buttonText} />
+            )}
           </View>
         </TouchableOpacity>
       </View>
@@ -365,7 +386,7 @@ const ProfileScreen: React.FC = () => {
             false: theme.colors.border,
             true: theme.colors.primary,
           }}
-          thumbColor={isDark ? '#FFFFFF' : '#FFFFFF'}
+          thumbColor={theme.colors.buttonText}
         />
       </View>
 
@@ -465,10 +486,12 @@ const ProfileScreen: React.FC = () => {
         title="Logout"
         onPress={handleLogout}
         style={[styles.logoutButton, { backgroundColor: theme.colors.error }]}
-        textStyle={{ color: '#FFFFFF' }}
+        textStyle={{ color: theme.colors.buttonText }}
       />
     </Animated.View>
   );
+
+  const styles = createStyles(theme);
 
   return (
     <View
@@ -489,140 +512,141 @@ const ProfileScreen: React.FC = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: rp(12),
-    paddingBottom: rp(16),
-    paddingTop: rp(8),
-  },
-  section: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: rp(8),
-    padding: rp(12),
-    marginBottom: rp(8),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  sectionTitle: {
-    fontSize: fp(14),
-    fontWeight: '600',
-    marginBottom: rp(8),
-    letterSpacing: 0.2,
-  },
-  profileImageContainer: {
-    alignItems: 'center',
-    marginBottom: rp(16),
-  },
-  profileImageWrapper: {
-    position: 'relative',
-  },
-  profileImage: {
-    width: rp(80),
-    height: rp(80),
-    borderRadius: rp(40),
-  },
-  profileImagePlaceholder: {
-    width: rp(80),
-    height: rp(80),
-    borderRadius: rp(40),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  profileImageText: {
-    fontSize: fp(32),
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-  },
-  editIconContainer: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: rp(24),
-    height: rp(24),
-    borderRadius: rp(12),
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-  },
-  inputContainer: {
-    marginBottom: rp(12),
-  },
-  inputLabel: {
-    fontSize: fp(12),
-    fontWeight: '500',
-    marginBottom: rp(4),
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: rp(8),
-    borderWidth: 1,
-    paddingHorizontal: rp(12),
-    height: rp(40),
-  },
-  inputIcon: {
-    marginRight: rp(8),
-  },
-  inputField: {
-    flex: 1,
-    fontSize: fp(14),
-    fontWeight: '400',
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    gap: rp(8),
-    marginTop: rp(8),
-  },
-  halfButton: {
-    flex: 1,
-    height: rp(40),
-    borderRadius: rp(8),
-  },
-  fullButton: {
-    height: rp(40),
-    borderRadius: rp(8),
-  },
-  settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: rp(12),
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  settingLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  settingLabel: {
-    fontSize: fp(14),
-    fontWeight: '500',
-    marginLeft: rp(12),
-  },
-  languageButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  languageText: {
-    fontSize: fp(14),
-    fontWeight: '500',
-    marginRight: rp(4),
-  },
-  logoutButton: {
-    height: rp(44),
-    borderRadius: rp(8),
-  },
-});
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingHorizontal: rp(12),
+      paddingBottom: rp(16),
+      paddingTop: rp(8),
+    },
+    section: {
+      backgroundColor: theme.colors.card,
+      borderRadius: rp(8),
+      padding: rp(12),
+      marginBottom: rp(8),
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.04,
+      shadowRadius: 4,
+      elevation: 2,
+    },
+    sectionTitle: {
+      fontSize: fp(14),
+      fontWeight: '600',
+      marginBottom: rp(8),
+      letterSpacing: 0.2,
+    },
+    profileImageContainer: {
+      alignItems: 'center',
+      marginBottom: rp(16),
+    },
+    profileImageWrapper: {
+      position: 'relative',
+    },
+    profileImage: {
+      width: rp(80),
+      height: rp(80),
+      borderRadius: rp(40),
+    },
+    profileImagePlaceholder: {
+      width: rp(80),
+      height: rp(80),
+      borderRadius: rp(40),
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    profileImageText: {
+      fontSize: fp(32),
+      fontWeight: 'bold',
+      color: theme.colors.textInverse,
+    },
+    editIconContainer: {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+      width: rp(24),
+      height: rp(24),
+      borderRadius: rp(12),
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 2,
+      borderColor: theme.colors.textInverse,
+    },
+    inputContainer: {
+      marginBottom: rp(12),
+    },
+    inputLabel: {
+      fontSize: fp(12),
+      fontWeight: '500',
+      marginBottom: rp(4),
+    },
+    inputWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: rp(8),
+      borderWidth: 1,
+      paddingHorizontal: rp(12),
+      height: rp(40),
+    },
+    inputIcon: {
+      marginRight: rp(8),
+    },
+    inputField: {
+      flex: 1,
+      fontSize: fp(14),
+      fontWeight: '400',
+    },
+    buttonRow: {
+      flexDirection: 'row',
+      gap: rp(8),
+      marginTop: rp(8),
+    },
+    halfButton: {
+      flex: 1,
+      height: rp(40),
+      borderRadius: rp(8),
+    },
+    fullButton: {
+      height: rp(40),
+      borderRadius: rp(8),
+    },
+    settingItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: rp(12),
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+    },
+    settingLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+    },
+    settingLabel: {
+      fontSize: fp(14),
+      fontWeight: '500',
+      marginLeft: rp(12),
+    },
+    languageButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    languageText: {
+      fontSize: fp(14),
+      fontWeight: '500',
+      marginRight: rp(4),
+    },
+    logoutButton: {
+      height: rp(44),
+      borderRadius: rp(8),
+    },
+  });
 
 export default ProfileScreen;

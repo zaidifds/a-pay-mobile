@@ -9,6 +9,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fp, rp } from '../utils/responsive';
+import { useTheme } from '../hooks/useTheme';
 
 interface HeaderProps {
   title: string;
@@ -31,24 +32,28 @@ const Header: React.FC<HeaderProps> = ({
   rightButton,
   showBackButton = false,
   onBackPress,
-  backgroundColor = '#FFFFFF',
-  titleColor = '#333333',
+  backgroundColor,
+  titleColor,
   showFilterButton = false,
   onFilterPress,
   filterActive = false,
 }) => {
   const insets = useSafeAreaInsets();
+  const { theme } = useTheme();
+
+  const headerBackgroundColor = backgroundColor || theme.colors.surface;
+  const headerTitleColor = titleColor || theme.colors.text;
 
   const styles = StyleSheet.create({
     container: {
-      backgroundColor,
+      backgroundColor: headerBackgroundColor,
       paddingTop: insets.top,
       paddingBottom: rp(12),
       paddingHorizontal: rp(16),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      shadowColor: '#000',
+      shadowColor: theme.colors.shadow,
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.03,
       shadowRadius: 4,
@@ -63,14 +68,14 @@ const Header: React.FC<HeaderProps> = ({
       padding: rp(6),
       marginRight: rp(8),
       borderRadius: rp(8),
-      backgroundColor: '#F8F9FA',
+      backgroundColor: theme.colors.buttonSecondary,
       borderWidth: 1,
-      borderColor: '#E5E5EA',
+      borderColor: theme.colors.borderLight,
     },
     title: {
       fontSize: fp(18),
       fontWeight: '600',
-      color: titleColor,
+      color: headerTitleColor,
       letterSpacing: 0.2,
       flex: 1,
     },
@@ -82,28 +87,35 @@ const Header: React.FC<HeaderProps> = ({
     rightButton: {
       padding: rp(8),
       borderRadius: rp(8),
-      backgroundColor: '#F8F9FA',
+      backgroundColor: theme.colors.buttonSecondary,
       borderWidth: 1,
-      borderColor: '#E5E5EA',
+      borderColor: theme.colors.borderLight,
     },
     filterButton: {
       padding: rp(8),
       borderRadius: rp(8),
-      backgroundColor: filterActive ? '#007AFF' : '#F8F9FA',
+      backgroundColor: filterActive
+        ? theme.colors.primary
+        : theme.colors.buttonSecondary,
       borderWidth: 1,
-      borderColor: filterActive ? '#007AFF' : '#E5E5EA',
+      borderColor: filterActive
+        ? theme.colors.primary
+        : theme.colors.borderLight,
     },
   });
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={backgroundColor} />
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor={headerBackgroundColor}
+      />
 
       {/* Left Section - Back Button + Title */}
       <View style={styles.leftSection}>
         {showBackButton && (
           <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
-            <Icon name="arrow-back" size={rp(20)} color="#333333" />
+            <Icon name="arrow-back" size={rp(20)} color={theme.colors.icon} />
           </TouchableOpacity>
         )}
         <Text style={styles.title}>{title}</Text>
@@ -116,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({
             <Icon
               name="filter-list"
               size={rp(18)}
-              color={filterActive ? '#FFFFFF' : '#333333'}
+              color={filterActive ? theme.colors.buttonText : theme.colors.icon}
             />
           </TouchableOpacity>
         )}
@@ -128,7 +140,7 @@ const Header: React.FC<HeaderProps> = ({
             <Icon
               name={rightButton.icon}
               size={rp(20)}
-              color={rightButton.color || '#333333'}
+              color={rightButton.color || theme.colors.icon}
             />
           </TouchableOpacity>
         )}

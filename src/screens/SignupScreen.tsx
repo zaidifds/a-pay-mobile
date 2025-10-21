@@ -71,7 +71,11 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
               { backgroundColor: theme.colors.primary },
             ]}
           >
-            <Icon name="account-balance-wallet" size={40} color="#FFFFFF" />
+            <Icon
+              name="account-balance-wallet"
+              size={40}
+              color={theme.colors.buttonText}
+            />
           </View>
           <Text style={[styles.title, { color: theme.colors.text }]}>
             Create Account

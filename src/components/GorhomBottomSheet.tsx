@@ -14,6 +14,7 @@ import BottomSheet, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fp, rp } from '../utils/responsive';
+import { useTheme } from '../hooks/useTheme';
 
 interface GorhomBottomSheetProps {
   visible: boolean;
@@ -31,6 +32,7 @@ const GorhomBottomSheet: React.FC<GorhomBottomSheetProps> = ({
   snapPoints = ['70%', '85%', '95%'],
 }) => {
   const insets = useSafeAreaInsets();
+  const { theme } = useTheme();
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   // Memoize snap points to prevent unnecessary re-renders
@@ -84,17 +86,17 @@ const GorhomBottomSheet: React.FC<GorhomBottomSheetProps> = ({
       paddingHorizontal: rp(20),
       paddingVertical: rp(16),
       borderBottomWidth: 1,
-      borderBottomColor: '#E5E5E5',
+      borderBottomColor: theme.colors.border,
     },
     title: {
       fontSize: fp(18),
       fontWeight: '700',
-      color: '#333333',
+      color: theme.colors.text,
     },
     closeButton: {
       padding: rp(8),
       borderRadius: rp(20),
-      backgroundColor: '#F5F5F5',
+      backgroundColor: theme.colors.backgroundSecondary,
     },
     content: {
       flex: 1,
@@ -105,7 +107,7 @@ const GorhomBottomSheet: React.FC<GorhomBottomSheetProps> = ({
       flex: 1,
     },
     handle: {
-      backgroundColor: '#E0E0E0',
+      backgroundColor: theme.colors.border,
       width: rp(40),
       height: rp(4),
       borderRadius: rp(2),
@@ -131,7 +133,11 @@ const GorhomBottomSheet: React.FC<GorhomBottomSheetProps> = ({
         <View style={styles.header}>
           <Text style={styles.title}>{title}</Text>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Icon name="close" size={rp(20)} color="#666666" />
+            <Icon
+              name="close"
+              size={rp(20)}
+              color={theme.colors.textSecondary}
+            />
           </TouchableOpacity>
         </View>
 

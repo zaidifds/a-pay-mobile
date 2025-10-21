@@ -72,7 +72,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
               { backgroundColor: theme.colors.primary },
             ]}
           >
-            <Icon name="lock-reset" size={40} color="#FFFFFF" />
+            <Icon name="lock-reset" size={40} color={theme.colors.buttonText} />
           </View>
           <Text style={[styles.title, { color: theme.colors.text }]}>
             Forgot Password?

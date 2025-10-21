@@ -35,16 +35,83 @@ export interface AuthStackParamList {
 
 export interface Theme {
   colors: {
+    // Primary colors
     primary: string;
+    primaryLight: string;
+    primaryDark: string;
+
+    // Secondary colors
     secondary: string;
+    secondaryLight: string;
+    secondaryDark: string;
+
+    // Background colors
     background: string;
+    backgroundSecondary: string;
     surface: string;
+    surfaceElevated: string;
+    overlay: string;
+
+    // Text colors
     text: string;
     textSecondary: string;
+    textTertiary: string;
+    textInverse: string;
+
+    // Border and divider colors
     border: string;
+    borderLight: string;
+    divider: string;
+
+    // Status colors
     error: string;
+    errorLight: string;
+    errorDark: string;
     success: string;
+    successLight: string;
+    successDark: string;
     warning: string;
+    warningLight: string;
+    warningDark: string;
+
+    // Interactive colors
+    button: string;
+    buttonDisabled: string;
+    buttonText: string;
+    buttonSecondary: string;
+    buttonSecondaryText: string;
+
+    // Input colors
+    input: string;
+    inputBorder: string;
+    inputBorderFocused: string;
+    inputBackground: string;
+    inputPlaceholder: string;
+
+    // Tab bar colors
+    tabBar: string;
+    tabBarBorder: string;
+    tabBarActive: string;
+    tabBarInactive: string;
+
+    // Card colors
+    card: string;
+    cardBorder: string;
+    cardShadow: string;
+
+    // Modal colors
+    modalOverlay: string;
+    modalBackground: string;
+
+    // Icon colors
+    icon: string;
+    iconSecondary: string;
+    iconActive: string;
+
+    // Shadow colors
+    shadow: string;
+    shadowLight: string;
+    shadowDark: string;
   };
   spacing: {
     xs: number;

@@ -22,16 +22,16 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
       case 'google':
         return {
           text: 'Continue with Google',
-          backgroundColor: '#FFFFFF',
-          textColor: '#000000',
+          backgroundColor: theme.colors.surface,
+          textColor: theme.colors.text,
           borderColor: theme.colors.border,
         };
       case 'apple':
         return {
           text: 'Continue with Apple',
-          backgroundColor: '#000000',
-          textColor: '#FFFFFF',
-          borderColor: '#000000',
+          backgroundColor: theme.colors.text,
+          textColor: theme.colors.surface,
+          borderColor: theme.colors.text,
         };
       default:
         return {
@@ -55,24 +55,26 @@ const SocialLoginButton: React.FC<SocialLoginButtonProps> = ({
       borderRadius: 12,
       borderWidth: 1,
       borderColor: disabled
-        ? theme.colors.textSecondary
+        ? theme.colors.buttonDisabled
         : providerInfo.borderColor,
       backgroundColor: disabled
-        ? theme.colors.textSecondary
+        ? theme.colors.buttonDisabled
         : providerInfo.backgroundColor,
       minHeight: 50,
     },
     text: {
       fontSize: 16,
       fontWeight: '600',
-      color: disabled ? theme.colors.surface : providerInfo.textColor,
+      color: disabled ? theme.colors.textSecondary : providerInfo.textColor,
       marginLeft: theme.spacing.sm,
     },
     icon: {
       width: 20,
       height: 20,
       borderRadius: 10,
-      backgroundColor: disabled ? theme.colors.surface : providerInfo.textColor,
+      backgroundColor: disabled
+        ? theme.colors.textSecondary
+        : providerInfo.textColor,
     },
   });
 

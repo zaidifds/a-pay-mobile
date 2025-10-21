@@ -107,6 +107,11 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.isAuthenticated = true;
     },
+    updateUserProfilePicture: (state, action: PayloadAction<string>) => {
+      if (state.user) {
+        state.user.avatar = action.payload;
+      }
+    },
   },
   extraReducers: builder => {
     builder
@@ -166,5 +171,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, setUser } = authSlice.actions;
+export const { clearError, setUser, updateUserProfilePicture } =
+  authSlice.actions;
 export default authSlice.reducer;

@@ -102,7 +102,7 @@ const SwapModal: React.FC<SwapModalProps> = ({
   const styles = StyleSheet.create({
     modalOverlay: {
       flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: theme.colors.modalOverlay,
       justifyContent: 'flex-end',
     },
     modalContainer: {
@@ -188,7 +188,7 @@ const SwapModal: React.FC<SwapModalProps> = ({
       borderWidth: 2,
       borderColor: theme.colors.border,
       backgroundColor: theme.colors.background,
-      shadowColor: '#000',
+      shadowColor: theme.colors.shadow,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
@@ -207,7 +207,7 @@ const SwapModal: React.FC<SwapModalProps> = ({
       letterSpacing: 0.5,
     },
     currencyTextSelected: {
-      color: '#FFFFFF',
+      color: theme.colors.buttonText,
     },
     amountInput: {
       borderWidth: 1,
@@ -253,7 +253,7 @@ const SwapModal: React.FC<SwapModalProps> = ({
       marginBottom: rp(12),
       borderWidth: 1,
       borderColor: theme.colors.border,
-      shadowColor: '#000',
+      shadowColor: theme.colors.shadow,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.05,
       shadowRadius: 4,
@@ -295,7 +295,7 @@ const SwapModal: React.FC<SwapModalProps> = ({
       elevation: 4,
     },
     buttonText: {
-      color: '#FFFFFF',
+      color: theme.colors.buttonText,
       fontSize: fp(16),
       fontWeight: '700',
       letterSpacing: 0.5,
@@ -408,7 +408,7 @@ const SwapModal: React.FC<SwapModalProps> = ({
                   <Icon
                     name="swap-vert"
                     size={rp(24)}
-                    color="#FFFFFF"
+                    color={theme.colors.buttonText}
                     style={{
                       transform: [{ rotate: isAnimating ? '180deg' : '0deg' }],
                     }}

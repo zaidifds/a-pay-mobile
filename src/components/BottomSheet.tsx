@@ -14,6 +14,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fp, rp } from '../utils/responsive';
+import { useTheme } from '../hooks/useTheme';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -33,6 +34,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   height = SCREEN_HEIGHT * 0.6,
 }) => {
   const insets = useSafeAreaInsets();
+  const { theme } = useTheme();
   const translateY = useRef(new Animated.Value(height)).current;
   const backdropOpacity = useRef(new Animated.Value(0)).current;
 
@@ -64,7 +66,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
         }),
       ]).start();
     }
-  }, [visible, height]);
+  }, [visible, height, translateY, backdropOpacity]);
 
   const handleBackdropPress = () => {
     onClose();
@@ -77,10 +79,10 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     },
     backdrop: {
       flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: theme.colors.modalOverlay,
     },
     sheet: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: theme.colors.card,
       borderTopLeftRadius: rp(20),
       borderTopRightRadius: rp(20),
       paddingBottom: insets.bottom + rp(20),
@@ -90,7 +92,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     handle: {
       width: rp(40),
       height: rp(4),
-      backgroundColor: '#E0E0E0',
+      backgroundColor: theme.colors.border,
       borderRadius: rp(2),
       alignSelf: 'center',
       marginTop: rp(8),
@@ -103,17 +105,17 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
       paddingHorizontal: rp(20),
       paddingBottom: rp(16),
       borderBottomWidth: 1,
-      borderBottomColor: '#F0F0F0',
+      borderBottomColor: theme.colors.border,
     },
     title: {
       fontSize: fp(18),
       fontWeight: '700',
-      color: '#333333',
+      color: theme.colors.text,
     },
     closeButton: {
       padding: rp(8),
       borderRadius: rp(20),
-      backgroundColor: '#F5F5F5',
+      backgroundColor: theme.colors.backgroundSecondary,
     },
     content: {
       flex: 1,
@@ -150,7 +152,11 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
           <View style={styles.header}>
             <Text style={styles.title}>{title}</Text>
             <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-              <Icon name="close" size={rp(20)} color="#666666" />
+              <Icon
+                name="close"
+                size={rp(20)}
+                color={theme.colors.textSecondary}
+              />
             </TouchableOpacity>
           </View>
 

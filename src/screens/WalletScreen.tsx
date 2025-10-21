@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
-  Alert,
   FlatList,
   ScrollView,
   StyleSheet,
@@ -11,26 +10,23 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {
-  addToBalance,
-  swapBalances,
-  toggleBalanceVisibility,
-} from '../redux/slices/walletSlice';
+import { toggleBalanceVisibility } from '../redux/slices/walletSlice';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { Transaction } from '../types';
 import { fp, rp } from '../utils/responsive';
 import Header from '../components/Header';
-import SwapModal from '../components/SwapModal';
-import ReceiveModal from '../components/ReceiveModal';
+import { useModalNavigation } from '../hooks/useModalNavigation';
+import { WalletScreenNavigationProp } from '../navigation/navigationTypes';
+import { useTheme } from '../hooks/useTheme';
 
 const WalletScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
+  const navigation = useNavigation<WalletScreenNavigationProp>();
   const { balances, prices, isBalanceVisible, transactions } = useAppSelector(
     state => state.wallet,
   );
-  const [receiveModalVisible, setReceiveModalVisible] = useState(false);
-  const [swapModalVisible, setSwapModalVisible] = useState(false);
+  const { openReceiveModal, openSwapModal } = useModalNavigation();
+  const { theme } = useTheme();
 
   // Animation values
   const fadeAnim = useMemo(() => new Animated.Value(0), []);
@@ -75,68 +71,42 @@ const WalletScreen: React.FC = () => {
     return `$${total.toFixed(2)}`;
   };
 
-  const handleReceive = (amount: string, currency: string) => {
-    const numAmount = parseFloat(amount);
-    if (numAmount > 0) {
-      dispatch(addToBalance({ currency, amount: numAmount }));
-      Alert.alert('Success', `Received ${numAmount.toFixed(4)} ${currency}`);
-      setReceiveModalVisible(false);
-    }
-  };
-
-  const handleSwap = (
-    fromCurrency: string,
-    toCurrency: string,
-    amount: string,
-  ) => {
-    const fromAmount = parseFloat(amount);
-    const toAmount = fromAmount * (prices[fromCurrency] / prices[toCurrency]);
-
-    if (balances[fromCurrency] >= fromAmount) {
-      dispatch(
-        swapBalances({
-          fromCurrency,
-          toCurrency,
-          fromAmount,
-          toAmount,
-        }),
-      );
-      Alert.alert(
-        'Success',
-        `Swapped ${fromAmount} ${fromCurrency} to ${toAmount.toFixed(
-          4,
-        )} ${toCurrency}`,
-      );
-      setSwapModalVisible(false);
-    } else {
-      Alert.alert('Error', 'Insufficient balance');
-    }
-  };
-
   const renderTransaction = ({ item }: { item: Transaction }) => {
     const getTransactionIcon = () => {
       switch (item.type) {
         case 'send':
-          return <Icon name="arrow-upward" size={20} color="#FF5722" />;
+          return (
+            <Icon name="arrow-upward" size={20} color={theme.colors.error} />
+          );
         case 'receive':
-          return <Icon name="arrow-downward" size={20} color="#4CAF50" />;
+          return (
+            <Icon
+              name="arrow-downward"
+              size={20}
+              color={theme.colors.success}
+            />
+          );
         case 'swap':
-          return <Icon name="swap-horiz" size={20} color="#2196F3" />;
+          return (
+            <Icon name="swap-horiz" size={20} color={theme.colors.primary} />
+          );
         default:
-          return <Icon name="help" size={20} color="#666666" />;
+          return (
+            <Icon name="help" size={20} color={theme.colors.textSecondary} />
+          );
       }
     };
 
     const getStatusColor = () => {
       switch (item.status) {
         case 'completed':
-          return '#4CAF50';
+          return theme.colors.success;
         case 'pending':
-          return '#FF9800';
+          return theme.colors.warning;
         case 'failed':
-          return '#F44336';
+          return theme.colors.error;
         default:
-          return '#666666';
+          return theme.colors.textSecondary;
       }
     };
 
@@ -172,6 +142,8 @@ const WalletScreen: React.FC = () => {
       </View>
     );
   };
+
+  const styles = createStyles(theme);
 
   return (
     <View style={styles.container}>
@@ -225,9 +197,9 @@ const WalletScreen: React.FC = () => {
         >
           <TouchableOpacity
             style={[styles.actionButton, styles.receiveButton]}
-            onPress={() => setReceiveModalVisible(true)}
+            onPress={openReceiveModal}
           >
-            <Icon name="add" size={24} color="#FFFFFF" />
+            <Icon name="add" size={24} color={theme.colors.buttonText} />
             <Text style={styles.actionButtonText}>Receive</Text>
           </TouchableOpacity>
 
@@ -235,15 +207,15 @@ const WalletScreen: React.FC = () => {
             style={[styles.actionButton, styles.sendButton]}
             onPress={() => navigation.navigate('send' as never)}
           >
-            <Icon name="send" size={24} color="#FFFFFF" />
+            <Icon name="send" size={24} color={theme.colors.buttonText} />
             <Text style={styles.actionButtonText}>Send</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.actionButton, styles.swapButton]}
-            onPress={() => setSwapModalVisible(true)}
+            onPress={openSwapModal}
           >
-            <Icon name="swap-horiz" size={24} color="#FFFFFF" />
+            <Icon name="swap-horiz" size={24} color={theme.colors.buttonText} />
             <Text style={styles.actionButtonText}>Swap</Text>
           </TouchableOpacity>
         </Animated.View>
@@ -268,200 +240,185 @@ const WalletScreen: React.FC = () => {
           />
         </Animated.View>
       </ScrollView>
-
-      {/* Receive Modal */}
-      <ReceiveModal
-        visible={receiveModalVisible}
-        onClose={() => setReceiveModalVisible(false)}
-        onReceive={handleReceive}
-      />
-
-      {/* Swap Modal */}
-      <SwapModal
-        visible={swapModalVisible}
-        onClose={() => setSwapModalVisible(false)}
-        onSwap={handleSwap}
-        balances={balances}
-        prices={prices}
-      />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F9FA',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: rp(16),
-    paddingBottom: rp(20),
-    paddingTop: rp(10),
-  },
-  balanceCard: {
-    padding: rp(16),
-    borderRadius: rp(16),
-    marginBottom: rp(16),
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E3F2FD',
-    shadowColor: '#2196F3',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  balanceLabel: {
-    fontSize: fp(12),
-    marginBottom: rp(6),
-    color: '#666666',
-    fontWeight: '500',
-    letterSpacing: 0.3,
-  },
-  balanceAmount: {
-    fontSize: fp(24),
-    fontWeight: '700',
-    color: '#2196F3',
-    marginBottom: rp(12),
-  },
-  balancesList: {
-    width: '100%',
-    backgroundColor: '#F5F5F5',
-    borderRadius: rp(12),
-    padding: rp(12),
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  balanceRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: rp(8),
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  currencyLabel: {
-    fontSize: fp(13),
-    fontWeight: '600',
-    color: '#333333',
-    letterSpacing: 0.3,
-  },
-  currencyAmount: {
-    fontSize: fp(13),
-    color: '#2196F3',
-    fontWeight: '600',
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: rp(20),
-    gap: rp(10),
-  },
-  actionButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: rp(14),
-    borderRadius: rp(15),
-    gap: rp(6),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  actionButtonText: {
-    color: '#FFFFFF',
-    fontSize: fp(12),
-    fontWeight: '600',
-  },
-  receiveButton: {
-    backgroundColor: '#4CAF50',
-  },
-  sendButton: {
-    backgroundColor: '#FF5722',
-  },
-  swapButton: {
-    backgroundColor: '#2196F3',
-  },
-  transactionsSection: {
-    marginBottom: rp(15),
-  },
-  sectionTitle: {
-    fontSize: fp(16),
-    fontWeight: '700',
-    color: '#333333',
-    marginBottom: rp(12),
-    letterSpacing: 0.3,
-  },
-  transactionItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: rp(12),
-    borderRadius: rp(10),
-    marginBottom: rp(8),
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  transactionLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  transactionIcon: {
-    width: rp(36),
-    height: rp(36),
-    borderRadius: rp(18),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: rp(10),
-    backgroundColor: '#F5F5F5',
-  },
-  transactionDetails: {
-    flex: 1,
-  },
-  transactionDescription: {
-    fontSize: fp(13),
-    fontWeight: '500',
-    color: '#333333',
-    letterSpacing: 0.2,
-    marginBottom: rp(2),
-  },
-  transactionTime: {
-    fontSize: fp(10),
-    color: '#666666',
-  },
-  transactionRight: {
-    alignItems: 'flex-end',
-  },
-  transactionAmount: {
-    fontSize: fp(13),
-    fontWeight: '600',
-    marginBottom: rp(2),
-  },
-  transactionAmountSend: {
-    color: '#FF5722',
-  },
-  transactionAmountReceive: {
-    color: '#4CAF50',
-  },
-  transactionStatus: {
-    fontSize: fp(9),
-    color: '#666666',
-    fontWeight: '500',
-    textTransform: 'capitalize',
-  },
-});
+const createStyles = (theme: any) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingHorizontal: rp(16),
+      paddingBottom: rp(20),
+      paddingTop: rp(10),
+    },
+    balanceCard: {
+      padding: rp(16),
+      borderRadius: rp(16),
+      marginBottom: rp(16),
+      backgroundColor: theme.colors.card,
+      borderWidth: 1,
+      borderColor: theme.colors.borderLight,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    balanceLabel: {
+      fontSize: fp(12),
+      marginBottom: rp(6),
+      color: theme.colors.textSecondary,
+      fontWeight: '500',
+      letterSpacing: 0.3,
+    },
+    balanceAmount: {
+      fontSize: fp(24),
+      fontWeight: '700',
+      color: theme.colors.primary,
+      marginBottom: rp(12),
+    },
+    balancesList: {
+      width: '100%',
+      backgroundColor: theme.colors.backgroundSecondary,
+      borderRadius: rp(12),
+      padding: rp(12),
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+    },
+    balanceRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: rp(8),
+      borderBottomWidth: 1,
+      borderBottomColor: '#E0E0E0',
+    },
+    currencyLabel: {
+      fontSize: fp(13),
+      fontWeight: '600',
+      color: theme.colors.text,
+      letterSpacing: 0.3,
+    },
+    currencyAmount: {
+      fontSize: fp(13),
+      color: theme.colors.primary,
+      fontWeight: '600',
+    },
+    actionButtons: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: rp(20),
+      gap: rp(10),
+    },
+    actionButton: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: rp(14),
+      borderRadius: rp(15),
+      gap: rp(6),
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 4,
+    },
+    actionButtonText: {
+      color: theme.colors.buttonText,
+      fontSize: fp(12),
+      fontWeight: '600',
+    },
+    receiveButton: {
+      backgroundColor: theme.colors.success,
+    },
+    sendButton: {
+      backgroundColor: theme.colors.error,
+    },
+    swapButton: {
+      backgroundColor: '#2196F3',
+    },
+    transactionsSection: {
+      marginBottom: rp(15),
+    },
+    sectionTitle: {
+      fontSize: fp(16),
+      fontWeight: '700',
+      color: theme.colors.text,
+      marginBottom: rp(12),
+      letterSpacing: 0.3,
+    },
+    transactionItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: rp(12),
+      borderRadius: rp(10),
+      marginBottom: rp(8),
+      backgroundColor: theme.colors.card,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      shadowColor: theme.colors.shadow,
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.05,
+      shadowRadius: 2,
+      elevation: 1,
+    },
+    transactionLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+    },
+    transactionIcon: {
+      width: rp(36),
+      height: rp(36),
+      borderRadius: rp(18),
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: rp(10),
+      backgroundColor: theme.colors.backgroundSecondary,
+    },
+    transactionDetails: {
+      flex: 1,
+    },
+    transactionDescription: {
+      fontSize: fp(13),
+      fontWeight: '500',
+      color: theme.colors.text,
+      letterSpacing: 0.2,
+      marginBottom: rp(2),
+    },
+    transactionTime: {
+      fontSize: fp(10),
+      color: theme.colors.textSecondary,
+    },
+    transactionRight: {
+      alignItems: 'flex-end',
+    },
+    transactionAmount: {
+      fontSize: fp(13),
+      fontWeight: '600',
+      marginBottom: rp(2),
+    },
+    transactionAmountSend: {
+      color: theme.colors.error,
+    },
+    transactionAmountReceive: {
+      color: theme.colors.success,
+    },
+    transactionStatus: {
+      fontSize: fp(9),
+      color: theme.colors.textSecondary,
+      fontWeight: '500',
+      textTransform: 'capitalize',
+    },
+  });
 
 export default WalletScreen;

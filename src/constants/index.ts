@@ -20,13 +20,14 @@ export const SCREEN_NAMES = {
 } as const;
 
 export const COLORS = {
-  PRIMARY: '#007AFF',
-  SECONDARY: '#5856D6',
-  SUCCESS: '#34C759',
-  WARNING: '#FF9500',
-  ERROR: '#FF3B30',
-  BACKGROUND: '#F2F2F7',
-  SURFACE: '#FFFFFF',
-  TEXT: '#000000',
-  TEXT_SECONDARY: '#8E8E93',
+  // Primary colors (matching web design system)
+  PRIMARY: '#3B82F6', // --primary
+  SECONDARY: '#F1F5F9', // --secondary
+  SUCCESS: '#22C55E',
+  WARNING: '#F59E0B',
+  ERROR: '#EF4444', // --destructive
+  BACKGROUND: '#FFFFFF', // --background
+  SURFACE: '#FFFFFF', // --card
+  TEXT: '#0F172A', // --foreground
+  TEXT_SECONDARY: '#64748B', // --muted-foreground
 } as const;

@@ -21,6 +21,9 @@ interface HeaderProps {
   onBackPress?: () => void;
   backgroundColor?: string;
   titleColor?: string;
+  showFilterButton?: boolean;
+  onFilterPress?: () => void;
+  filterActive?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -30,6 +33,9 @@ const Header: React.FC<HeaderProps> = ({
   onBackPress,
   backgroundColor = '#FFFFFF',
   titleColor = '#333333',
+  showFilterButton = false,
+  onFilterPress,
+  filterActive = false,
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -37,13 +43,16 @@ const Header: React.FC<HeaderProps> = ({
     container: {
       backgroundColor,
       paddingTop: insets.top,
-      paddingBottom: rp(15),
-      paddingHorizontal: rp(20),
+      paddingBottom: rp(12),
+      paddingHorizontal: rp(16),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      borderBottomWidth: 1,
-      borderBottomColor: '#E0E0E0',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.03,
+      shadowRadius: 4,
+      elevation: 2,
     },
     leftSection: {
       flexDirection: 'row',
@@ -51,28 +60,38 @@ const Header: React.FC<HeaderProps> = ({
       flex: 1,
     },
     backButton: {
-      padding: rp(8),
-      marginRight: rp(12),
-      borderRadius: rp(20),
-      backgroundColor: '#F5F5F5',
+      padding: rp(6),
+      marginRight: rp(8),
+      borderRadius: rp(8),
+      backgroundColor: '#F8F9FA',
+      borderWidth: 1,
+      borderColor: '#E5E5EA',
     },
     title: {
       fontSize: fp(18),
-      fontWeight: '700',
+      fontWeight: '600',
       color: titleColor,
-      letterSpacing: 0.5,
+      letterSpacing: 0.2,
       flex: 1,
     },
     rightSection: {
       flexDirection: 'row',
       alignItems: 'center',
+      gap: rp(8),
     },
     rightButton: {
-      padding: rp(10),
-      borderRadius: rp(20),
-      backgroundColor: '#F5F5F5',
+      padding: rp(8),
+      borderRadius: rp(8),
+      backgroundColor: '#F8F9FA',
       borderWidth: 1,
-      borderColor: '#E0E0E0',
+      borderColor: '#E5E5EA',
+    },
+    filterButton: {
+      padding: rp(8),
+      borderRadius: rp(8),
+      backgroundColor: filterActive ? '#007AFF' : '#F8F9FA',
+      borderWidth: 1,
+      borderColor: filterActive ? '#007AFF' : '#E5E5EA',
     },
   });
 
@@ -80,6 +99,7 @@ const Header: React.FC<HeaderProps> = ({
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={backgroundColor} />
 
+      {/* Left Section - Back Button + Title */}
       <View style={styles.leftSection}>
         {showBackButton && (
           <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
@@ -89,8 +109,18 @@ const Header: React.FC<HeaderProps> = ({
         <Text style={styles.title}>{title}</Text>
       </View>
 
-      {rightButton && (
-        <View style={styles.rightSection}>
+      {/* Right Section - Action Buttons */}
+      <View style={styles.rightSection}>
+        {showFilterButton && (
+          <TouchableOpacity style={styles.filterButton} onPress={onFilterPress}>
+            <Icon
+              name="filter-list"
+              size={rp(18)}
+              color={filterActive ? '#FFFFFF' : '#333333'}
+            />
+          </TouchableOpacity>
+        )}
+        {rightButton && (
           <TouchableOpacity
             style={styles.rightButton}
             onPress={rightButton.onPress}
@@ -101,8 +131,8 @@ const Header: React.FC<HeaderProps> = ({
               color={rightButton.color || '#333333'}
             />
           </TouchableOpacity>
-        </View>
-      )}
+        )}
+      </View>
     </View>
   );
 };

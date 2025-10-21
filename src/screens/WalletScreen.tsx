@@ -9,8 +9,8 @@ import {
   View,
   Animated,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { mockTransactions } from '../mocks/transactions';
 import {
   addToBalance,
   swapBalances,
@@ -25,7 +25,8 @@ import ReceiveModal from '../components/ReceiveModal';
 
 const WalletScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { balances, prices, isBalanceVisible } = useAppSelector(
+  const navigation = useNavigation();
+  const { balances, prices, isBalanceVisible, transactions } = useAppSelector(
     state => state.wallet,
   );
   const [receiveModalVisible, setReceiveModalVisible] = useState(false);
@@ -232,9 +233,7 @@ const WalletScreen: React.FC = () => {
 
           <TouchableOpacity
             style={[styles.actionButton, styles.sendButton]}
-            onPress={() =>
-              Alert.alert('Send', 'Send functionality coming soon!')
-            }
+            onPress={() => navigation.navigate('send' as never)}
           >
             <Icon name="send" size={24} color="#FFFFFF" />
             <Text style={styles.actionButtonText}>Send</Text>
@@ -261,7 +260,7 @@ const WalletScreen: React.FC = () => {
         >
           <Text style={styles.sectionTitle}>Recent Transactions</Text>
           <FlatList
-            data={mockTransactions}
+            data={transactions}
             renderItem={renderTransaction}
             keyExtractor={item => item.id}
             scrollEnabled={false}

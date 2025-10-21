@@ -1,6 +1,6 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { COLORS } from '../constants';
@@ -11,12 +11,30 @@ const BottomTabBarContent = ({
 }: BottomTabBarProps) => {
   const insets = useSafeAreaInsets();
 
-  const getTabIcon = (_routeName: string, color: string, size: number) => {
-    return <Icon name="account-balance-wallet" size={size} color={color} />;
+  const getTabIcon = (routeName: string, color: string, size: number) => {
+    switch (routeName) {
+      case 'wallet':
+        return <Icon name="account-balance-wallet" size={size} color={color} />;
+      case 'send':
+        return <Icon name="send" size={size} color={color} />;
+      case 'history':
+        return <Icon name="history" size={size} color={color} />;
+      default:
+        return <Icon name="account-balance-wallet" size={size} color={color} />;
+    }
   };
 
-  const getTabLabel = (_routeName: string) => {
-    return 'Wallet';
+  const getTabLabel = (routeName: string) => {
+    switch (routeName) {
+      case 'wallet':
+        return 'Wallet';
+      case 'send':
+        return 'Send';
+      case 'history':
+        return 'History';
+      default:
+        return 'Wallet';
+    }
   };
 
   const handleTabPress = (route: any) => {
@@ -43,11 +61,16 @@ const BottomTabBarContent = ({
             onPress={onPress}
             style={styles.tabItem}
           >
-            <View style={styles.iconContainer}>
+            <View
+              style={[
+                styles.iconContainer,
+                isFocused && styles.iconContainerActive,
+              ]}
+            >
               {getTabIcon(
                 route.name,
                 isFocused ? COLORS.PRIMARY : COLORS.TEXT_SECONDARY,
-                24,
+                18,
               )}
             </View>
             <Text
@@ -73,26 +96,39 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     backgroundColor: COLORS.SURFACE,
-    borderTopColor: '#E5E5E5',
+    borderTopColor: '#E5E5EA',
     borderTopWidth: 1,
-    height: 70,
-    paddingTop: 5,
+    height: 60,
+    paddingTop: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 4,
+    elevation: 3,
   },
   tabItem: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 2,
   },
   iconContainer: {
-    height: 30,
+    height: 24,
+    width: 24,
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 12,
+    marginBottom: 2,
+  },
+  iconContainerActive: {
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
   },
   label: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '500',
-    marginTop: 2,
+    marginTop: 1,
+    letterSpacing: 0.1,
   },
 });
 

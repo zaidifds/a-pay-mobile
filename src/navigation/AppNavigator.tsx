@@ -1,15 +1,12 @@
-import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useSelector } from 'react-redux';
-import { useAppSelector } from '../redux/store';
+import { RootState, useAppSelector } from '../redux/store';
 
 // Import navigators
 import AuthNavigator from './AuthNavigator';
-
-// Import screens
-import HomeScreen from '../screens/HomeScreen';
+import BottomTabNavigator from './BottomTabNavigator';
 
 export type RootStackParamList = {
   Auth: undefined;
@@ -19,8 +16,7 @@ export type RootStackParamList = {
 const Stack = createStackNavigator<RootStackParamList>();
 
 const AppNavigator: React.FC = () => {
-  const { userSession } = useAppSelector(state => state.userSession);
-  const isAuthenticated = !!userSession?.user?.id;
+  const { isAuthenticated } = useAppSelector((state: RootState) => state.auth);
 
   return (
     <SafeAreaProvider>
@@ -32,7 +28,7 @@ const AppNavigator: React.FC = () => {
           }}
         >
           {isAuthenticated ? (
-            <Stack.Screen name="Main" component={HomeScreen} />
+            <Stack.Screen name="Main" component={BottomTabNavigator} />
           ) : (
             <Stack.Screen name="Auth" component={AuthNavigator} />
           )}

@@ -1,10 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import userSession from '../slices/userSlice';
 import auth from '../slices/authSlice';
+import wallet from '../slices/walletSlice';
 
 const reducers = combineReducers({
-  userSession,
   auth,
+  wallet,
 });
 
 export default reducers;

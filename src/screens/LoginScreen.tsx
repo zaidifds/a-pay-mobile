@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  Alert,
+  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Formik } from 'formik';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '../hooks/useTheme';
 import { useAppDispatch, useAppSelector } from '../redux/store';
-import { loginUser, clearError } from '../redux/slices/authSlice';
+import { loginUser } from '../redux/slices/authSlice';
 import AuthInput from '../components/AuthInput';
 import AuthButton from '../components/AuthButton';
-import SocialLoginButton from '../components/SocialLoginButton';
+import { loginSchema } from '../utils/validationSchemas';
 
 interface LoginScreenProps {
   navigation: any;
@@ -25,65 +26,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector(state => state.auth);
+  const insets = useSafeAreaInsets();
 
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-
-  const [errors, setErrors] = useState({
-    email: '',
-    password: '',
-  });
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validateForm = () => {
-    const newErrors = {
-      email: '',
-      password: '',
-    };
-
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    setErrors(newErrors);
-    return !newErrors.email && !newErrors.password;
-  };
-
-  const handleLogin = async () => {
-    if (!validateForm()) return;
-
+  const handleLogin = async (values: { email: string; password: string }) => {
     try {
-      const result = await dispatch(loginUser(formData));
-      if (loginUser.fulfilled.match(result)) {
-        // Navigation will be handled by the navigator based on auth state
-        Alert.alert('Success', 'Login successful!');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Login failed. Please try again.');
+      await dispatch(loginUser(values)).unwrap();
+    } catch {
+      // Error is handled by the slice
     }
-  };
-
-  const handleSocialLogin = (provider: 'google' | 'apple') => {
-    Alert.alert(
-      'Social Login',
-      `${
-        provider.charAt(0).toUpperCase() + provider.slice(1)
-      } login is not implemented yet. This is a placeholder.`,
-    );
   };
 
   const handleForgotPassword = () => {
@@ -94,162 +44,198 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     navigation.navigate('Signup');
   };
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: theme.colors.background,
-    },
-    scrollView: {
-      flex: 1,
-    },
-    content: {
-      flex: 1,
-      paddingHorizontal: theme.spacing.lg,
-      paddingTop: theme.spacing.xl,
-    },
-    header: {
-      alignItems: 'center',
-      marginBottom: theme.spacing.xl,
-    },
-    title: {
-      fontSize: 32,
-      fontWeight: 'bold',
-      color: theme.colors.text,
-      marginBottom: theme.spacing.sm,
-    },
-    subtitle: {
-      fontSize: 16,
-      color: theme.colors.textSecondary,
-      textAlign: 'center',
-    },
-    form: {
-      marginBottom: theme.spacing.xl,
-    },
-    forgotPassword: {
-      alignItems: 'flex-end',
-      marginBottom: theme.spacing.lg,
-    },
-    forgotPasswordText: {
-      fontSize: 14,
-      color: theme.colors.primary,
-      fontWeight: '600',
-    },
-    socialSection: {
-      marginBottom: theme.spacing.xl,
-    },
-    socialTitle: {
-      fontSize: 16,
-      color: theme.colors.textSecondary,
-      textAlign: 'center',
-      marginBottom: theme.spacing.md,
-    },
-    socialButtons: {
-      gap: theme.spacing.md,
-    },
-    signupSection: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: theme.spacing.lg,
-    },
-    signupText: {
-      fontSize: 14,
-      color: theme.colors.textSecondary,
-    },
-    signupLink: {
-      fontSize: 14,
-      color: theme.colors.primary,
-      fontWeight: '600',
-      marginLeft: theme.spacing.xs,
-    },
-  });
-
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingTop: insets.top + 20 },
+        ]}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
-          <Text style={styles.title}>Welcome Back</Text>
-          <Text style={styles.subtitle}>
-            Sign in to your account to continue
+          <View
+            style={[
+              styles.logoContainer,
+              { backgroundColor: theme.colors.primary },
+            ]}
+          >
+            <Icon name="account-balance-wallet" size={40} color="#FFFFFF" />
+          </View>
+          <Text style={[styles.title, { color: theme.colors.text }]}>
+            Welcome Back
+          </Text>
+          <Text
+            style={[styles.subtitle, { color: theme.colors.textSecondary }]}
+          >
+            Sign in to your A-Pay account
           </Text>
         </View>
 
         <View style={styles.form}>
-          <AuthInput
-            label="Email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChangeText={text => {
-              setFormData(prev => ({ ...prev, email: text }));
-              if (errors.email) {
-                setErrors(prev => ({ ...prev, email: '' }));
-              }
-            }}
-            error={errors.email}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-
-          <AuthInput
-            label="Password"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChangeText={text => {
-              setFormData(prev => ({ ...prev, password: text }));
-              if (errors.password) {
-                setErrors(prev => ({ ...prev, password: '' }));
-              }
-            }}
-            error={errors.password}
-            isPassword
-          />
-
-          <TouchableOpacity
-            style={styles.forgotPassword}
-            onPress={handleForgotPassword}
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            validationSchema={loginSchema}
+            onSubmit={handleLogin}
           >
-            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-          </TouchableOpacity>
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
+              <>
+                <AuthInput
+                  label="Email Address"
+                  placeholder="Enter your email"
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  error={errors.email}
+                  touched={touched.email}
+                  leftIcon="email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
 
-          <AuthButton
-            title="Sign In"
-            onPress={handleLogin}
-            loading={isLoading}
-            disabled={!formData.email || !formData.password}
-          />
+                <AuthInput
+                  label="Password"
+                  placeholder="Enter your password"
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  error={errors.password}
+                  touched={touched.password}
+                  isPassword
+                  leftIcon="lock"
+                />
+
+                {error && (
+                  <View style={styles.errorContainer}>
+                    <Icon name="error" size={20} color={theme.colors.error} />
+                    <Text
+                      style={[styles.errorText, { color: theme.colors.error }]}
+                    >
+                      {error}
+                    </Text>
+                  </View>
+                )}
+
+                <TouchableOpacity
+                  style={styles.forgotPassword}
+                  onPress={handleForgotPassword}
+                >
+                  <Text
+                    style={[
+                      styles.forgotPasswordText,
+                      { color: theme.colors.primary },
+                    ]}
+                  >
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+
+                <AuthButton
+                  title="Sign In"
+                  onPress={handleSubmit}
+                  loading={isLoading}
+                  disabled={isLoading}
+                />
+              </>
+            )}
+          </Formik>
         </View>
 
-        <View style={styles.socialSection}>
-          <Text style={styles.socialTitle}>Or continue with</Text>
-          <View style={styles.socialButtons}>
-            <SocialLoginButton
-              provider="google"
-              onPress={() => handleSocialLogin('google')}
-            />
-            <SocialLoginButton
-              provider="apple"
-              onPress={() => handleSocialLogin('apple')}
-            />
-          </View>
-        </View>
-
-        <View style={styles.signupSection}>
-          <Text style={styles.signupText}>Don't have an account?</Text>
+        <View style={styles.footer}>
+          <Text
+            style={[styles.footerText, { color: theme.colors.textSecondary }]}
+          >
+            Don't have an account?{' '}
+          </Text>
           <TouchableOpacity onPress={handleSignup}>
-            <Text style={styles.signupLink}>Sign Up</Text>
+            <Text style={[styles.signupText, { color: theme.colors.primary }]}>
+              Sign Up
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingBottom: 40,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  logoContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  form: {
+    marginBottom: 32,
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingHorizontal: 4,
+  },
+  errorText: {
+    marginLeft: 8,
+    fontSize: 14,
+    flex: 1,
+  },
+  forgotPassword: {
+    alignItems: 'flex-end',
+    marginBottom: 24,
+  },
+  forgotPasswordText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 14,
+  },
+  signupText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+});
 
 export default LoginScreen;

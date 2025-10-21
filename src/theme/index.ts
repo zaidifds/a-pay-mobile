@@ -1,5 +1,6 @@
-import { Theme } from '@/types';
-import { COLORS } from '@/constants';
+import { Theme } from '../types';
+import { COLORS } from '../constants';
+import { fp, rp } from '../utils/responsive';
 
 export const lightTheme: Theme = {
   colors: {
@@ -15,37 +16,37 @@ export const lightTheme: Theme = {
     warning: COLORS.WARNING,
   },
   spacing: {
-    xs: 4,
-    sm: 8,
-    md: 16,
-    lg: 24,
-    xl: 32,
+    xs: rp(4),
+    sm: rp(8),
+    md: rp(16),
+    lg: rp(24),
+    xl: rp(32),
   },
   typography: {
     h1: {
-      fontSize: 32,
+      fontSize: fp(32),
       fontWeight: 'bold',
-      lineHeight: 40,
+      lineHeight: fp(40),
     },
     h2: {
-      fontSize: 24,
+      fontSize: fp(24),
       fontWeight: 'bold',
-      lineHeight: 32,
+      lineHeight: fp(32),
     },
     h3: {
-      fontSize: 20,
+      fontSize: fp(20),
       fontWeight: '600',
-      lineHeight: 28,
+      lineHeight: fp(28),
     },
     body: {
-      fontSize: 16,
+      fontSize: fp(16),
       fontWeight: 'normal',
-      lineHeight: 24,
+      lineHeight: fp(24),
     },
     caption: {
-      fontSize: 12,
+      fontSize: fp(12),
       fontWeight: 'normal',
-      lineHeight: 16,
+      lineHeight: fp(16),
     },
   },
 };

@@ -1,95 +1,146 @@
 import React, { useState } from 'react';
 import {
   View,
-  TextInput,
   Text,
+  TextInput,
   TouchableOpacity,
   StyleSheet,
   TextInputProps,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '../hooks/useTheme';
 
 interface AuthInputProps extends TextInputProps {
   label: string;
   error?: string;
+  touched?: boolean;
   isPassword?: boolean;
-  containerStyle?: any;
+  leftIcon?: string;
+  rightIcon?: string;
+  onRightIconPress?: () => void;
 }
 
 const AuthInput: React.FC<AuthInputProps> = ({
   label,
   error,
+  touched,
   isPassword = false,
-  containerStyle,
+  leftIcon,
+  rightIcon,
+  onRightIconPress,
+  style,
   ...props
 }) => {
   const { theme } = useTheme();
-  const [isSecure, setIsSecure] = useState(isPassword);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(!isPassword);
 
-  const styles = StyleSheet.create({
-    container: {
-      marginBottom: theme.spacing.md,
-      ...containerStyle,
-    },
-    label: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: theme.colors.text,
-      marginBottom: theme.spacing.sm,
-    },
-    inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderWidth: 1,
-      borderColor: error ? theme.colors.error : theme.colors.border,
-      borderRadius: 12,
-      backgroundColor: theme.colors.surface,
-      paddingHorizontal: theme.spacing.md,
-      minHeight: 50,
-    },
-    input: {
-      flex: 1,
-      fontSize: 16,
-      color: theme.colors.text,
-      paddingVertical: theme.spacing.sm,
-    },
-    toggleButton: {
-      padding: theme.spacing.sm,
-    },
-    toggleText: {
-      fontSize: 14,
-      color: theme.colors.primary,
-      fontWeight: '600',
-    },
-    errorText: {
-      fontSize: 12,
-      color: theme.colors.error,
-      marginTop: theme.spacing.xs,
-    },
-  });
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+
+  const hasError = error && touched;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.inputContainer}>
+      <Text style={[styles.label, { color: theme.colors.text }]}>{label}</Text>
+      <View
+        style={[
+          styles.inputContainer,
+          {
+            backgroundColor: theme.colors.surface,
+            borderColor: hasError ? theme.colors.error : theme.colors.border,
+            borderWidth: hasError ? 2 : 1,
+          },
+        ]}
+      >
+        {leftIcon && (
+          <Icon
+            name={leftIcon}
+            size={20}
+            color={hasError ? theme.colors.error : theme.colors.textSecondary}
+            style={styles.leftIcon}
+          />
+        )}
         <TextInput
-          style={styles.input}
-          secureTextEntry={isSecure}
+          style={[
+            styles.input,
+            { color: theme.colors.text },
+            leftIcon && styles.inputWithLeftIcon,
+            rightIcon && styles.inputWithRightIcon,
+          ]}
+          secureTextEntry={isPassword && !isPasswordVisible}
           placeholderTextColor={theme.colors.textSecondary}
           {...props}
         />
         {isPassword && (
           <TouchableOpacity
-            style={styles.toggleButton}
-            onPress={() => setIsSecure(!isSecure)}
+            onPress={togglePasswordVisibility}
+            style={styles.rightIcon}
           >
-            <Text style={styles.toggleText}>{isSecure ? 'Show' : 'Hide'}</Text>
+            <Icon
+              name={isPasswordVisible ? 'visibility' : 'visibility-off'}
+              size={20}
+              color={theme.colors.textSecondary}
+            />
+          </TouchableOpacity>
+        )}
+        {rightIcon && !isPassword && (
+          <TouchableOpacity onPress={onRightIconPress} style={styles.rightIcon}>
+            <Icon
+              name={rightIcon}
+              size={20}
+              color={theme.colors.textSecondary}
+            />
           </TouchableOpacity>
         )}
       </View>
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      {hasError && (
+        <Text style={[styles.errorText, { color: theme.colors.error }]}>
+          {error}
+        </Text>
+      )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    minHeight: 56,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    paddingVertical: 16,
+  },
+  inputWithLeftIcon: {
+    marginLeft: 12,
+  },
+  inputWithRightIcon: {
+    marginRight: 12,
+  },
+  leftIcon: {
+    marginRight: 4,
+  },
+  rightIcon: {
+    padding: 4,
+  },
+  errorText: {
+    fontSize: 14,
+    marginTop: 4,
+    marginLeft: 4,
+  },
+});
 
 export default AuthInput;

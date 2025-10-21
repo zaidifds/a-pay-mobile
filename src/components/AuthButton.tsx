@@ -1,11 +1,10 @@
 import React from 'react';
 import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
   ActivityIndicator,
-  ViewStyle,
+  Text,
   TextStyle,
+  TouchableOpacity,
+  ViewStyle,
 } from 'react-native';
 import { useTheme } from '../hooks/useTheme';
 
@@ -15,6 +14,7 @@ interface AuthButtonProps {
   loading?: boolean;
   disabled?: boolean;
   variant?: 'primary' | 'secondary' | 'outline';
+  size?: 'small' | 'medium' | 'large';
   style?: ViewStyle;
   textStyle?: TextStyle;
 }
@@ -25,92 +25,100 @@ const AuthButton: React.FC<AuthButtonProps> = ({
   loading = false,
   disabled = false,
   variant = 'primary',
+  size = 'medium',
   style,
   textStyle,
 }) => {
   const { theme } = useTheme();
 
-  const getButtonStyle = () => {
-    const baseStyle = {
-      paddingVertical: theme.spacing.md,
-      paddingHorizontal: theme.spacing.lg,
+  const getButtonStyle = (): ViewStyle => {
+    const baseStyle: ViewStyle = {
       borderRadius: 12,
-      alignItems: 'center' as const,
-      justifyContent: 'center' as const,
-      minHeight: 50,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
     };
 
-    switch (variant) {
-      case 'primary':
-        return {
-          ...baseStyle,
-          backgroundColor: disabled
-            ? theme.colors.textSecondary
-            : theme.colors.primary,
-        };
-      case 'secondary':
-        return {
-          ...baseStyle,
-          backgroundColor: disabled
-            ? theme.colors.textSecondary
-            : theme.colors.secondary,
-        };
-      case 'outline':
-        return {
-          ...baseStyle,
-          backgroundColor: 'transparent',
-          borderWidth: 1,
-          borderColor: disabled
-            ? theme.colors.textSecondary
-            : theme.colors.primary,
-        };
-      default:
-        return baseStyle;
-    }
-  };
-
-  const getTextStyle = () => {
-    const baseTextStyle = {
-      fontSize: 16,
-      fontWeight: '600' as const,
+    // Size styles
+    const sizeStyles: Record<string, ViewStyle> = {
+      small: { paddingVertical: 12, paddingHorizontal: 24, minHeight: 44 },
+      medium: { paddingVertical: 16, paddingHorizontal: 32, minHeight: 56 },
+      large: { paddingVertical: 20, paddingHorizontal: 40, minHeight: 64 },
     };
 
-    switch (variant) {
-      case 'primary':
-      case 'secondary':
-        return {
-          ...baseTextStyle,
-          color: disabled ? theme.colors.surface : '#FFFFFF',
-        };
-      case 'outline':
-        return {
-          ...baseTextStyle,
-          color: disabled ? theme.colors.textSecondary : theme.colors.primary,
-        };
-      default:
-        return baseTextStyle;
-    }
+    // Variant styles
+    const variantStyles: Record<string, ViewStyle> = {
+      primary: {
+        backgroundColor: disabled
+          ? theme.colors.textSecondary
+          : theme.colors.primary,
+      },
+      secondary: {
+        backgroundColor: disabled
+          ? theme.colors.textSecondary
+          : theme.colors.secondary,
+      },
+      outline: {
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderColor: disabled
+          ? theme.colors.textSecondary
+          : theme.colors.primary,
+      },
+    };
+
+    return {
+      ...baseStyle,
+      ...sizeStyles[size],
+      ...variantStyles[variant],
+    };
   };
 
-  const styles = StyleSheet.create({
-    button: getButtonStyle(),
-    text: getTextStyle(),
-  });
+  const getTextStyle = (): TextStyle => {
+    const baseStyle: TextStyle = {
+      fontWeight: '600',
+      textAlign: 'center',
+    };
+
+    const sizeStyles: Record<string, TextStyle> = {
+      small: { fontSize: 14 },
+      medium: { fontSize: 16 },
+      large: { fontSize: 18 },
+    };
+
+    const variantStyles: Record<string, TextStyle> = {
+      primary: {
+        color: '#FFFFFF',
+      },
+      secondary: {
+        color: '#FFFFFF',
+      },
+      outline: {
+        color: disabled ? theme.colors.textSecondary : theme.colors.primary,
+      },
+    };
+
+    return {
+      ...baseStyle,
+      ...sizeStyles[size],
+      ...variantStyles[variant],
+    };
+  };
 
   return (
     <TouchableOpacity
-      style={[styles.button, style]}
+      style={[getButtonStyle(), style]}
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.8}
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === 'outline' ? theme.colors.primary : '#FFFFFF'}
           size="small"
+          color={variant === 'outline' ? theme.colors.primary : '#FFFFFF'}
         />
       ) : (
-        <Text style={[styles.text, textStyle]}>{title}</Text>
+        <Text style={[getTextStyle(), textStyle]}>{title}</Text>
       )}
     </TouchableOpacity>
   );

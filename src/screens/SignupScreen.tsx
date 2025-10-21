@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  Alert,
+  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Formik } from 'formik';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '../hooks/useTheme';
 import { useAppDispatch, useAppSelector } from '../redux/store';
-import { signupUser, clearError } from '../redux/slices/authSlice';
+import { signupUser } from '../redux/slices/authSlice';
 import AuthInput from '../components/AuthInput';
 import AuthButton from '../components/AuthButton';
-import SocialLoginButton from '../components/SocialLoginButton';
+import { signupSchema } from '../utils/validationSchemas';
 
 interface SignupScreenProps {
   navigation: any;
@@ -25,268 +26,231 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector(state => state.auth);
+  const insets = useSafeAreaInsets();
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validateForm = () => {
-    const newErrors = {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    };
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
-    }
-
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    setErrors(newErrors);
-    return !Object.values(newErrors).some(error => error !== '');
-  };
-
-  const handleSignup = async () => {
-    if (!validateForm()) return;
-
+  const handleSignup = async (values: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }) => {
     try {
-      const result = await dispatch(
+      await dispatch(
         signupUser({
-          name: formData.name.trim(),
-          email: formData.email,
-          password: formData.password,
+          name: values.name,
+          email: values.email,
+          password: values.password,
         }),
-      );
-
-      if (signupUser.fulfilled.match(result)) {
-        Alert.alert('Success', 'Account created successfully!');
-        // Navigation will be handled by the navigator based on auth state
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Signup failed. Please try again.');
+      ).unwrap();
+    } catch {
+      // Error is handled by the slice
     }
-  };
-
-  const handleSocialLogin = (provider: 'google' | 'apple') => {
-    Alert.alert(
-      'Social Login',
-      `${
-        provider.charAt(0).toUpperCase() + provider.slice(1)
-      } signup is not implemented yet. This is a placeholder.`,
-    );
   };
 
   const handleLogin = () => {
     navigation.navigate('Login');
   };
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: theme.colors.background,
-    },
-    scrollView: {
-      flex: 1,
-    },
-    content: {
-      flex: 1,
-      paddingHorizontal: theme.spacing.lg,
-      paddingTop: theme.spacing.xl,
-    },
-    header: {
-      alignItems: 'center',
-      marginBottom: theme.spacing.xl,
-    },
-    title: {
-      fontSize: 32,
-      fontWeight: 'bold',
-      color: theme.colors.text,
-      marginBottom: theme.spacing.sm,
-    },
-    subtitle: {
-      fontSize: 16,
-      color: theme.colors.textSecondary,
-      textAlign: 'center',
-    },
-    form: {
-      marginBottom: theme.spacing.xl,
-    },
-    socialSection: {
-      marginBottom: theme.spacing.xl,
-    },
-    socialTitle: {
-      fontSize: 16,
-      color: theme.colors.textSecondary,
-      textAlign: 'center',
-      marginBottom: theme.spacing.md,
-    },
-    socialButtons: {
-      gap: theme.spacing.md,
-    },
-    loginSection: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: theme.spacing.lg,
-    },
-    loginText: {
-      fontSize: 14,
-      color: theme.colors.textSecondary,
-    },
-    loginLink: {
-      fontSize: 14,
-      color: theme.colors.primary,
-      fontWeight: '600',
-      marginLeft: theme.spacing.xs,
-    },
-  });
-
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingTop: insets.top + 20 },
+        ]}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
-          <Text style={styles.title}>Create Account</Text>
-          <Text style={styles.subtitle}>Sign up to get started with A-Pay</Text>
+          <View
+            style={[
+              styles.logoContainer,
+              { backgroundColor: theme.colors.primary },
+            ]}
+          >
+            <Icon name="account-balance-wallet" size={40} color="#FFFFFF" />
+          </View>
+          <Text style={[styles.title, { color: theme.colors.text }]}>
+            Create Account
+          </Text>
+          <Text
+            style={[styles.subtitle, { color: theme.colors.textSecondary }]}
+          >
+            Sign up to start using A-Pay
+          </Text>
         </View>
 
         <View style={styles.form}>
-          <AuthInput
-            label="Full Name"
-            placeholder="Enter your full name"
-            value={formData.name}
-            onChangeText={text => {
-              setFormData(prev => ({ ...prev, name: text }));
-              if (errors.name) {
-                setErrors(prev => ({ ...prev, name: '' }));
-              }
+          <Formik
+            initialValues={{
+              name: '',
+              email: '',
+              password: '',
+              confirmPassword: '',
             }}
-            error={errors.name}
-            autoCapitalize="words"
-            autoCorrect={false}
-          />
+            validationSchema={signupSchema}
+            onSubmit={handleSignup}
+          >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
+              <>
+                <AuthInput
+                  label="Full Name"
+                  placeholder="Enter your full name"
+                  value={values.name}
+                  onChangeText={handleChange('name')}
+                  onBlur={handleBlur('name')}
+                  error={errors.name}
+                  touched={touched.name}
+                  leftIcon="person"
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                />
 
-          <AuthInput
-            label="Email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChangeText={text => {
-              setFormData(prev => ({ ...prev, email: text }));
-              if (errors.email) {
-                setErrors(prev => ({ ...prev, email: '' }));
-              }
-            }}
-            error={errors.email}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
+                <AuthInput
+                  label="Email Address"
+                  placeholder="Enter your email"
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  error={errors.email}
+                  touched={touched.email}
+                  leftIcon="email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
 
-          <AuthInput
-            label="Password"
-            placeholder="Create a password"
-            value={formData.password}
-            onChangeText={text => {
-              setFormData(prev => ({ ...prev, password: text }));
-              if (errors.password) {
-                setErrors(prev => ({ ...prev, password: '' }));
-              }
-            }}
-            error={errors.password}
-            isPassword
-          />
+                <AuthInput
+                  label="Password"
+                  placeholder="Create a password"
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  error={errors.password}
+                  touched={touched.password}
+                  isPassword
+                  leftIcon="lock"
+                />
 
-          <AuthInput
-            label="Confirm Password"
-            placeholder="Confirm your password"
-            value={formData.confirmPassword}
-            onChangeText={text => {
-              setFormData(prev => ({ ...prev, confirmPassword: text }));
-              if (errors.confirmPassword) {
-                setErrors(prev => ({ ...prev, confirmPassword: '' }));
-              }
-            }}
-            error={errors.confirmPassword}
-            isPassword
-          />
+                <AuthInput
+                  label="Confirm Password"
+                  placeholder="Confirm your password"
+                  value={values.confirmPassword}
+                  onChangeText={handleChange('confirmPassword')}
+                  onBlur={handleBlur('confirmPassword')}
+                  error={errors.confirmPassword}
+                  touched={touched.confirmPassword}
+                  isPassword
+                  leftIcon="lock"
+                />
 
-          <AuthButton
-            title="Create Account"
-            onPress={handleSignup}
-            loading={isLoading}
-            disabled={
-              !formData.name ||
-              !formData.email ||
-              !formData.password ||
-              !formData.confirmPassword
-            }
-          />
+                {error && (
+                  <View style={styles.errorContainer}>
+                    <Icon name="error" size={20} color={theme.colors.error} />
+                    <Text
+                      style={[styles.errorText, { color: theme.colors.error }]}
+                    >
+                      {error}
+                    </Text>
+                  </View>
+                )}
+
+                <AuthButton
+                  title="Create Account"
+                  onPress={handleSubmit}
+                  loading={isLoading}
+                  disabled={isLoading}
+                />
+              </>
+            )}
+          </Formik>
         </View>
 
-        <View style={styles.socialSection}>
-          <Text style={styles.socialTitle}>Or sign up with</Text>
-          <View style={styles.socialButtons}>
-            <SocialLoginButton
-              provider="google"
-              onPress={() => handleSocialLogin('google')}
-            />
-            <SocialLoginButton
-              provider="apple"
-              onPress={() => handleSocialLogin('apple')}
-            />
-          </View>
-        </View>
-
-        <View style={styles.loginSection}>
-          <Text style={styles.loginText}>Already have an account?</Text>
+        <View style={styles.footer}>
+          <Text
+            style={[styles.footerText, { color: theme.colors.textSecondary }]}
+          >
+            Already have an account?{' '}
+          </Text>
           <TouchableOpacity onPress={handleLogin}>
-            <Text style={styles.loginLink}>Sign In</Text>
+            <Text style={[styles.loginText, { color: theme.colors.primary }]}>
+              Sign In
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingBottom: 40,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  logoContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  form: {
+    marginBottom: 32,
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingHorizontal: 4,
+  },
+  errorText: {
+    marginLeft: 8,
+    fontSize: 14,
+    flex: 1,
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 14,
+  },
+  loginText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+});
 
 export default SignupScreen;

@@ -15,11 +15,11 @@ import reducers from './reducers/reducers';
 const persistConfig = {
   key: 'root',
   storage: require('../utils/mmkvStorage').reduxStorage,
-  whitelist: ['userSession', 'auth'],
+  whitelist: ['auth', 'wallet'],
 };
 
 type PersistedState = ReturnType<typeof reducers>;
-const persistedReducer = persistReducer<PersistedState>(
+const persistedReducer = persistReducer<PersistedState, any>(
   persistConfig,
   reducers as Reducer<PersistedState>,
 );

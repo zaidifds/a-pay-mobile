@@ -1,6 +1,10 @@
-import { Transaction, WalletBalance, CoinPrice } from '../types';
+import { Transaction } from '../types';
+import { mockWalletBalances, mockCoinPrices } from './wallet';
 
-// Simple mock data
+// Re-export wallet data for backward compatibility
+export { mockWalletBalances, mockCoinPrices };
+
+// Transaction mock data
 export const mockTransactions: Transaction[] = [
   {
     id: '1',
@@ -47,16 +51,49 @@ export const mockTransactions: Transaction[] = [
     timestamp: '2024-01-11T11:30:00Z',
     status: 'pending',
   },
+  {
+    id: '6',
+    type: 'receive',
+    amount: 12.5,
+    currency: 'BNB',
+    description: 'Staking rewards',
+    timestamp: '2024-01-10T08:20:00Z',
+    status: 'completed',
+  },
+  {
+    id: '7',
+    type: 'swap',
+    amount: 1000,
+    currency: 'ADA',
+    description: 'Swapped USDT to ADA',
+    timestamp: '2024-01-09T16:45:00Z',
+    status: 'completed',
+  },
+  {
+    id: '8',
+    type: 'send',
+    amount: 5.0,
+    currency: 'SOL',
+    description: 'Sent to DeFi protocol',
+    timestamp: '2024-01-08T12:30:00Z',
+    status: 'completed',
+  },
+  {
+    id: '9',
+    type: 'receive',
+    amount: 150,
+    currency: 'DOT',
+    description: 'Parachain rewards',
+    timestamp: '2024-01-07T14:15:00Z',
+    status: 'completed',
+  },
+  {
+    id: '10',
+    type: 'send',
+    amount: 200,
+    currency: 'MATIC',
+    description: 'Gas fee payment',
+    timestamp: '2024-01-06T09:10:00Z',
+    status: 'failed',
+  },
 ];
-
-export const mockWalletBalances: WalletBalance = {
-  BTC: 1.25,
-  ETH: 5.8,
-  USDT: 2500,
-};
-
-export const mockCoinPrices: CoinPrice = {
-  BTC: 45000,
-  ETH: 3200,
-  USDT: 1,
-};

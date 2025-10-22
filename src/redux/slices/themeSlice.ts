@@ -31,11 +31,13 @@ const themeSlice = createSlice({
     setSystemTheme: (state, action: PayloadAction<boolean>) => {
       state.isDark = action.payload;
     },
-    initializeTheme: state => {
+    initializeTheme: (state, action: PayloadAction<boolean | null>) => {
       const savedTheme = UserPreferences.getTheme();
+      const systemIsDark = action.payload;
+
       if (savedTheme === 'system') {
         state.systemTheme = true;
-        state.isDark = false; // This would be determined by system in real app
+        state.isDark = systemIsDark ?? false;
       } else {
         state.systemTheme = false;
         state.isDark = savedTheme === 'dark';

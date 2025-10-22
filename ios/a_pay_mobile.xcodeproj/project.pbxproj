@@ -279,12 +279,14 @@
 				DEVELOPMENT_TEAM = WH7UX4XQAH;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = a_pay_mobile/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "A Pay";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -307,12 +309,14 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WH7UX4XQAH;
 				INFOPLIST_FILE = a_pay_mobile/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "A Pay";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

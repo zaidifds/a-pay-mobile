@@ -4,18 +4,18 @@ import { User } from '../types';
 export const mockUsers: User[] = [
   {
     id: '1',
-    email: 'john.doe@example.com',
+    email: 'john@apay.com',
     name: 'John Doe',
     phone: '+1 (555) 123-4567',
-    avatar: 'https://via.placeholder.com/100x100/007AFF/FFFFFF?text=JD',
+    avatar: require('../assets/images/profile1.jpg'),
     createdAt: new Date().toISOString(),
   },
   {
     id: '2',
-    email: 'jane.smith@example.com',
+    email: 'jane@apay.com',
     name: 'Jane Smith',
     phone: '+1 (555) 987-6543',
-    avatar: 'https://via.placeholder.com/100x100/5856D6/FFFFFF?text=JS',
+    avatar: require('../assets/images/profile2.jpg'),
     createdAt: new Date().toISOString(),
   },
   {
@@ -23,13 +23,13 @@ export const mockUsers: User[] = [
     email: 'test@apay.com',
     name: 'Test User',
     phone: '+1 (555) 555-5555',
-    avatar: 'https://via.placeholder.com/100x100/34C759/FFFFFF?text=TU',
+    avatar: require('../assets/images/profile3.jpg'),
     createdAt: new Date().toISOString(),
   },
 ];
 
 export const mockCredentials: Record<string, string> = {
-  'john.doe@example.com': 'Password123!',
-  'jane.smith@example.com': 'Password456!',
+  'john@apay.com': 'Password123!',
+  'jane@apay.com': 'Password456!',
   'test@apay.com': 'Test123!',
 };

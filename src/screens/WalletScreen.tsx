@@ -7,9 +7,7 @@ import {
   TouchableOpacity,
   View,
   Animated,
-  TextInput,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { toggleBalanceVisibility } from '../redux/slices/walletSlice';
 import { useAppDispatch, useAppSelector } from '../redux/store';
@@ -19,17 +17,17 @@ import Header from '../components/Header';
 import GradientButton from '../components/GradientButton';
 import BuyModal from '../components/BuyModal';
 import { useModalNavigation } from '../hooks/useModalNavigation';
-import { WalletScreenNavigationProp } from '../navigation/navigationTypes';
 import { useTheme } from '../hooks/useTheme';
+import { useTranslation } from '../localization';
 
 const WalletScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const navigation = useNavigation<WalletScreenNavigationProp>();
   const { balances, prices, isBalanceVisible, transactions } = useAppSelector(
     state => state.wallet,
   );
   const { openReceiveModal, openSwapModal } = useModalNavigation();
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   // Buy modal state
   const [isBuyModalVisible, setIsBuyModalVisible] = useState(false);
@@ -153,7 +151,7 @@ const WalletScreen: React.FC = () => {
             {item.amount} {item.currency}
           </Text>
           <Text style={[styles.transactionStatus, { color: getStatusColor() }]}>
-            {item.status}
+            {t(item.status as any)}
           </Text>
         </View>
       </View>
@@ -164,7 +162,7 @@ const WalletScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Header title="Wallet" />
+      <Header titleKey="wallet" />
 
       <ScrollView
         style={styles.scrollView}
@@ -183,7 +181,7 @@ const WalletScreen: React.FC = () => {
         >
           <View style={styles.balanceHeader}>
             <View style={styles.balanceTitleContainer}>
-              <Text style={styles.balanceLabel}>Total Balance</Text>
+              <Text style={styles.balanceLabel}>{t('total_balance')}</Text>
               <Text style={styles.balanceAmount}>{getTotalValue()}</Text>
             </View>
             <TouchableOpacity
@@ -231,7 +229,7 @@ const WalletScreen: React.FC = () => {
               style={styles.gradientButton}
             >
               <Icon name="add" size={18} color={theme.colors.buttonText} />
-              <Text style={styles.actionButtonText}>Receive</Text>
+              <Text style={styles.actionButtonText}>{t('receive')}</Text>
             </GradientButton>
           </TouchableOpacity>
 
@@ -248,7 +246,7 @@ const WalletScreen: React.FC = () => {
                 size={18}
                 color={theme.colors.buttonText}
               />
-              <Text style={styles.actionButtonText}>Buy</Text>
+              <Text style={styles.actionButtonText}>{t('buy')}</Text>
             </GradientButton>
           </TouchableOpacity>
 
@@ -262,7 +260,7 @@ const WalletScreen: React.FC = () => {
                 size={18}
                 color={theme.colors.buttonText}
               />
-              <Text style={styles.actionButtonText}>Swap</Text>
+              <Text style={styles.actionButtonText}>{t('swap')}</Text>
             </GradientButton>
           </TouchableOpacity>
         </Animated.View>
@@ -277,7 +275,7 @@ const WalletScreen: React.FC = () => {
             },
           ]}
         >
-          <Text style={styles.sectionTitle}>Recent Transactions</Text>
+          <Text style={styles.sectionTitle}>{t('recent_transactions')}</Text>
           <FlatList
             data={transactions}
             renderItem={renderTransaction}

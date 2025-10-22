@@ -10,9 +10,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fp, rp } from '../utils/responsive';
 import { useTheme } from '../hooks/useTheme';
+import { useTranslation } from '../localization';
 
 interface HeaderProps {
-  title: string;
+  title?: string;
+  titleKey?: string; // Translation key for title
   rightButton?: {
     icon: string;
     onPress: () => void;
@@ -29,6 +31,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({
   title,
+  titleKey,
   rightButton,
   showBackButton = false,
   onBackPress,
@@ -40,6 +43,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
+  const { t, isRTL } = useTranslation();
 
   const headerBackgroundColor = backgroundColor || theme.colors.surface;
   const headerTitleColor = titleColor || theme.colors.text;
@@ -78,6 +82,9 @@ const Header: React.FC<HeaderProps> = ({
       color: headerTitleColor,
       letterSpacing: 0.2,
       flex: 1,
+    },
+    rtlTitle: {
+      textAlign: 'right',
     },
     rightSection: {
       flexDirection: 'row',
@@ -118,7 +125,9 @@ const Header: React.FC<HeaderProps> = ({
             <Icon name="arrow-back" size={rp(20)} color={theme.colors.icon} />
           </TouchableOpacity>
         )}
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, isRTL && styles.rtlTitle]}>
+          {titleKey ? t(titleKey as any) : title}
+        </Text>
       </View>
 
       {/* Right Section - Action Buttons */}

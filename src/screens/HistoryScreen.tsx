@@ -4,7 +4,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   Animated,
 } from 'react-native';
@@ -14,12 +13,15 @@ import { Transaction } from '../types';
 import { fp, rp } from '../utils/responsive';
 import Header from '../components/Header';
 import { useTheme } from '../hooks/useTheme';
+import { useTranslation } from '../localization';
+import FilterModal from '../components/FilterModal';
 
 type FilterType = 'all' | 'send' | 'receive' | 'swap';
 
 const HistoryScreen: React.FC = () => {
   const walletState = useAppSelector(state => state.wallet);
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const styles = createStyles(theme);
   const { transactions = [] } = walletState || {};
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
@@ -169,40 +171,18 @@ const HistoryScreen: React.FC = () => {
     </Animated.View>
   );
 
-  const renderFilterButton = (filter: FilterType, label: string) => {
-    const isSelected = selectedFilter === filter;
-    return (
-      <TouchableOpacity
-        style={[styles.filterButton, isSelected && styles.filterButtonSelected]}
-        onPress={() => {
-          setSelectedFilter(filter);
-          setShowFilters(false);
-        }}
-      >
-        <Text
-          style={[
-            styles.filterButtonText,
-            isSelected && styles.filterButtonTextSelected,
-          ]}
-        >
-          {label}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
   const getFilterLabel = () => {
     switch (selectedFilter) {
       case 'all':
-        return 'All';
+        return t('all_transactions');
       case 'send':
-        return 'Send';
+        return t('sent');
       case 'receive':
-        return 'Receive';
+        return t('received');
       case 'swap':
-        return 'Swap';
+        return t('swapped');
       default:
-        return 'All';
+        return t('all_transactions');
     }
   };
 
@@ -230,7 +210,7 @@ const HistoryScreen: React.FC = () => {
   if (!walletState) {
     return (
       <View style={styles.container}>
-        <Header title="Transaction History" />
+        <Header titleKey="transaction_history" />
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -275,24 +255,35 @@ const HistoryScreen: React.FC = () => {
       </ScrollView>
 
       {/* Filter Modal */}
-      {showFilters && (
-        <View style={styles.filterModal}>
-          <TouchableOpacity
-            style={styles.filterModalOverlay}
-            onPress={() => setShowFilters(false)}
-            activeOpacity={1}
-          />
-          <View style={styles.filterModalContent}>
-            <Text style={styles.filterModalTitle}>Filter Transactions</Text>
-            <View style={styles.filterButtonsContainer}>
-              {renderFilterButton('all', 'All')}
-              {renderFilterButton('send', 'Send')}
-              {renderFilterButton('receive', 'Receive')}
-              {renderFilterButton('swap', 'Swap')}
-            </View>
-          </View>
-        </View>
-      )}
+      <FilterModal
+        visible={showFilters}
+        onClose={() => setShowFilters(false)}
+        selectedFilter={selectedFilter}
+        onFilterSelect={filter => setSelectedFilter(filter as FilterType)}
+        options={[
+          {
+            key: 'all',
+            label: t('all_transactions'),
+            icon: 'list',
+          },
+          {
+            key: 'send',
+            label: t('sent'),
+            icon: 'arrow-upward',
+          },
+          {
+            key: 'receive',
+            label: t('received'),
+            icon: 'arrow-downward',
+          },
+          {
+            key: 'swap',
+            label: t('swapped'),
+            icon: 'swap-horiz',
+          },
+        ]}
+        title={t('all_transactions')}
+      />
     </View>
   );
 };
@@ -310,64 +301,6 @@ const createStyles = (theme: any) =>
       paddingHorizontal: rp(12),
       paddingBottom: rp(16),
       paddingTop: rp(8),
-    },
-    filterModal: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      justifyContent: 'flex-end',
-      zIndex: 1000,
-    },
-    filterModalOverlay: {
-      flex: 1,
-      backgroundColor: theme.colors.modalOverlay,
-    },
-    filterModalContent: {
-      backgroundColor: theme.colors.card,
-      borderTopLeftRadius: rp(16),
-      borderTopRightRadius: rp(16),
-      padding: rp(20),
-      paddingBottom: rp(30),
-    },
-    filterModalTitle: {
-      fontSize: fp(16),
-      fontWeight: '600',
-      color: theme.colors.text,
-      marginBottom: rp(16),
-      textAlign: 'center',
-    },
-    filterButtonsContainer: {
-      flexDirection: 'row',
-      gap: rp(8),
-    },
-    filterButton: {
-      flex: 1,
-      paddingVertical: rp(6),
-      paddingHorizontal: rp(12),
-      borderRadius: rp(16),
-      backgroundColor: theme.colors.background,
-      borderWidth: 1,
-      borderColor: theme.colors.border,
-      alignItems: 'center',
-    },
-    filterButtonSelected: {
-      backgroundColor: theme.colors.primary,
-      borderColor: theme.colors.primary,
-      shadowColor: theme.colors.primary,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.15,
-      shadowRadius: 2,
-      elevation: 2,
-    },
-    filterButtonText: {
-      fontSize: fp(11),
-      fontWeight: '500',
-      color: theme.colors.textSecondary,
-    },
-    filterButtonTextSelected: {
-      color: theme.colors.buttonText,
     },
     listContainer: {
       paddingHorizontal: rp(0),

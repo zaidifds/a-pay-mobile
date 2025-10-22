@@ -16,13 +16,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Header from '../components/Header';
 import { useTheme } from '../hooks/useTheme';
 import { useImagePicker } from '../hooks/useImagePicker';
+import { useTranslation } from '../localization';
+import LanguageSelector from '../components/LanguageSelector';
 import {
   logoutUser,
   setUser,
   updateUserProfilePicture,
 } from '../redux/slices/authSlice';
 import {
-  setLanguage,
   updateNotifications,
   updatePrivacy,
 } from '../redux/slices/settingsSlice';
@@ -39,9 +40,12 @@ const ProfileScreen: React.FC = () => {
     state => state.settings,
   );
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   // Form state
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isLanguageSelectorVisible, setIsLanguageSelectorVisible] =
+    useState(false);
   const [fullName, setFullName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
   const [phone, setPhone] = useState(user?.phone || '');
@@ -125,9 +129,7 @@ const ProfileScreen: React.FC = () => {
   };
 
   const handleLanguageChange = () => {
-    const newLanguage = language === 'en' ? 'ar' : 'en';
-    dispatch(setLanguage(newLanguage));
-    UserPreferences.setLanguage(newLanguage);
+    setIsLanguageSelectorVisible(true);
   };
 
   const handleThemeToggle = () => {
@@ -160,12 +162,17 @@ const ProfileScreen: React.FC = () => {
       <View style={styles.profileHeader}>
         <View style={styles.profileImageContainer}>
           <TouchableOpacity
-            onPress={pickImage}
+            activeOpacity={1}
+            disabled={!isEditModalVisible}
             style={styles.profileImageWrapper}
           >
             {user?.avatar ? (
               <Image
-                source={{ uri: user.avatar }}
+                source={
+                  typeof user.avatar === 'string'
+                    ? { uri: user.avatar }
+                    : (user.avatar as any)
+                }
                 style={styles.profileImage}
               />
             ) : (
@@ -180,26 +187,7 @@ const ProfileScreen: React.FC = () => {
                 </Text>
               </View>
             )}
-            <View
-              style={[
-                styles.editIconContainer,
-                { backgroundColor: theme.colors.primary },
-              ]}
-            >
-              {isImageLoading ? (
-                <Icon
-                  name="hourglass-empty"
-                  size={14}
-                  color={theme.colors.buttonText}
-                />
-              ) : (
-                <Icon
-                  name="camera-alt"
-                  size={14}
-                  color={theme.colors.buttonText}
-                />
-              )}
-            </View>
+            {/* Camera icon hidden outside edit mode */}
           </TouchableOpacity>
         </View>
 
@@ -217,7 +205,7 @@ const ProfileScreen: React.FC = () => {
             <Text
               style={[styles.verifiedText, { color: theme.colors.success }]}
             >
-              Verified Account
+              {t('verified')}
             </Text>
           </View>
         </View>
@@ -238,7 +226,7 @@ const ProfileScreen: React.FC = () => {
               { color: theme.colors.buttonText },
             ]}
           >
-            Edit Profile
+            {t('edit_profile')}
           </Text>
         </TouchableOpacity>
 
@@ -253,7 +241,7 @@ const ProfileScreen: React.FC = () => {
         >
           <Icon name="security" size={18} color={theme.colors.text} />
           <Text style={[styles.actionButtonText, { color: theme.colors.text }]}>
-            Security
+            {t('security')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -271,7 +259,7 @@ const ProfileScreen: React.FC = () => {
       ]}
     >
       <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
-        Account Information
+        {t('account_information')}
       </Text>
 
       <View style={styles.infoItem}>
@@ -283,7 +271,7 @@ const ProfileScreen: React.FC = () => {
           />
           <View style={styles.infoContent}>
             <Text style={[styles.infoLabel, { color: theme.colors.text }]}>
-              Wallet ID
+              {t('wallet_id')}
             </Text>
             <Text
               style={[styles.infoValue, { color: theme.colors.textSecondary }]}
@@ -306,7 +294,7 @@ const ProfileScreen: React.FC = () => {
           <Icon name="calendar-today" size={20} color={theme.colors.primary} />
           <View style={styles.infoContent}>
             <Text style={[styles.infoLabel, { color: theme.colors.text }]}>
-              Member Since
+              {t('member_since')}
             </Text>
             <Text
               style={[styles.infoValue, { color: theme.colors.textSecondary }]}
@@ -322,10 +310,10 @@ const ProfileScreen: React.FC = () => {
           <Icon name="verified" size={20} color={theme.colors.success} />
           <View style={styles.infoContent}>
             <Text style={[styles.infoLabel, { color: theme.colors.text }]}>
-              Account Status
+              {t('account_status')}
             </Text>
             <Text style={[styles.infoValue, { color: theme.colors.success }]}>
-              Verified
+              {t('verified')}
             </Text>
           </View>
         </View>
@@ -344,14 +332,14 @@ const ProfileScreen: React.FC = () => {
       ]}
     >
       <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
-        Preferences
+        {t('preferences')}
       </Text>
 
       <View style={styles.settingItem}>
         <View style={styles.settingLeft}>
           <Icon name="dark-mode" size={20} color={theme.colors.textSecondary} />
           <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
-            Dark Mode
+            {t('dark_mode')}
           </Text>
         </View>
         <Switch
@@ -369,7 +357,7 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.settingLeft}>
           <Icon name="language" size={20} color={theme.colors.textSecondary} />
           <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
-            Language
+            {t('language')}
           </Text>
         </View>
         <TouchableOpacity
@@ -377,7 +365,11 @@ const ProfileScreen: React.FC = () => {
           style={styles.languageButton}
         >
           <Text style={[styles.languageText, { color: theme.colors.primary }]}>
-            {language === 'en' ? 'English' : 'العربية'}
+            {language === 'en'
+              ? t('english')
+              : language === 'ar'
+              ? t('arabic')
+              : t('croatian')}
           </Text>
           <Icon name="arrow-drop-down" size={18} color={theme.colors.primary} />
         </TouchableOpacity>
@@ -391,7 +383,7 @@ const ProfileScreen: React.FC = () => {
             color={theme.colors.textSecondary}
           />
           <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
-            Push Notifications
+            {t('push_notifications')}
           </Text>
         </View>
         <Switch
@@ -409,7 +401,7 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.settingLeft}>
           <Icon name="email" size={20} color={theme.colors.textSecondary} />
           <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
-            Email Notifications
+            {t('email_notifications')}
           </Text>
         </View>
         <Switch
@@ -431,7 +423,7 @@ const ProfileScreen: React.FC = () => {
             color={theme.colors.textSecondary}
           />
           <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
-            Biometric Login
+            {t('biometric_login')}
           </Text>
         </View>
         <Switch
@@ -465,7 +457,7 @@ const ProfileScreen: React.FC = () => {
         <Text
           style={[styles.logoutButtonText, { color: theme.colors.buttonText }]}
         >
-          Sign Out
+          {t('logout')}
         </Text>
       </TouchableOpacity>
     </Animated.View>
@@ -494,11 +486,11 @@ const ProfileScreen: React.FC = () => {
             <Icon name="close" size={24} color={theme.colors.text} />
           </TouchableOpacity>
           <Text style={[styles.modalTitle, { color: theme.colors.text }]}>
-            Edit Profile
+            {t('edit_profile')}
           </Text>
           <TouchableOpacity onPress={handleSaveProfile} disabled={isLoading}>
             <Text style={[styles.saveButton, { color: theme.colors.primary }]}>
-              {isLoading ? 'Saving...' : 'Save'}
+              {isLoading ? t('loading') : t('save')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -514,7 +506,11 @@ const ProfileScreen: React.FC = () => {
             >
               {user?.avatar ? (
                 <Image
-                  source={{ uri: user.avatar }}
+                  source={
+                    typeof user.avatar === 'string'
+                      ? { uri: user.avatar }
+                      : (user.avatar as any)
+                  }
                   style={styles.modalProfileImage}
                 />
               ) : (
@@ -556,13 +552,13 @@ const ProfileScreen: React.FC = () => {
                 { color: theme.colors.textSecondary },
               ]}
             >
-              Tap to change photo
+              {t('change_photo')}
             </Text>
           </View>
 
           <View style={styles.inputContainer}>
             <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
-              Full Name *
+              {t('full_name')} *
             </Text>
             <View
               style={[
@@ -591,7 +587,7 @@ const ProfileScreen: React.FC = () => {
 
           <View style={styles.inputContainer}>
             <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
-              Email *
+              {t('email')} *
             </Text>
             <View
               style={[
@@ -622,7 +618,7 @@ const ProfileScreen: React.FC = () => {
 
           <View style={styles.inputContainer}>
             <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
-              Phone Number
+              {t('phone_number')}
             </Text>
             <View
               style={[
@@ -660,7 +656,7 @@ const ProfileScreen: React.FC = () => {
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      <Header title="Profile" />
+      <Header titleKey="profile" />
 
       <ScrollView
         style={styles.scrollView}
@@ -673,6 +669,10 @@ const ProfileScreen: React.FC = () => {
         {renderLogoutSection()}
       </ScrollView>
       {renderEditProfileModal()}
+      <LanguageSelector
+        visible={isLanguageSelectorVisible}
+        onClose={() => setIsLanguageSelectorVisible(false)}
+      />
     </View>
   );
 };

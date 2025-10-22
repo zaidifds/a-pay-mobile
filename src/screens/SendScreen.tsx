@@ -20,11 +20,13 @@ import { fp, rp } from '../utils/responsive';
 import Header from '../components/Header';
 import AuthButton from '../components/AuthButton';
 import { useTheme } from '../hooks/useTheme';
+import { useTranslation } from '../localization';
 
 const SendScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const { balances, prices } = useAppSelector(state => state.wallet);
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   // Form state
   const [cardNumber, setCardNumber] = useState('');
@@ -34,6 +36,7 @@ const SendScreen: React.FC = () => {
   const [selectedCurrency, setSelectedCurrency] = useState('BTC');
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [focusedField, setFocusedField] = useState<string | null>(null);
 
   // Animation values
   const fadeAnim = useMemo(() => new Animated.Value(0), []);
@@ -167,7 +170,13 @@ const SendScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Header title="Send Money" />
+      {/* Futuristic background decor */}
+      <View style={styles.backgroundDecor}>
+        <View style={styles.glowOrbPrimary} />
+        <View style={styles.glowOrbSecondary} />
+        <View style={styles.glowLine} />
+      </View>
+      <Header titleKey="send" />
 
       <ScrollView
         style={styles.scrollView}
@@ -187,8 +196,13 @@ const SendScreen: React.FC = () => {
           <Text style={styles.sectionTitle}>Card Details</Text>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Card Number</Text>
-            <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>{t('card_number')}</Text>
+            <View
+              style={[
+                styles.inputWrapper,
+                focusedField === 'card' && styles.inputWrapperFocused,
+              ]}
+            >
               <Icon
                 name="credit-card"
                 size={20}
@@ -203,6 +217,8 @@ const SendScreen: React.FC = () => {
                 placeholderTextColor={theme.colors.inputPlaceholder}
                 keyboardType="numeric"
                 maxLength={19}
+                onFocus={() => setFocusedField('card')}
+                onBlur={() => setFocusedField(null)}
               />
             </View>
           </View>
@@ -210,8 +226,13 @@ const SendScreen: React.FC = () => {
           <View style={styles.row}>
             <View style={styles.halfWidth}>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Expiry Date</Text>
-                <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>{t('expiry_date')}</Text>
+                <View
+                  style={[
+                    styles.inputWrapper,
+                    focusedField === 'expiry' && styles.inputWrapperFocused,
+                  ]}
+                >
                   <Icon
                     name="calendar-today"
                     size={20}
@@ -226,14 +247,21 @@ const SendScreen: React.FC = () => {
                     placeholderTextColor={theme.colors.inputPlaceholder}
                     keyboardType="numeric"
                     maxLength={5}
+                    onFocus={() => setFocusedField('expiry')}
+                    onBlur={() => setFocusedField(null)}
                   />
                 </View>
               </View>
             </View>
             <View style={styles.halfWidth}>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>CVC</Text>
-                <View style={styles.inputWrapper}>
+                <Text style={styles.inputLabel}>{t('cvv')}</Text>
+                <View
+                  style={[
+                    styles.inputWrapper,
+                    focusedField === 'cvc' && styles.inputWrapperFocused,
+                  ]}
+                >
                   <Icon
                     name="lock"
                     size={20}
@@ -248,6 +276,8 @@ const SendScreen: React.FC = () => {
                     placeholderTextColor={theme.colors.inputPlaceholder}
                     keyboardType="numeric"
                     maxLength={3}
+                    onFocus={() => setFocusedField('cvc')}
+                    onBlur={() => setFocusedField(null)}
                   />
                 </View>
               </View>
@@ -265,7 +295,7 @@ const SendScreen: React.FC = () => {
             },
           ]}
         >
-          <Text style={styles.sectionTitle}>Amount</Text>
+          <Text style={styles.sectionTitle}>{t('enter_amount')}</Text>
 
           <View style={styles.currencySelector}>
             <Text style={styles.currencyLabel}>Currency</Text>
@@ -299,8 +329,13 @@ const SendScreen: React.FC = () => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Amount</Text>
-            <View style={styles.inputWrapper}>
+            <Text style={styles.inputLabel}>{t('enter_amount')}</Text>
+            <View
+              style={[
+                styles.inputWrapper,
+                focusedField === 'amount' && styles.inputWrapperFocused,
+              ]}
+            >
               <Icon
                 name="attach-money"
                 size={20}
@@ -314,6 +349,8 @@ const SendScreen: React.FC = () => {
                 placeholder="0.00"
                 placeholderTextColor={theme.colors.inputPlaceholder}
                 keyboardType="numeric"
+                onFocus={() => setFocusedField('amount')}
+                onBlur={() => setFocusedField(null)}
               />
             </View>
           </View>
@@ -345,7 +382,7 @@ const SendScreen: React.FC = () => {
           ]}
         >
           <AuthButton
-            title={isLoading ? 'Processing...' : 'Send Money'}
+            title={isLoading ? t('loading') : t('send')}
             onPress={handleSend}
             loading={isLoading}
             disabled={
@@ -391,122 +428,169 @@ const createStyles = (theme: any) =>
       flex: 1,
       backgroundColor: theme.colors.background,
     },
+    backgroundDecor: {
+      ...StyleSheet.absoluteFillObject,
+      overflow: 'hidden',
+    },
+    glowOrbPrimary: {
+      position: 'absolute',
+      width: rp(320),
+      height: rp(320),
+      borderRadius: rp(320) / 2,
+      backgroundColor: theme.colors.primary,
+      opacity: 0.12,
+      top: -rp(120),
+      right: -rp(120),
+      shadowColor: theme.colors.primary,
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.4,
+      shadowRadius: 30,
+    },
+    glowOrbSecondary: {
+      position: 'absolute',
+      width: rp(260),
+      height: rp(260),
+      borderRadius: rp(260) / 2,
+      backgroundColor: theme.colors.accent || '#6C5CE7',
+      opacity: 0.08,
+      bottom: -rp(100),
+      left: -rp(80),
+      shadowColor: theme.colors.accent || '#6C5CE7',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.35,
+      shadowRadius: 26,
+    },
+    glowLine: {
+      position: 'absolute',
+      height: rp(1),
+      width: '120%',
+      backgroundColor: theme.colors.borderLight,
+      opacity: 0.25,
+      top: rp(92),
+      left: '-10%',
+    },
     scrollView: {
       flex: 1,
     },
     scrollContent: {
-      paddingHorizontal: rp(12),
-      paddingBottom: rp(16),
-      paddingTop: rp(8),
+      paddingHorizontal: rp(14),
+      paddingBottom: rp(20),
+      paddingTop: rp(12),
     },
     section: {
       backgroundColor: theme.colors.card,
-      borderRadius: rp(8),
-      padding: rp(12),
-      marginBottom: rp(8),
+      borderRadius: rp(14),
+      padding: rp(14),
+      marginBottom: rp(10),
+      borderWidth: 1,
+      borderColor: theme.colors.borderLight,
       shadowColor: theme.colors.shadow,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.04,
-      shadowRadius: 4,
-      elevation: 2,
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.08,
+      shadowRadius: 12,
+      elevation: 3,
     },
     sectionTitle: {
-      fontSize: fp(14),
-      fontWeight: '600',
+      fontSize: fp(16),
+      fontWeight: '700',
       color: theme.colors.text,
-      marginBottom: rp(8),
-      letterSpacing: 0.2,
+      marginBottom: rp(10),
+      letterSpacing: 0.5,
     },
     row: {
       flexDirection: 'row',
-      gap: rp(6),
+      gap: rp(8),
     },
     halfWidth: {
       flex: 1,
     },
     currencySelector: {
-      marginBottom: rp(8),
+      marginBottom: rp(10),
     },
     currencyLabel: {
       fontSize: fp(12),
-      fontWeight: '500',
+      fontWeight: '600',
       color: theme.colors.text,
-      marginBottom: rp(6),
+      marginBottom: rp(8),
+      opacity: 0.9,
     },
     currencyScroll: {
-      maxHeight: rp(32),
+      maxHeight: rp(40),
     },
     currencyOption: {
-      paddingHorizontal: rp(10),
-      paddingVertical: rp(4),
-      borderRadius: rp(12),
-      marginRight: rp(6),
+      paddingHorizontal: rp(14),
+      paddingVertical: rp(8),
+      borderRadius: rp(20),
+      marginRight: rp(8),
       backgroundColor: theme.colors.inputBackground,
       borderWidth: 1,
       borderColor: theme.colors.inputBorder,
-      minWidth: rp(50),
+      minWidth: rp(56),
       alignItems: 'center',
     },
     currencyOptionSelected: {
       backgroundColor: theme.colors.primary,
       borderColor: theme.colors.primary,
       shadowColor: theme.colors.primary,
-      shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.15,
-      shadowRadius: 2,
-      elevation: 2,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 4,
     },
     currencyOptionText: {
-      fontSize: fp(11),
-      fontWeight: '600',
+      fontSize: fp(12),
+      fontWeight: '700',
       color: theme.colors.textSecondary,
+      letterSpacing: 0.4,
     },
     currencyOptionTextSelected: {
       color: theme.colors.buttonText,
     },
     valuePreview: {
-      marginTop: rp(6),
-      paddingHorizontal: rp(8),
-      paddingVertical: rp(6),
+      marginTop: rp(8),
+      paddingHorizontal: rp(10),
+      paddingVertical: rp(8),
       backgroundColor: theme.colors.primaryLight,
-      borderRadius: rp(6),
+      borderRadius: rp(10),
       borderWidth: 1,
-      borderColor: theme.colors.primaryLight,
+      borderColor: theme.colors.primary,
     },
     valuePreviewText: {
       fontSize: fp(12),
-      fontWeight: '600',
+      fontWeight: '700',
       color: theme.colors.primary,
       textAlign: 'center',
+      letterSpacing: 0.6,
     },
     balanceInfo: {
-      marginTop: rp(6),
-      paddingHorizontal: rp(8),
-      paddingVertical: rp(6),
+      marginTop: rp(8),
+      paddingHorizontal: rp(10),
+      paddingVertical: rp(8),
       backgroundColor: theme.colors.inputBackground,
-      borderRadius: rp(6),
+      borderRadius: rp(10),
       borderWidth: 1,
       borderColor: theme.colors.inputBorder,
     },
     balanceLabel: {
-      fontSize: fp(10),
-      fontWeight: '500',
+      fontSize: fp(11),
+      fontWeight: '600',
       color: theme.colors.textSecondary,
       textAlign: 'center',
+      letterSpacing: 0.3,
     },
     buttonSection: {
-      marginTop: rp(8),
+      marginTop: rp(12),
       paddingHorizontal: rp(0),
     },
     sendButton: {
       backgroundColor: theme.colors.primary,
-      borderRadius: rp(8),
-      height: rp(44),
-      shadowColor: '#007AFF',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.15,
-      shadowRadius: 4,
-      elevation: 3,
+      borderRadius: rp(14),
+      height: rp(52),
+      shadowColor: theme.colors.primary,
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 0.3,
+      shadowRadius: 12,
+      elevation: 5,
     },
     modalOverlay: {
       position: 'absolute',
@@ -521,23 +605,25 @@ const createStyles = (theme: any) =>
     },
     modalContent: {
       backgroundColor: theme.colors.card,
-      borderRadius: rp(12),
-      padding: rp(20),
+      borderRadius: rp(16),
+      padding: rp(22),
       marginHorizontal: rp(20),
       alignItems: 'center',
       shadowColor: theme.colors.shadow,
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.15,
-      shadowRadius: 16,
-      elevation: 8,
-      maxWidth: rp(280),
+      shadowOffset: { width: 0, height: 12 },
+      shadowOpacity: 0.2,
+      shadowRadius: 24,
+      elevation: 10,
+      maxWidth: rp(320),
+      borderWidth: 1,
+      borderColor: theme.colors.borderLight,
     },
     successIcon: {
       marginBottom: rp(12),
     },
     modalTitle: {
-      fontSize: fp(18),
-      fontWeight: '600',
+      fontSize: fp(20),
+      fontWeight: '700',
       color: theme.colors.text,
       marginBottom: rp(8),
       textAlign: 'center',
@@ -550,16 +636,16 @@ const createStyles = (theme: any) =>
       marginBottom: rp(20),
     },
     modalButton: {
-      minWidth: rp(120),
-      height: rp(40),
-      borderRadius: rp(8),
+      minWidth: rp(140),
+      height: rp(44),
+      borderRadius: rp(12),
     },
     inputContainer: {
       marginBottom: rp(12),
     },
     inputLabel: {
       fontSize: fp(12),
-      fontWeight: '500',
+      fontWeight: '600',
       color: theme.colors.text,
       marginBottom: rp(4),
     },
@@ -567,18 +653,26 @@ const createStyles = (theme: any) =>
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: theme.colors.inputBackground,
-      borderRadius: rp(8),
+      borderRadius: rp(12),
       borderWidth: 1,
       borderColor: theme.colors.inputBorder,
       paddingHorizontal: rp(12),
-      height: rp(40),
+      height: rp(48),
+    },
+    inputWrapperFocused: {
+      borderColor: theme.colors.primary,
+      shadowColor: theme.colors.primary,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
+      elevation: 4,
     },
     inputIcon: {
       marginRight: rp(8),
     },
     inputField: {
       flex: 1,
-      fontSize: fp(14),
+      fontSize: fp(15),
       color: theme.colors.text,
       fontWeight: '400',
     },

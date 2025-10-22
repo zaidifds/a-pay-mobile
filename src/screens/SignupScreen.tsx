@@ -16,7 +16,8 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { signupUser } from '../redux/slices/authSlice';
 import AuthInput from '../components/AuthInput';
 import AuthButton from '../components/AuthButton';
-import { signupSchema } from '../utils/validationSchemas';
+import { buildSignupSchema } from '../utils/validationSchemas';
+import { useTranslation } from '../localization';
 
 interface SignupScreenProps {
   navigation: any;
@@ -27,6 +28,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector(state => state.auth);
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const handleSignup = async (values: {
     name: string;
@@ -78,12 +80,12 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
             />
           </View>
           <Text style={[styles.title, { color: theme.colors.text }]}>
-            Create Account
+            {t('create_account')}
           </Text>
           <Text
             style={[styles.subtitle, { color: theme.colors.textSecondary }]}
           >
-            Sign up to start using A-Pay
+            {t('signup_subtitle')}
           </Text>
         </View>
 
@@ -95,7 +97,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
               password: '',
               confirmPassword: '',
             }}
-            validationSchema={signupSchema}
+            validationSchema={buildSignupSchema(t)}
             onSubmit={handleSignup}
           >
             {({
@@ -108,8 +110,8 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
             }) => (
               <>
                 <AuthInput
-                  label="Full Name"
-                  placeholder="Enter your full name"
+                  label={t('full_name')}
+                  placeholder={t('enter_full_name')}
                   value={values.name}
                   onChangeText={handleChange('name')}
                   onBlur={handleBlur('name')}
@@ -121,8 +123,8 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 />
 
                 <AuthInput
-                  label="Email Address"
-                  placeholder="Enter your email"
+                  label={t('email_address')}
+                  placeholder={t('enter_email')}
                   value={values.email}
                   onChangeText={handleChange('email')}
                   onBlur={handleBlur('email')}
@@ -135,8 +137,8 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 />
 
                 <AuthInput
-                  label="Password"
-                  placeholder="Create a password"
+                  label={t('password')}
+                  placeholder={t('create_password')}
                   value={values.password}
                   onChangeText={handleChange('password')}
                   onBlur={handleBlur('password')}
@@ -147,8 +149,8 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 />
 
                 <AuthInput
-                  label="Confirm Password"
-                  placeholder="Confirm your password"
+                  label={t('confirm_password')}
+                  placeholder={t('confirm_password_placeholder')}
                   value={values.confirmPassword}
                   onChangeText={handleChange('confirmPassword')}
                   onBlur={handleBlur('confirmPassword')}
@@ -170,7 +172,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
                 )}
 
                 <AuthButton
-                  title="Create Account"
+                  title={t('create_account')}
                   onPress={handleSubmit}
                   loading={isLoading}
                   disabled={isLoading}
@@ -184,11 +186,11 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
           <Text
             style={[styles.footerText, { color: theme.colors.textSecondary }]}
           >
-            Already have an account?{' '}
+            {t('already_have_account')}{' '}
           </Text>
           <TouchableOpacity onPress={handleLogin}>
             <Text style={[styles.loginText, { color: theme.colors.primary }]}>
-              Sign In
+              {t('sign_in')}
             </Text>
           </TouchableOpacity>
         </View>

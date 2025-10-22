@@ -15,7 +15,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '../hooks/useTheme';
 import AuthInput from '../components/AuthInput';
 import AuthButton from '../components/AuthButton';
-import { forgotPasswordSchema } from '../utils/validationSchemas';
+import { buildForgotPasswordSchema } from '../utils/validationSchemas';
+import { useTranslation } from '../localization';
 
 interface ForgotPasswordScreenProps {
   navigation: any;
@@ -26,19 +27,16 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 }) => {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
-  const handleForgotPassword = async (values: { email: string }) => {
+  const handleForgotPassword = async (_values: { email: string }) => {
     // Simulate API call
-    Alert.alert(
-      'Reset Link Sent',
-      'We have sent a password reset link to your email address.',
-      [
-        {
-          text: 'OK',
-          onPress: () => navigation.navigate('Login'),
-        },
-      ],
-    );
+    Alert.alert(t('reset_link_sent'), t('reset_link_message'), [
+      {
+        text: t('ok'),
+        onPress: () => navigation.navigate('Login'),
+      },
+    ]);
   };
 
   const handleBackToLogin = () => {
@@ -75,19 +73,19 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
             <Icon name="lock-reset" size={40} color={theme.colors.buttonText} />
           </View>
           <Text style={[styles.title, { color: theme.colors.text }]}>
-            Forgot Password?
+            {t('forgot_password')}
           </Text>
           <Text
             style={[styles.subtitle, { color: theme.colors.textSecondary }]}
           >
-            Don't worry! Enter your email and we'll send you a reset link.
+            {t('forgot_password_subtitle')}
           </Text>
         </View>
 
         <View style={styles.form}>
           <Formik
             initialValues={{ email: '' }}
-            validationSchema={forgotPasswordSchema}
+            validationSchema={buildForgotPasswordSchema(t)}
             onSubmit={handleForgotPassword}
           >
             {({
@@ -100,8 +98,8 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
             }) => (
               <>
                 <AuthInput
-                  label="Email Address"
-                  placeholder="Enter your email"
+                  label={t('email_address')}
+                  placeholder={t('enter_email')}
                   value={values.email}
                   onChangeText={handleChange('email')}
                   onBlur={handleBlur('email')}
@@ -113,7 +111,10 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
                   autoCorrect={false}
                 />
 
-                <AuthButton title="Send Reset Link" onPress={handleSubmit} />
+                <AuthButton
+                  title={t('send_reset_link')}
+                  onPress={handleSubmit}
+                />
               </>
             )}
           </Formik>
@@ -123,11 +124,11 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           <Text
             style={[styles.footerText, { color: theme.colors.textSecondary }]}
           >
-            Remember your password?{' '}
+            {t('remember_password')}{' '}
           </Text>
           <TouchableOpacity onPress={handleBackToLogin}>
             <Text style={[styles.loginText, { color: theme.colors.primary }]}>
-              Sign In
+              {t('sign_in')}
             </Text>
           </TouchableOpacity>
         </View>

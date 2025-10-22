@@ -21,12 +21,13 @@ export const UserPreferences = {
   },
 
   // Language preferences
-  setLanguage: (language: 'en' | 'ar') => {
+  setLanguage: (language: 'en' | 'ar' | 'hr') => {
     userPreferencesStorage.set('language', language);
   },
-  getLanguage: (): 'en' | 'ar' => {
+  getLanguage: (): 'en' | 'ar' | 'hr' => {
     return (
-      (userPreferencesStorage.getString('language') as 'en' | 'ar') || 'en'
+      (userPreferencesStorage.getString('language') as 'en' | 'ar' | 'hr') ||
+      'en'
     );
   },
 

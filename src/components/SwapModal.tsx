@@ -14,6 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fp, rp } from '../utils/responsive';
 import { useTheme } from '../hooks/useTheme';
+import { useTranslation } from '../localization';
 
 interface SwapModalProps {
   visible: boolean;
@@ -31,6 +32,7 @@ const SwapModal: React.FC<SwapModalProps> = ({
   prices,
 }) => {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   const [fromCurrency, setFromCurrency] = useState('BTC');
   const [toCurrency, setToCurrency] = useState('ETH');
   const [amount, setAmount] = useState('');
@@ -340,7 +342,7 @@ const SwapModal: React.FC<SwapModalProps> = ({
           ]}
         >
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Swap</Text>
+            <Text style={styles.modalTitle}>{t('swap_crypto')}</Text>
             <TouchableOpacity style={styles.closeButton} onPress={onClose}>
               <Icon name="close" size={rp(24)} color={theme.colors.text} />
             </TouchableOpacity>
@@ -353,7 +355,7 @@ const SwapModal: React.FC<SwapModalProps> = ({
             <View style={styles.container}>
               {/* From Currency */}
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>From</Text>
+                <Text style={styles.sectionTitle}>{t('from')}</Text>
                 <View style={styles.swapContainer}>
                   <View style={styles.currencyRow}>
                     <View style={styles.currencyInfo}>
@@ -418,7 +420,7 @@ const SwapModal: React.FC<SwapModalProps> = ({
 
               {/* To Currency */}
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>To</Text>
+                <Text style={styles.sectionTitle}>{t('to')}</Text>
                 <View style={styles.swapContainer}>
                   <View style={styles.currencyRow}>
                     <View style={styles.currencyInfo}>
@@ -499,7 +501,7 @@ const SwapModal: React.FC<SwapModalProps> = ({
               </View>
 
               <TouchableOpacity style={styles.button} onPress={handleSwap}>
-                <Text style={styles.buttonText}>Confirm Swap</Text>
+                <Text style={styles.buttonText}>{t('confirm_swap')}</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

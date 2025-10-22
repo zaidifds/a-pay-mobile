@@ -1,54 +1,54 @@
 import * as Yup from 'yup';
+import { TranslationKeys } from '../localization/types';
 
-// Login validation schema
-export const loginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Please enter a valid email address')
-    .required('Email is required'),
-  password: Yup.string()
-    .min(8, 'Password must be at least 8 characters')
-    .required('Password is required'),
-});
+// Builder functions that accept t() for localized messages
+export const buildLoginSchema = (t: (k: keyof TranslationKeys) => string) =>
+  Yup.object().shape({
+    email: Yup.string().email(t('email_invalid')).required(t('email_required')),
+    password: Yup.string()
+      .min(8, t('password_min_8'))
+      .required(t('password_required')),
+  });
 
-// Signup validation schema
-export const signupSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(50, 'Name must be less than 50 characters')
-    .required('Name is required'),
-  email: Yup.string()
-    .email('Please enter a valid email address')
-    .required('Email is required'),
-  password: Yup.string()
-    .min(8, 'Password must be at least 8 characters')
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-      'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
-    )
-    .required('Password is required'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], 'Passwords must match')
-    .required('Please confirm your password'),
-});
+export const buildSignupSchema = (t: (k: keyof TranslationKeys) => string) =>
+  Yup.object().shape({
+    name: Yup.string()
+      .min(2, t('name_min'))
+      .max(50, t('name_max'))
+      .required(t('name_required')),
+    email: Yup.string().email(t('email_invalid')).required(t('email_required')),
+    password: Yup.string()
+      .min(8, t('password_min_8'))
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+        t('password_complexity'),
+      )
+      .required(t('password_required')),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password')], t('passwords_must_match'))
+      .required(t('confirm_password_required')),
+  });
 
-// Forgot password validation schema
-export const forgotPasswordSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Please enter a valid email address')
-    .required('Email is required'),
-});
+export const buildForgotPasswordSchema = (
+  t: (k: keyof TranslationKeys) => string,
+) =>
+  Yup.object().shape({
+    email: Yup.string().email(t('email_invalid')).required(t('email_required')),
+  });
 
-// Change password validation schema
-export const changePasswordSchema = Yup.object().shape({
-  currentPassword: Yup.string().required('Current password is required'),
-  newPassword: Yup.string()
-    .min(8, 'Password must be at least 8 characters')
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-      'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
-    )
-    .required('New password is required'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('newPassword')], 'Passwords must match')
-    .required('Please confirm your new password'),
-});
+export const buildChangePasswordSchema = (
+  t: (k: keyof TranslationKeys) => string,
+) =>
+  Yup.object().shape({
+    currentPassword: Yup.string().required(t('current_password_required')),
+    newPassword: Yup.string()
+      .min(8, t('password_min_8'))
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+        t('password_complexity'),
+      )
+      .required(t('new_password_required')),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('newPassword')], t('passwords_must_match'))
+      .required(t('confirm_new_password_required')),
+  });

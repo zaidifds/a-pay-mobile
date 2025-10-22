@@ -15,10 +15,12 @@ import { fp, rp } from '../utils/responsive';
 import { useTheme } from '../hooks/useTheme';
 import { useNavigation } from '@react-navigation/native';
 import { TabStackNavigationProp } from '../navigation/navigationTypes';
+import { useTranslation } from '../localization';
 
 const ReceiveModalScreen: React.FC = () => {
   const { theme } = useTheme();
   const navigation = useNavigation<TabStackNavigationProp>();
+  const { t } = useTranslation();
 
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState('BTC');
@@ -294,7 +296,7 @@ const ReceiveModalScreen: React.FC = () => {
         ]}
       >
         <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>Receive</Text>
+          <Text style={styles.modalTitle}>{t('receive_crypto')}</Text>
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
             <Icon name="close" size={rp(24)} color={theme.colors.text} />
           </TouchableOpacity>
@@ -307,7 +309,7 @@ const ReceiveModalScreen: React.FC = () => {
           <View style={styles.container}>
             {/* Amount Section */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Amount to Receive</Text>
+              <Text style={styles.sectionTitle}>{t('enter_amount')}</Text>
               <View style={styles.amountContainer}>
                 <View style={styles.inputGroup}>
                   <Text style={styles.label}>Amount</Text>
@@ -390,7 +392,7 @@ const ReceiveModalScreen: React.FC = () => {
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleReceive}>
-              <Text style={styles.buttonText}>Generate Receive Request</Text>
+              <Text style={styles.buttonText}>{t('receive_crypto')}</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

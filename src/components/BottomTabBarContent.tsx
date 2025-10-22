@@ -4,6 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '../hooks/useTheme';
+import { useTranslation } from '../localization';
 
 const BottomTabBarContent = ({
   state: tabState,
@@ -11,6 +12,7 @@ const BottomTabBarContent = ({
 }: BottomTabBarProps) => {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
+  const { t } = useTranslation();
 
   const getTabIcon = (routeName: string, color: string, size: number) => {
     switch (routeName) {
@@ -30,15 +32,15 @@ const BottomTabBarContent = ({
   const getTabLabel = (routeName: string) => {
     switch (routeName) {
       case 'wallet':
-        return 'Wallet';
+        return t('wallet');
       case 'send':
-        return 'Send';
+        return t('send');
       case 'history':
-        return 'History';
+        return t('history');
       case 'profile':
-        return 'Profile';
+        return t('profile');
       default:
-        return 'Wallet';
+        return t('wallet');
     }
   };
 

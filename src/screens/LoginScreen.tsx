@@ -16,7 +16,8 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { loginUser } from '../redux/slices/authSlice';
 import AuthInput from '../components/AuthInput';
 import AuthButton from '../components/AuthButton';
-import { loginSchema } from '../utils/validationSchemas';
+import { buildLoginSchema } from '../utils/validationSchemas';
+import { useTranslation } from '../localization';
 
 interface LoginScreenProps {
   navigation: any;
@@ -27,6 +28,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector(state => state.auth);
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
@@ -71,19 +73,19 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             />
           </View>
           <Text style={[styles.title, { color: theme.colors.text }]}>
-            Welcome Back
+            {t('login')}
           </Text>
           <Text
             style={[styles.subtitle, { color: theme.colors.textSecondary }]}
           >
-            Sign in to your A-Pay account
+            {t('login_subtitle')}
           </Text>
         </View>
 
         <View style={styles.form}>
           <Formik
             initialValues={{ email: '', password: '' }}
-            validationSchema={loginSchema}
+            validationSchema={buildLoginSchema(t)}
             onSubmit={handleLogin}
           >
             {({
@@ -96,8 +98,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             }) => (
               <>
                 <AuthInput
-                  label="Email Address"
-                  placeholder="Enter your email"
+                  label={t('email')}
+                  placeholder={t('enter_email')}
                   value={values.email}
                   onChangeText={handleChange('email')}
                   onBlur={handleBlur('email')}
@@ -110,8 +112,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 />
 
                 <AuthInput
-                  label="Password"
-                  placeholder="Enter your password"
+                  label={t('password')}
+                  placeholder={t('enter_password')}
                   value={values.password}
                   onChangeText={handleChange('password')}
                   onBlur={handleBlur('password')}
@@ -142,12 +144,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                       { color: theme.colors.primary },
                     ]}
                   >
-                    Forgot Password?
+                    {t('forgot_password')}
                   </Text>
                 </TouchableOpacity>
 
                 <AuthButton
-                  title="Sign In"
+                  title={t('login')}
                   onPress={handleSubmit}
                   loading={isLoading}
                   disabled={isLoading}
@@ -158,14 +160,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         </View>
 
         <View style={styles.footer}>
-          <Text
-            style={[styles.footerText, { color: theme.colors.textSecondary }]}
-          >
-            Don't have an account?{' '}
-          </Text>
           <TouchableOpacity onPress={handleSignup}>
-            <Text style={[styles.signupText, { color: theme.colors.primary }]}>
-              Sign Up
+            <Text style={[styles.footerText, { color: theme.colors.primary }]}>
+              {t('signup')}
             </Text>
           </TouchableOpacity>
         </View>

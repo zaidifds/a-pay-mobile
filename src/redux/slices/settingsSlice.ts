@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserPreferences } from '../../utils/userPreferences';
 
 export interface SettingsState {
-  language: 'en' | 'ar';
+  language: 'en' | 'ar' | 'hr';
   notifications: {
     push: boolean;
     email: boolean;
@@ -31,7 +31,7 @@ const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
-    setLanguage: (state, action: PayloadAction<'en' | 'ar'>) => {
+    setLanguage: (state, action: PayloadAction<'en' | 'ar' | 'hr'>) => {
       state.language = action.payload;
     },
     updateNotifications: (

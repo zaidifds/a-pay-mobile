@@ -14,6 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fp, rp } from '../utils/responsive';
 import { useTheme } from '../hooks/useTheme';
+import { useTranslation } from '../localization';
 
 interface BuyModalProps {
   visible: boolean;
@@ -31,6 +32,7 @@ const BuyModal: React.FC<BuyModalProps> = ({
   prices,
 }) => {
   const { theme } = useTheme();
+  const { t, isRTL } = useTranslation();
   const [selectedCurrency, setSelectedCurrency] = useState('BTC');
   const [amount, setAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('card');
@@ -45,20 +47,20 @@ const BuyModal: React.FC<BuyModalProps> = ({
   const paymentMethods = [
     {
       id: 'card',
-      name: 'Credit/Debit Card',
+      name: t('credit_debit_card'),
       subtext: 'Visa, Mastercard, American Express',
       icon: 'credit-card',
     },
     {
       id: 'bank',
-      name: 'Bank Transfer',
-      subtext: 'Direct bank transfer',
+      name: t('bank_transfer'),
+      subtext: t('instant_transfer'),
       icon: 'account-balance',
     },
     {
       id: 'apple',
-      name: 'Apple Pay',
-      subtext: 'Quick and secure',
+      name: t('apple_pay'),
+      subtext: t('secure_payment'),
       icon: 'apple',
     },
   ];
@@ -414,7 +416,7 @@ const BuyModal: React.FC<BuyModalProps> = ({
           ]}
         >
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Buy Cryptocurrency</Text>
+            <Text style={styles.modalTitle}>{t('buy_crypto')}</Text>
             <TouchableOpacity style={styles.closeButton} onPress={onClose}>
               <Icon name="close" size={rp(24)} color={theme.colors.text} />
             </TouchableOpacity>
@@ -427,7 +429,7 @@ const BuyModal: React.FC<BuyModalProps> = ({
             <View style={styles.container}>
               {/* Currency Selection */}
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Select Currency</Text>
+                <Text style={styles.sectionTitle}>{t('select_currency')}</Text>
                 <View style={styles.buyContainer}>
                   <View style={styles.currencyRow}>
                     <View style={styles.currencyInfo}>
@@ -473,7 +475,7 @@ const BuyModal: React.FC<BuyModalProps> = ({
 
               {/* Payment Method */}
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Payment Method</Text>
+                <Text style={styles.sectionTitle}>{t('payment_method')}</Text>
                 <View style={styles.paymentMethods}>
                   {paymentMethods.map(method => (
                     <TouchableOpacity
@@ -538,10 +540,14 @@ const BuyModal: React.FC<BuyModalProps> = ({
                 {/* Card Input Section - Only show when Credit/Debit Card is selected */}
                 {paymentMethod === 'card' && (
                   <View style={styles.cardInputSection}>
-                    <Text style={styles.cardInputTitle}>Card Details</Text>
+                    <Text style={styles.cardInputTitle}>
+                      {t('card_details')}
+                    </Text>
                     <View style={styles.cardInputRow}>
                       <View style={styles.cardInputContainer}>
-                        <Text style={styles.cardInputLabel}>Card Number</Text>
+                        <Text style={styles.cardInputLabel}>
+                          {t('card_number')}
+                        </Text>
                         <TextInput
                           style={styles.cardInput}
                           placeholder="1234 5678 9012 3456"
@@ -559,7 +565,9 @@ const BuyModal: React.FC<BuyModalProps> = ({
                     </View>
                     <View style={styles.cardInputRow}>
                       <View style={styles.cardInputContainerHalf}>
-                        <Text style={styles.cardInputLabel}>Expiry Date</Text>
+                        <Text style={styles.cardInputLabel}>
+                          {t('expiry_date')}
+                        </Text>
                         <TextInput
                           style={styles.cardInput}
                           placeholder="MM/YY"
@@ -575,7 +583,7 @@ const BuyModal: React.FC<BuyModalProps> = ({
                         />
                       </View>
                       <View style={styles.cardInputContainerHalf}>
-                        <Text style={styles.cardInputLabel}>CVV</Text>
+                        <Text style={styles.cardInputLabel}>{t('cvv')}</Text>
                         <TextInput
                           style={styles.cardInput}
                           placeholder="123"
@@ -592,7 +600,7 @@ const BuyModal: React.FC<BuyModalProps> = ({
                     <View style={styles.cardInputRow}>
                       <View style={styles.cardInputContainer}>
                         <Text style={styles.cardInputLabel}>
-                          Cardholder Name
+                          {t('cardholder_name')}
                         </Text>
                         <TextInput
                           style={styles.cardInput}
@@ -614,7 +622,7 @@ const BuyModal: React.FC<BuyModalProps> = ({
 
               {/* Buy Details */}
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Order Summary</Text>
+                <Text style={styles.sectionTitle}>{t('order_summary')}</Text>
                 <View style={styles.buyDetails}>
                   <View style={styles.buyDetailRow}>
                     <Text style={styles.buyDetailLabel}>Cryptocurrency</Text>
@@ -637,24 +645,28 @@ const BuyModal: React.FC<BuyModalProps> = ({
                     </Text>
                   </View>
                   <View style={styles.buyDetailRow}>
-                    <Text style={styles.buyDetailLabel}>Total Cost</Text>
+                    <Text style={styles.buyDetailLabel}>{t('total')}</Text>
                     <Text style={styles.buyDetailValue}>${getTotalCost()}</Text>
                   </View>
                   <View style={styles.buyDetailRow}>
-                    <Text style={styles.buyDetailLabel}>Payment Method</Text>
+                    <Text style={styles.buyDetailLabel}>
+                      {t('payment_method')}
+                    </Text>
                     <Text style={styles.buyDetailValue}>
                       {paymentMethods.find(m => m.id === paymentMethod)?.name}
                     </Text>
                   </View>
                   <View style={styles.buyDetailRow}>
-                    <Text style={styles.buyDetailLabel}>Processing Fee</Text>
+                    <Text style={styles.buyDetailLabel}>{t('fee')}</Text>
                     <Text style={styles.buyDetailValue}>2.5%</Text>
                   </View>
                 </View>
               </View>
 
               <TouchableOpacity style={styles.button} onPress={handleBuy}>
-                <Text style={styles.buttonText}>Confirm Purchase</Text>
+                <Text style={styles.buttonText}>
+                  {t('confirm')} {t('buy')}
+                </Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

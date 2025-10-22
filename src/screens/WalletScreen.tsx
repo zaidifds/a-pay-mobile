@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   FlatList,
   ScrollView,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Animated,
+  TextInput,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -15,6 +16,8 @@ import { useAppDispatch, useAppSelector } from '../redux/store';
 import { Transaction } from '../types';
 import { fp, rp } from '../utils/responsive';
 import Header from '../components/Header';
+import GradientButton from '../components/GradientButton';
+import BuyModal from '../components/BuyModal';
 import { useModalNavigation } from '../hooks/useModalNavigation';
 import { WalletScreenNavigationProp } from '../navigation/navigationTypes';
 import { useTheme } from '../hooks/useTheme';
@@ -27,6 +30,9 @@ const WalletScreen: React.FC = () => {
   );
   const { openReceiveModal, openSwapModal } = useModalNavigation();
   const { theme } = useTheme();
+
+  // Buy modal state
+  const [isBuyModalVisible, setIsBuyModalVisible] = useState(false);
 
   // Animation values
   const fadeAnim = useMemo(() => new Animated.Value(0), []);
@@ -59,6 +65,17 @@ const WalletScreen: React.FC = () => {
       return `${amount.toFixed(4)} ${currency}`;
     }
     return '••••••';
+  };
+
+  const handleBuy = (
+    currency: string,
+    amount: string,
+    paymentMethod: string,
+  ) => {
+    // Here you would typically integrate with a payment service
+    // For now, we'll just show a success message
+    console.log(`Buying ${amount} ${currency} using ${paymentMethod}`);
+    // You can add actual buy logic here
   };
 
   const getTotalValue = () => {
@@ -147,13 +164,7 @@ const WalletScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Header
-        title="Wallet"
-        rightButton={{
-          icon: isBalanceVisible ? 'visibility' : 'visibility-off',
-          onPress: () => dispatch(toggleBalanceVisibility()),
-        }}
-      />
+      <Header title="Wallet" />
 
       <ScrollView
         style={styles.scrollView}
@@ -170,18 +181,34 @@ const WalletScreen: React.FC = () => {
             },
           ]}
         >
-          <Text style={styles.balanceLabel}>Total Balance</Text>
-          <Text style={styles.balanceAmount}>{getTotalValue()}</Text>
+          <View style={styles.balanceHeader}>
+            <View style={styles.balanceTitleContainer}>
+              <Text style={styles.balanceLabel}>Total Balance</Text>
+              <Text style={styles.balanceAmount}>{getTotalValue()}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.eyeButton}
+              onPress={() => dispatch(toggleBalanceVisibility())}
+            >
+              <Icon
+                name={isBalanceVisible ? 'visibility' : 'visibility-off'}
+                size={24}
+                color={theme.colors.textSecondary}
+              />
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.balancesList}>
-            {Object.keys(balances).map(currency => (
-              <View key={currency} style={styles.balanceRow}>
-                <Text style={styles.currencyLabel}>{currency}</Text>
-                <Text style={styles.currencyAmount}>
-                  {formatBalance(balances[currency], currency)}
-                </Text>
-              </View>
-            ))}
+            {Object.keys(balances)
+              .slice(0, 4)
+              .map(currency => (
+                <View key={currency} style={styles.balanceRow}>
+                  <Text style={styles.currencyLabel}>{currency}</Text>
+                  <Text style={styles.currencyAmount}>
+                    {formatBalance(balances[currency], currency)}
+                  </Text>
+                </View>
+              ))}
           </View>
         </Animated.View>
 
@@ -196,27 +223,47 @@ const WalletScreen: React.FC = () => {
           ]}
         >
           <TouchableOpacity
-            style={[styles.actionButton, styles.receiveButton]}
+            style={styles.actionButton}
             onPress={openReceiveModal}
           >
-            <Icon name="add" size={24} color={theme.colors.buttonText} />
-            <Text style={styles.actionButtonText}>Receive</Text>
+            <GradientButton
+              colors={[theme.colors.success, theme.colors.successDark]}
+              style={styles.gradientButton}
+            >
+              <Icon name="add" size={18} color={theme.colors.buttonText} />
+              <Text style={styles.actionButtonText}>Receive</Text>
+            </GradientButton>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.actionButton, styles.sendButton]}
-            onPress={() => navigation.navigate('send' as never)}
+            style={styles.actionButton}
+            onPress={() => setIsBuyModalVisible(true)}
           >
-            <Icon name="send" size={24} color={theme.colors.buttonText} />
-            <Text style={styles.actionButtonText}>Send</Text>
+            <GradientButton
+              colors={[theme.colors.primary, theme.colors.primaryDark]}
+              style={styles.gradientButton}
+            >
+              <Icon
+                name="add-shopping-cart"
+                size={18}
+                color={theme.colors.buttonText}
+              />
+              <Text style={styles.actionButtonText}>Buy</Text>
+            </GradientButton>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.actionButton, styles.swapButton]}
-            onPress={openSwapModal}
-          >
-            <Icon name="swap-horiz" size={24} color={theme.colors.buttonText} />
-            <Text style={styles.actionButtonText}>Swap</Text>
+          <TouchableOpacity style={styles.actionButton} onPress={openSwapModal}>
+            <GradientButton
+              colors={[theme.colors.warning, theme.colors.warningDark]}
+              style={styles.gradientButton}
+            >
+              <Icon
+                name="swap-horiz"
+                size={18}
+                color={theme.colors.buttonText}
+              />
+              <Text style={styles.actionButtonText}>Swap</Text>
+            </GradientButton>
           </TouchableOpacity>
         </Animated.View>
 
@@ -240,6 +287,15 @@ const WalletScreen: React.FC = () => {
           />
         </Animated.View>
       </ScrollView>
+
+      {/* Buy Modal */}
+      <BuyModal
+        visible={isBuyModalVisible}
+        onClose={() => setIsBuyModalVisible(false)}
+        onBuy={handleBuy}
+        balances={balances}
+        prices={prices}
+      />
     </View>
   );
 };
@@ -270,6 +326,20 @@ const createStyles = (theme: any) =>
       shadowOpacity: 0.08,
       shadowRadius: 8,
       elevation: 4,
+    },
+    balanceHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: rp(12),
+    },
+    balanceTitleContainer: {
+      flex: 1,
+    },
+    eyeButton: {
+      padding: rp(8),
+      borderRadius: rp(20),
+      backgroundColor: theme.colors.backgroundSecondary,
     },
     balanceLabel: {
       fontSize: fp(12),
@@ -314,36 +384,30 @@ const createStyles = (theme: any) =>
     actionButtons: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: rp(20),
-      gap: rp(10),
+      marginBottom: rp(16),
+      gap: rp(6),
     },
     actionButton: {
       flex: 1,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: rp(14),
-      borderRadius: rp(15),
-      gap: rp(6),
+      borderRadius: rp(12),
+      overflow: 'hidden',
       shadowColor: theme.colors.shadow,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
       elevation: 4,
     },
+    gradientButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: rp(6),
+      gap: rp(3),
+    },
     actionButtonText: {
       color: theme.colors.buttonText,
-      fontSize: fp(12),
+      fontSize: fp(9),
       fontWeight: '600',
-    },
-    receiveButton: {
-      backgroundColor: theme.colors.success,
-    },
-    sendButton: {
-      backgroundColor: theme.colors.error,
-    },
-    swapButton: {
-      backgroundColor: '#2196F3',
     },
     transactionsSection: {
       marginBottom: rp(15),

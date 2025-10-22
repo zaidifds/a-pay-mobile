@@ -1,10 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import {
-  ActionSheetIOS,
   Alert,
   Animated,
   Image,
-  Platform,
+  Modal,
   ScrollView,
   StyleSheet,
   Switch,
@@ -14,7 +13,6 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import AuthButton from '../components/AuthButton';
 import Header from '../components/Header';
 import { useTheme } from '../hooks/useTheme';
 import { useImagePicker } from '../hooks/useImagePicker';
@@ -43,7 +41,7 @@ const ProfileScreen: React.FC = () => {
   const { theme } = useTheme();
 
   // Form state
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [fullName, setFullName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
   const [phone, setPhone] = useState(user?.phone || '');
@@ -78,7 +76,10 @@ const ProfileScreen: React.FC = () => {
   }, [fadeAnim, slideAnim]);
 
   const handleEditProfile = () => {
-    setIsEditing(true);
+    setIsEditModalVisible(true);
+    setFullName(user?.name || '');
+    setEmail(user?.email || '');
+    setPhone(user?.phone || '');
   };
 
   const handleSaveProfile = async () => {
@@ -99,7 +100,7 @@ const ProfileScreen: React.FC = () => {
       };
 
       dispatch(setUser(updatedUser));
-      setIsEditing(false);
+      setIsEditModalVisible(false);
       setIsLoading(false);
       Alert.alert('Success', 'Profile updated successfully');
     }, 1000);
@@ -109,38 +110,7 @@ const ProfileScreen: React.FC = () => {
     setFullName(user?.name || '');
     setEmail(user?.email || '');
     setPhone(user?.phone || '');
-    setIsEditing(false);
-  };
-
-  const handleImagePicker = () => {
-    if (Platform.OS === 'ios') {
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options: ['Cancel', 'Take Photo', 'Choose from Library'],
-          cancelButtonIndex: 0,
-        },
-        buttonIndex => {
-          if (buttonIndex === 1) {
-            // Take Photo
-            Alert.alert(
-              'Coming Soon',
-              'Camera functionality will be added soon',
-            );
-          } else if (buttonIndex === 2) {
-            // Choose from Library
-            Alert.alert(
-              'Coming Soon',
-              'Gallery functionality will be added soon',
-            );
-          }
-        },
-      );
-    } else {
-      Alert.alert(
-        'Coming Soon',
-        'Image picker functionality will be added soon',
-      );
-    }
+    setIsEditModalVisible(false);
   };
 
   const handleLogout = () => {
@@ -187,173 +157,178 @@ const ProfileScreen: React.FC = () => {
         },
       ]}
     >
-      <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
-        Profile
-      </Text>
-
-      <View style={styles.profileImageContainer}>
-        <TouchableOpacity
-          onPress={pickImage}
-          style={styles.profileImageWrapper}
-        >
-          {user?.avatar ? (
-            <Image source={{ uri: user.avatar }} style={styles.profileImage} />
-          ) : (
+      <View style={styles.profileHeader}>
+        <View style={styles.profileImageContainer}>
+          <TouchableOpacity
+            onPress={pickImage}
+            style={styles.profileImageWrapper}
+          >
+            {user?.avatar ? (
+              <Image
+                source={{ uri: user.avatar }}
+                style={styles.profileImage}
+              />
+            ) : (
+              <View
+                style={[
+                  styles.profileImagePlaceholder,
+                  { backgroundColor: theme.colors.primary },
+                ]}
+              >
+                <Text style={styles.profileImageText}>
+                  {user?.name?.charAt(0).toUpperCase() || 'U'}
+                </Text>
+              </View>
+            )}
             <View
               style={[
-                styles.profileImagePlaceholder,
+                styles.editIconContainer,
                 { backgroundColor: theme.colors.primary },
               ]}
             >
-              <Text style={styles.profileImageText}>
-                {user?.name?.charAt(0).toUpperCase() || 'U'}
-              </Text>
+              {isImageLoading ? (
+                <Icon
+                  name="hourglass-empty"
+                  size={14}
+                  color={theme.colors.buttonText}
+                />
+              ) : (
+                <Icon
+                  name="camera-alt"
+                  size={14}
+                  color={theme.colors.buttonText}
+                />
+              )}
             </View>
-          )}
-          <View
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.profileInfo}>
+          <Text style={[styles.userName, { color: theme.colors.text }]}>
+            {user?.name || 'John Doe'}
+          </Text>
+          <Text
+            style={[styles.userEmail, { color: theme.colors.textSecondary }]}
+          >
+            {user?.email || 'john.doe@example.com'}
+          </Text>
+          <View style={styles.verificationBadge}>
+            <Icon name="verified" size={16} color={theme.colors.success} />
+            <Text
+              style={[styles.verifiedText, { color: theme.colors.success }]}
+            >
+              Verified Account
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.profileActions}>
+        <TouchableOpacity
+          style={[
+            styles.actionButton,
+            { backgroundColor: theme.colors.primary },
+          ]}
+          onPress={handleEditProfile}
+        >
+          <Icon name="edit" size={18} color={theme.colors.buttonText} />
+          <Text
             style={[
-              styles.editIconContainer,
-              { backgroundColor: theme.colors.primary },
+              styles.actionButtonText,
+              { color: theme.colors.buttonText },
             ]}
           >
-            {isImageLoading ? (
-              <Icon
-                name="hourglass-empty"
-                size={16}
-                color={theme.colors.buttonText}
-              />
-            ) : (
-              <Icon name="edit" size={16} color={theme.colors.buttonText} />
-            )}
+            Edit Profile
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.actionButton,
+            {
+              backgroundColor: theme.colors.surface,
+              borderColor: theme.colors.border,
+            },
+          ]}
+        >
+          <Icon name="security" size={18} color={theme.colors.text} />
+          <Text style={[styles.actionButtonText, { color: theme.colors.text }]}>
+            Security
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </Animated.View>
+  );
+
+  const renderAccountInfoSection = () => (
+    <Animated.View
+      style={[
+        styles.section,
+        {
+          opacity: fadeAnim,
+          transform: [{ translateY: slideAnim }],
+        },
+      ]}
+    >
+      <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
+        Account Information
+      </Text>
+
+      <View style={styles.infoItem}>
+        <View style={styles.infoLeft}>
+          <Icon
+            name="account-balance-wallet"
+            size={20}
+            color={theme.colors.primary}
+          />
+          <View style={styles.infoContent}>
+            <Text style={[styles.infoLabel, { color: theme.colors.text }]}>
+              Wallet ID
+            </Text>
+            <Text
+              style={[styles.infoValue, { color: theme.colors.textSecondary }]}
+            >
+              AP-****-****-****-1234
+            </Text>
           </View>
+        </View>
+        <TouchableOpacity>
+          <Icon
+            name="content-copy"
+            size={18}
+            color={theme.colors.textSecondary}
+          />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
-          Full Name
-        </Text>
-        <View
-          style={[
-            styles.inputWrapper,
-            {
-              backgroundColor: theme.colors.surface,
-              borderColor: theme.colors.border,
-            },
-          ]}
-        >
-          <Icon
-            name="person"
-            size={20}
-            color={theme.colors.textSecondary}
-            style={styles.inputIcon}
-          />
-          <TextInput
-            style={[styles.inputField, { color: theme.colors.text }]}
-            value={fullName}
-            onChangeText={setFullName}
-            placeholder="Enter your full name"
-            placeholderTextColor={theme.colors.textSecondary}
-            editable={isEditing}
-          />
+      <View style={styles.infoItem}>
+        <View style={styles.infoLeft}>
+          <Icon name="calendar-today" size={20} color={theme.colors.primary} />
+          <View style={styles.infoContent}>
+            <Text style={[styles.infoLabel, { color: theme.colors.text }]}>
+              Member Since
+            </Text>
+            <Text
+              style={[styles.infoValue, { color: theme.colors.textSecondary }]}
+            >
+              January 2024
+            </Text>
+          </View>
         </View>
       </View>
 
-      <View style={styles.inputContainer}>
-        <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
-          Email
-        </Text>
-        <View
-          style={[
-            styles.inputWrapper,
-            {
-              backgroundColor: theme.colors.surface,
-              borderColor: theme.colors.border,
-            },
-          ]}
-        >
-          <Icon
-            name="email"
-            size={20}
-            color={theme.colors.textSecondary}
-            style={styles.inputIcon}
-          />
-          <TextInput
-            style={[styles.inputField, { color: theme.colors.text }]}
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Enter your email"
-            placeholderTextColor={theme.colors.textSecondary}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            editable={isEditing}
-          />
+      <View style={styles.infoItem}>
+        <View style={styles.infoLeft}>
+          <Icon name="verified" size={20} color={theme.colors.success} />
+          <View style={styles.infoContent}>
+            <Text style={[styles.infoLabel, { color: theme.colors.text }]}>
+              Account Status
+            </Text>
+            <Text style={[styles.infoValue, { color: theme.colors.success }]}>
+              Verified
+            </Text>
+          </View>
         </View>
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
-          Phone
-        </Text>
-        <View
-          style={[
-            styles.inputWrapper,
-            {
-              backgroundColor: theme.colors.surface,
-              borderColor: theme.colors.border,
-            },
-          ]}
-        >
-          <Icon
-            name="phone"
-            size={20}
-            color={theme.colors.textSecondary}
-            style={styles.inputIcon}
-          />
-          <TextInput
-            style={[styles.inputField, { color: theme.colors.text }]}
-            value={phone}
-            onChangeText={setPhone}
-            placeholder="Enter your phone number"
-            placeholderTextColor={theme.colors.textSecondary}
-            keyboardType="phone-pad"
-            editable={isEditing}
-          />
-        </View>
-      </View>
-
-      <View style={styles.buttonRow}>
-        {isEditing ? (
-          <>
-            <AuthButton
-              title="Cancel"
-              onPress={handleCancelEdit}
-              style={[
-                styles.halfButton,
-                { backgroundColor: theme.colors.border },
-              ]}
-              textStyle={{ color: theme.colors.text }}
-            />
-            <AuthButton
-              title={isLoading ? 'Saving...' : 'Save'}
-              onPress={handleSaveProfile}
-              loading={isLoading}
-              style={[
-                styles.halfButton,
-                { backgroundColor: theme.colors.primary },
-              ]}
-            />
-          </>
-        ) : (
-          <AuthButton
-            title="Edit Profile"
-            onPress={handleEditProfile}
-            style={[
-              styles.fullButton,
-              { backgroundColor: theme.colors.primary },
-            ]}
-          />
-        )}
       </View>
     </Animated.View>
   );
@@ -369,12 +344,12 @@ const ProfileScreen: React.FC = () => {
       ]}
     >
       <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
-        Settings
+        Preferences
       </Text>
 
       <View style={styles.settingItem}>
         <View style={styles.settingLeft}>
-          <Icon name="dark-mode" size={24} color={theme.colors.textSecondary} />
+          <Icon name="dark-mode" size={20} color={theme.colors.textSecondary} />
           <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
             Dark Mode
           </Text>
@@ -392,7 +367,7 @@ const ProfileScreen: React.FC = () => {
 
       <View style={styles.settingItem}>
         <View style={styles.settingLeft}>
-          <Icon name="language" size={24} color={theme.colors.textSecondary} />
+          <Icon name="language" size={20} color={theme.colors.textSecondary} />
           <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
             Language
           </Text>
@@ -404,7 +379,7 @@ const ProfileScreen: React.FC = () => {
           <Text style={[styles.languageText, { color: theme.colors.primary }]}>
             {language === 'en' ? 'English' : 'العربية'}
           </Text>
-          <Icon name="arrow-drop-down" size={20} color={theme.colors.primary} />
+          <Icon name="arrow-drop-down" size={18} color={theme.colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -412,7 +387,7 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.settingLeft}>
           <Icon
             name="notifications"
-            size={24}
+            size={20}
             color={theme.colors.textSecondary}
           />
           <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
@@ -426,13 +401,13 @@ const ProfileScreen: React.FC = () => {
             false: theme.colors.border,
             true: theme.colors.primary,
           }}
-          thumbColor={notifications.push ? '#FFFFFF' : '#FFFFFF'}
+          thumbColor={theme.colors.buttonText}
         />
       </View>
 
       <View style={styles.settingItem}>
         <View style={styles.settingLeft}>
-          <Icon name="email" size={24} color={theme.colors.textSecondary} />
+          <Icon name="email" size={20} color={theme.colors.textSecondary} />
           <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
             Email Notifications
           </Text>
@@ -444,7 +419,7 @@ const ProfileScreen: React.FC = () => {
             false: theme.colors.border,
             true: theme.colors.primary,
           }}
-          thumbColor={notifications.email ? '#FFFFFF' : '#FFFFFF'}
+          thumbColor={theme.colors.buttonText}
         />
       </View>
 
@@ -452,7 +427,7 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.settingLeft}>
           <Icon
             name="fingerprint"
-            size={24}
+            size={20}
             color={theme.colors.textSecondary}
           />
           <Text style={[styles.settingLabel, { color: theme.colors.text }]}>
@@ -466,7 +441,7 @@ const ProfileScreen: React.FC = () => {
             false: theme.colors.border,
             true: theme.colors.primary,
           }}
-          thumbColor={privacy.biometric ? '#FFFFFF' : '#FFFFFF'}
+          thumbColor={theme.colors.buttonText}
         />
       </View>
     </Animated.View>
@@ -482,13 +457,201 @@ const ProfileScreen: React.FC = () => {
         },
       ]}
     >
-      <AuthButton
-        title="Logout"
-        onPress={handleLogout}
+      <TouchableOpacity
         style={[styles.logoutButton, { backgroundColor: theme.colors.error }]}
-        textStyle={{ color: theme.colors.buttonText }}
-      />
+        onPress={handleLogout}
+      >
+        <Icon name="logout" size={18} color={theme.colors.buttonText} />
+        <Text
+          style={[styles.logoutButtonText, { color: theme.colors.buttonText }]}
+        >
+          Sign Out
+        </Text>
+      </TouchableOpacity>
     </Animated.View>
+  );
+
+  const renderEditProfileModal = () => (
+    <Modal
+      visible={isEditModalVisible}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      onRequestClose={handleCancelEdit}
+    >
+      <View
+        style={[
+          styles.modalContainer,
+          { backgroundColor: theme.colors.background },
+        ]}
+      >
+        <View
+          style={[
+            styles.modalHeader,
+            { borderBottomColor: theme.colors.border },
+          ]}
+        >
+          <TouchableOpacity onPress={handleCancelEdit}>
+            <Icon name="close" size={24} color={theme.colors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.modalTitle, { color: theme.colors.text }]}>
+            Edit Profile
+          </Text>
+          <TouchableOpacity onPress={handleSaveProfile} disabled={isLoading}>
+            <Text style={[styles.saveButton, { color: theme.colors.primary }]}>
+              {isLoading ? 'Saving...' : 'Save'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <ScrollView
+          style={styles.modalContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.profileImageSection}>
+            <TouchableOpacity
+              onPress={pickImage}
+              style={styles.profileImageWrapper}
+            >
+              {user?.avatar ? (
+                <Image
+                  source={{ uri: user.avatar }}
+                  style={styles.modalProfileImage}
+                />
+              ) : (
+                <View
+                  style={[
+                    styles.modalProfileImagePlaceholder,
+                    { backgroundColor: theme.colors.primary },
+                  ]}
+                >
+                  <Text style={styles.modalProfileImageText}>
+                    {user?.name?.charAt(0).toUpperCase() || 'U'}
+                  </Text>
+                </View>
+              )}
+              <View
+                style={[
+                  styles.modalEditIconContainer,
+                  { backgroundColor: theme.colors.primary },
+                ]}
+              >
+                {isImageLoading ? (
+                  <Icon
+                    name="hourglass-empty"
+                    size={16}
+                    color={theme.colors.buttonText}
+                  />
+                ) : (
+                  <Icon
+                    name="camera-alt"
+                    size={16}
+                    color={theme.colors.buttonText}
+                  />
+                )}
+              </View>
+            </TouchableOpacity>
+            <Text
+              style={[
+                styles.changePhotoText,
+                { color: theme.colors.textSecondary },
+              ]}
+            >
+              Tap to change photo
+            </Text>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
+              Full Name *
+            </Text>
+            <View
+              style={[
+                styles.inputWrapper,
+                {
+                  backgroundColor: theme.colors.surface,
+                  borderColor: theme.colors.border,
+                },
+              ]}
+            >
+              <Icon
+                name="person"
+                size={20}
+                color={theme.colors.textSecondary}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={[styles.inputField, { color: theme.colors.text }]}
+                value={fullName}
+                onChangeText={setFullName}
+                placeholder="Enter your full name"
+                placeholderTextColor={theme.colors.textSecondary}
+              />
+            </View>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
+              Email *
+            </Text>
+            <View
+              style={[
+                styles.inputWrapper,
+                {
+                  backgroundColor: theme.colors.surface,
+                  borderColor: theme.colors.border,
+                },
+              ]}
+            >
+              <Icon
+                name="email"
+                size={20}
+                color={theme.colors.textSecondary}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={[styles.inputField, { color: theme.colors.text }]}
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Enter your email"
+                placeholderTextColor={theme.colors.textSecondary}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
+              Phone Number
+            </Text>
+            <View
+              style={[
+                styles.inputWrapper,
+                {
+                  backgroundColor: theme.colors.surface,
+                  borderColor: theme.colors.border,
+                },
+              ]}
+            >
+              <Icon
+                name="phone"
+                size={20}
+                color={theme.colors.textSecondary}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={[styles.inputField, { color: theme.colors.text }]}
+                value={phone}
+                onChangeText={setPhone}
+                placeholder="Enter your phone number"
+                placeholderTextColor={theme.colors.textSecondary}
+                keyboardType="phone-pad"
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </Modal>
   );
 
   const styles = createStyles(theme);
@@ -505,9 +668,11 @@ const ProfileScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
       >
         {renderProfileSection()}
+        {renderAccountInfoSection()}
         {renderSettingsSection()}
         {renderLogoutSection()}
       </ScrollView>
+      {renderEditProfileModal()}
     </View>
   );
 };
@@ -542,27 +707,31 @@ const createStyles = (theme: any) =>
       marginBottom: rp(8),
       letterSpacing: 0.2,
     },
-    profileImageContainer: {
+    profileHeader: {
+      flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: rp(16),
+      marginBottom: rp(20),
+    },
+    profileImageContainer: {
+      marginRight: rp(16),
     },
     profileImageWrapper: {
       position: 'relative',
     },
     profileImage: {
-      width: rp(80),
-      height: rp(80),
-      borderRadius: rp(40),
+      width: rp(70),
+      height: rp(70),
+      borderRadius: rp(35),
     },
     profileImagePlaceholder: {
-      width: rp(80),
-      height: rp(80),
-      borderRadius: rp(40),
+      width: rp(70),
+      height: rp(70),
+      borderRadius: rp(35),
       justifyContent: 'center',
       alignItems: 'center',
     },
     profileImageText: {
-      fontSize: fp(32),
+      fontSize: fp(28),
       fontWeight: 'bold',
       color: theme.colors.textInverse,
     },
@@ -570,13 +739,52 @@ const createStyles = (theme: any) =>
       position: 'absolute',
       bottom: 0,
       right: 0,
-      width: rp(24),
-      height: rp(24),
-      borderRadius: rp(12),
+      width: rp(22),
+      height: rp(22),
+      borderRadius: rp(11),
       justifyContent: 'center',
       alignItems: 'center',
       borderWidth: 2,
       borderColor: theme.colors.textInverse,
+    },
+    profileInfo: {
+      flex: 1,
+    },
+    userName: {
+      fontSize: fp(18),
+      fontWeight: '700',
+      marginBottom: rp(4),
+    },
+    userEmail: {
+      fontSize: fp(14),
+      marginBottom: rp(8),
+    },
+    verificationBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    verifiedText: {
+      fontSize: fp(12),
+      fontWeight: '600',
+      marginLeft: rp(4),
+    },
+    profileActions: {
+      flexDirection: 'row',
+      gap: rp(12),
+    },
+    actionButton: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: rp(10),
+      borderRadius: rp(8),
+      borderWidth: 1,
+      gap: rp(6),
+    },
+    actionButtonText: {
+      fontSize: fp(12),
+      fontWeight: '600',
     },
     inputContainer: {
       marginBottom: rp(12),
@@ -616,6 +824,31 @@ const createStyles = (theme: any) =>
       height: rp(40),
       borderRadius: rp(8),
     },
+    infoItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: rp(12),
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+    },
+    infoLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+    },
+    infoContent: {
+      marginLeft: rp(12),
+    },
+    infoLabel: {
+      fontSize: fp(13),
+      fontWeight: '600',
+      marginBottom: rp(2),
+    },
+    infoValue: {
+      fontSize: fp(12),
+      fontWeight: '400',
+    },
     settingItem: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -630,8 +863,8 @@ const createStyles = (theme: any) =>
       flex: 1,
     },
     settingLabel: {
-      fontSize: fp(14),
-      fontWeight: '500',
+      fontSize: fp(13),
+      fontWeight: '600',
       marginLeft: rp(12),
     },
     languageButton: {
@@ -639,13 +872,81 @@ const createStyles = (theme: any) =>
       alignItems: 'center',
     },
     languageText: {
-      fontSize: fp(14),
-      fontWeight: '500',
+      fontSize: fp(13),
+      fontWeight: '600',
       marginRight: rp(4),
     },
     logoutButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
       height: rp(44),
       borderRadius: rp(8),
+      gap: rp(8),
+    },
+    logoutButtonText: {
+      fontSize: fp(14),
+      fontWeight: '600',
+    },
+    modalContainer: {
+      flex: 1,
+    },
+    modalHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: rp(16),
+      paddingVertical: rp(12),
+      borderBottomWidth: 1,
+    },
+    modalTitle: {
+      fontSize: fp(18),
+      fontWeight: '700',
+    },
+    saveButton: {
+      fontSize: fp(16),
+      fontWeight: '600',
+    },
+    modalContent: {
+      flex: 1,
+      paddingHorizontal: rp(16),
+    },
+    profileImageSection: {
+      alignItems: 'center',
+      paddingVertical: rp(24),
+    },
+    modalProfileImage: {
+      width: rp(100),
+      height: rp(100),
+      borderRadius: rp(50),
+    },
+    modalProfileImagePlaceholder: {
+      width: rp(100),
+      height: rp(100),
+      borderRadius: rp(50),
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalProfileImageText: {
+      fontSize: fp(40),
+      fontWeight: 'bold',
+      color: theme.colors.textInverse,
+    },
+    modalEditIconContainer: {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+      width: rp(32),
+      height: rp(32),
+      borderRadius: rp(16),
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 3,
+      borderColor: theme.colors.textInverse,
+    },
+    changePhotoText: {
+      fontSize: fp(14),
+      marginTop: rp(8),
     },
   });
 

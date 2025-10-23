@@ -9,6 +9,7 @@ import { UserPreferences } from '../utils/userPreferences';
 import ar from './translations/ar';
 import en from './translations/en';
 import hr from './translations/hr';
+import ur from './translations/ur';
 import {
   SupportedLanguage,
   TranslationContextType,
@@ -19,6 +20,7 @@ const translations = {
   en,
   ar,
   hr,
+  ur,
 };
 
 const TranslationContext = createContext<TranslationContextType | undefined>(
@@ -50,6 +52,8 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
     if (isRTL !== I18nManager.isRTL) {
       I18nManager.allowRTL(isRTL);
       I18nManager.forceRTL(isRTL);
+      // Note: forceRTL may require app restart for some components,
+      // but we also use isRTL state for conditional styling
     }
   }, [isRTL]);
 

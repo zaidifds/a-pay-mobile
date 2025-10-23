@@ -8,21 +8,21 @@ import {
   Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useAppSelector } from '../redux/store';
-import { Transaction } from '../types';
-import { fp, rp } from '../utils/responsive';
-import Header from '../components/Header';
-import { useTheme } from '../hooks/useTheme';
-import { useTranslation } from '../localization';
-import FilterModal from '../components/FilterModal';
+import { RootState, useAppSelector } from '../../redux/store';
+import { Transaction } from '../../types';
+import { fp, rp } from '../../utils/responsive';
+import Header from '../../components/Header';
+import { useTheme } from '../../hooks/useTheme';
+import { useTranslation } from '../../localization';
+import FilterModal from '../../components/FilterModal';
 
 type FilterType = 'all' | 'send' | 'receive' | 'swap';
 
 const HistoryScreen: React.FC = () => {
-  const walletState = useAppSelector(state => state.wallet);
+  const walletState = useAppSelector((state: RootState) => state.wallet);
   const { theme } = useTheme();
-  const { t } = useTranslation();
-  const styles = createStyles(theme);
+  const { t, isRTL } = useTranslation();
+  const styles = createStyles(theme, isRTL);
   const { transactions = [] } = walletState || {};
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
   const [showFilters, setShowFilters] = useState(false);
@@ -210,7 +210,7 @@ const HistoryScreen: React.FC = () => {
   if (!walletState) {
     return (
       <View style={styles.container}>
-        <Header titleKey="transaction_history" />
+        <Header titleKey="transaction_history" showLanguageSwitch={true} />
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -235,6 +235,7 @@ const HistoryScreen: React.FC = () => {
         showFilterButton={true}
         onFilterPress={() => setShowFilters(!showFilters)}
         filterActive={showFilters}
+        showLanguageSwitch={true}
       />
 
       <ScrollView
@@ -288,7 +289,7 @@ const HistoryScreen: React.FC = () => {
   );
 };
 
-const createStyles = (theme: any) =>
+const createStyles = (theme: any, isRTL: boolean) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -307,7 +308,7 @@ const createStyles = (theme: any) =>
       paddingBottom: rp(0),
     },
     transactionItem: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       padding: rp(12),
@@ -323,7 +324,7 @@ const createStyles = (theme: any) =>
       elevation: 1,
     },
     transactionLeft: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       flex: 1,
     },
@@ -333,7 +334,8 @@ const createStyles = (theme: any) =>
       borderRadius: rp(14),
       alignItems: 'center',
       justifyContent: 'center',
-      marginRight: rp(8),
+      marginRight: isRTL ? 0 : rp(8),
+      marginLeft: isRTL ? rp(8) : 0,
       backgroundColor: theme.colors.background,
     },
     transactionDetails: {
@@ -344,18 +346,21 @@ const createStyles = (theme: any) =>
       fontWeight: '500',
       color: theme.colors.text,
       marginBottom: rp(2),
+      textAlign: isRTL ? 'right' : 'left',
     },
     transactionTime: {
       fontSize: fp(10),
       color: theme.colors.textSecondary,
+      textAlign: isRTL ? 'right' : 'left',
     },
     transactionRight: {
-      alignItems: 'flex-end',
+      alignItems: isRTL ? 'flex-start' : 'flex-end',
     },
     transactionAmount: {
       fontSize: fp(13),
       fontWeight: '600',
       marginBottom: rp(2),
+      textAlign: isRTL ? 'left' : 'right',
     },
     transactionAmountSend: {
       color: theme.colors.error,
@@ -364,19 +369,21 @@ const createStyles = (theme: any) =>
       color: theme.colors.success,
     },
     statusContainer: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
     },
     statusDot: {
       width: rp(6),
       height: rp(6),
       borderRadius: rp(3),
-      marginRight: rp(4),
+      marginRight: isRTL ? 0 : rp(4),
+      marginLeft: isRTL ? rp(4) : 0,
     },
     transactionStatus: {
       fontSize: fp(9),
       fontWeight: '500',
       textTransform: 'capitalize',
+      textAlign: isRTL ? 'left' : 'right',
     },
     emptyState: {
       flex: 1,
@@ -390,6 +397,7 @@ const createStyles = (theme: any) =>
       color: theme.colors.text,
       marginTop: rp(12),
       marginBottom: rp(4),
+      textAlign: 'center',
     },
     emptyStateMessage: {
       fontSize: fp(12),

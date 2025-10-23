@@ -10,23 +10,25 @@ import {
   Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useAppDispatch, useAppSelector } from '../redux/store';
+import { RootState, useAppDispatch, useAppSelector } from '../../redux/store';
 import {
   addTransaction,
   subtractFromBalance,
-} from '../redux/slices/walletSlice';
-import { Transaction } from '../types';
-import { fp, rp } from '../utils/responsive';
-import Header from '../components/Header';
-import AuthButton from '../components/AuthButton';
-import { useTheme } from '../hooks/useTheme';
-import { useTranslation } from '../localization';
+} from '../../redux/slices/walletSlice';
+import { Transaction } from '../../types';
+import { fp, rp } from '../../utils/responsive';
+import Header from '../../components/Header';
+import AuthButton from '../../components/AuthButton';
+import { useTheme } from '../../hooks/useTheme';
+import { useTranslation } from '../../localization';
 
 const SendScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { balances, prices } = useAppSelector(state => state.wallet);
+  const { balances, prices } = useAppSelector(
+    (state: RootState) => state.wallet,
+  );
   const { theme } = useTheme();
-  const { t } = useTranslation();
+  const { t, isRTL } = useTranslation();
 
   // Form state
   const [cardNumber, setCardNumber] = useState('');
@@ -166,7 +168,7 @@ const SendScreen: React.FC = () => {
     return `$${(amountNum * price).toFixed(2)}`;
   };
 
-  const styles = createStyles(theme);
+  const styles = createStyles(theme, isRTL);
 
   return (
     <View style={styles.container}>
@@ -176,7 +178,7 @@ const SendScreen: React.FC = () => {
         <View style={styles.glowOrbSecondary} />
         <View style={styles.glowLine} />
       </View>
-      <Header titleKey="send" />
+      <Header titleKey="send" showLanguageSwitch={true} />
 
       <ScrollView
         style={styles.scrollView}
@@ -422,7 +424,7 @@ const SendScreen: React.FC = () => {
   );
 };
 
-const createStyles = (theme: any) =>
+const createStyles = (theme: any, isRTL: boolean) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -496,9 +498,10 @@ const createStyles = (theme: any) =>
       color: theme.colors.text,
       marginBottom: rp(10),
       letterSpacing: 0.5,
+      textAlign: isRTL ? 'right' : 'left',
     },
     row: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       gap: rp(8),
     },
     halfWidth: {
@@ -513,6 +516,7 @@ const createStyles = (theme: any) =>
       color: theme.colors.text,
       marginBottom: rp(8),
       opacity: 0.9,
+      textAlign: isRTL ? 'right' : 'left',
     },
     currencyScroll: {
       maxHeight: rp(40),
@@ -521,7 +525,8 @@ const createStyles = (theme: any) =>
       paddingHorizontal: rp(14),
       paddingVertical: rp(8),
       borderRadius: rp(20),
-      marginRight: rp(8),
+      marginRight: isRTL ? 0 : rp(8),
+      marginLeft: isRTL ? rp(8) : 0,
       backgroundColor: theme.colors.inputBackground,
       borderWidth: 1,
       borderColor: theme.colors.inputBorder,
@@ -542,6 +547,7 @@ const createStyles = (theme: any) =>
       fontWeight: '700',
       color: theme.colors.textSecondary,
       letterSpacing: 0.4,
+      textAlign: 'center',
     },
     currencyOptionTextSelected: {
       color: theme.colors.buttonText,
@@ -648,9 +654,10 @@ const createStyles = (theme: any) =>
       fontWeight: '600',
       color: theme.colors.text,
       marginBottom: rp(4),
+      textAlign: isRTL ? 'right' : 'left',
     },
     inputWrapper: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       backgroundColor: theme.colors.inputBackground,
       borderRadius: rp(12),
@@ -668,13 +675,15 @@ const createStyles = (theme: any) =>
       elevation: 4,
     },
     inputIcon: {
-      marginRight: rp(8),
+      marginRight: isRTL ? 0 : rp(8),
+      marginLeft: isRTL ? rp(8) : 0,
     },
     inputField: {
       flex: 1,
       fontSize: fp(15),
       color: theme.colors.text,
       fontWeight: '400',
+      textAlign: isRTL ? 'right' : 'left',
     },
   });
 

@@ -9,21 +9,21 @@ import {
   Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { toggleBalanceVisibility } from '../redux/slices/walletSlice';
-import { useAppDispatch, useAppSelector } from '../redux/store';
-import { Transaction } from '../types';
-import { fp, rp } from '../utils/responsive';
-import Header from '../components/Header';
-import GradientButton from '../components/GradientButton';
-import BuyModal from '../components/BuyModal';
-import { useModalNavigation } from '../hooks/useModalNavigation';
-import { useTheme } from '../hooks/useTheme';
-import { useTranslation } from '../localization';
+import { toggleBalanceVisibility } from '../../redux/slices/walletSlice';
+import { RootState, useAppDispatch, useAppSelector } from '../../redux/store';
+import { Transaction } from '../../types';
+import { fp, rp } from '../../utils/responsive';
+import Header from '../../components/Header';
+import GradientButton from '../../components/GradientButton';
+import BuyModal from '../../components/BuyModal';
+import { useModalNavigation } from '../../hooks/useModalNavigation';
+import { useTheme } from '../../hooks/useTheme';
+import { useTranslation } from '../../localization';
 
 const WalletScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const { balances, prices, isBalanceVisible, transactions } = useAppSelector(
-    state => state.wallet,
+    (state: RootState) => state.wallet,
   );
   const { openReceiveModal, openSwapModal } = useModalNavigation();
   const { theme } = useTheme();

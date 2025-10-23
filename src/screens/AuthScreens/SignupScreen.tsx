@@ -11,13 +11,13 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useTheme } from '../hooks/useTheme';
-import { useAppDispatch, useAppSelector } from '../redux/store';
-import { signupUser } from '../redux/slices/authSlice';
-import AuthInput from '../components/AuthInput';
-import AuthButton from '../components/AuthButton';
-import { buildSignupSchema } from '../utils/validationSchemas';
-import { useTranslation } from '../localization';
+import { useTheme } from '../../hooks/useTheme';
+import { RootState, useAppDispatch, useAppSelector } from '../../redux/store';
+import { signupUser } from '../../redux/slices/authSlice';
+import AuthInput from '../../components/AuthInput';
+import AuthButton from '../../components/AuthButton';
+import { buildSignupSchema } from '../../utils/validationSchemas';
+import { useTranslation } from '../../localization';
 
 interface SignupScreenProps {
   navigation: any;
@@ -26,7 +26,7 @@ interface SignupScreenProps {
 const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
-  const { isLoading, error } = useAppSelector(state => state.auth);
+  const { isLoading, error } = useAppSelector((state: RootState) => state.auth);
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
 

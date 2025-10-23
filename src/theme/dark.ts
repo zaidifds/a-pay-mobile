@@ -26,10 +26,12 @@ export const darkTheme: Theme = {
     textSecondary: '#94A3B8', // --muted-foreground (HSL: 215 20.2% 65.1%)
     textTertiary: '#64748B', // Lighter text
     textInverse: '#0F172A', // Inverse text
+    textOnDark: '#FFFFFF', // Text on dark backgrounds
 
     // Border and divider colors (HSL: 217.2 32.6% 17.5%)
     border: '#1E293B', // --border
     borderLight: '#334155', // Lighter border
+    borderHeader: 'rgba(255, 255, 255, 0.1)', // Header border for dark theme
     divider: '#1E293B', // --muted
 
     // Status colors
@@ -81,6 +83,7 @@ export const darkTheme: Theme = {
     shadow: 'rgba(0, 0, 0, 0.3)', // Light shadow
     shadowLight: 'rgba(0, 0, 0, 0.2)', // Lighter shadow
     shadowDark: 'rgba(0, 0, 0, 0.5)', // Darker shadow
+    shadowColor: '#000000', // Shadow color
   },
   spacing: {
     xs: rp(4),

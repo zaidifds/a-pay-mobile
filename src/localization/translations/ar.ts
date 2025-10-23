@@ -32,6 +32,30 @@ const ar: TranslationKeys = {
   logout: 'تسجيل الخروج',
   forgot_password: 'نسيت كلمة المرور؟',
   reset_password: 'إعادة تعيين كلمة المرور',
+
+  // Onboarding
+  onboarding_title: 'البداية',
+  onboarding_welcome: 'مرحباً بك في A Pay',
+  onboarding_sign_up: 'إنشاء حساب',
+  onboarding_sign_in: 'تسجيل الدخول إلى A Pay',
+  onboarding_recover_account: 'استرداد الحساب',
+
+  // Recovery Flow
+  recover_account_title: 'استرداد الحساب',
+  recover_account_description:
+    'إذا كنت تواجه مشكلة في الوصول إلى حسابك، يمكنك استخدام ميزة استرداد الحساب لاستعادة الوصول. قد يتضمن ذلك التحقق من هويتك من خلال عملية آمنة لحماية حسابك.',
+  two_way_auth_title: 'المصادقة الثنائية',
+  two_way_auth_description:
+    'حماية حسابك هي أولويتنا القصوى. يرجى تأكيد حسابك بإدخال رمز التفويض المرسل إلى {phone}',
+  verify_identity_title: 'دعنا نتحقق من هويتك',
+  verify_identity_description:
+    'نحن ملزمون بالقانون للتحقق من هويتك قبل استخدام أموالك.',
+  verify_identity_button: 'التحقق من الهوية',
+  verifying: 'جاري التحقق...',
+  code_delivery_time: 'قد يستغرق وصول الرمز دقيقة واحدة.',
+  resend_code: 'إرسال رمز جديد',
+  continue: 'متابعة',
+  submit: 'إرسال',
   email: 'البريد الإلكتروني',
   password: 'كلمة المرور',
   confirm_password: 'تأكيد كلمة المرور',
@@ -179,6 +203,7 @@ const ar: TranslationKeys = {
   english: 'English',
   arabic: 'العربية',
   croatian: 'Hrvatski',
+  urdu: 'اردو',
 };
 
 export default ar;

@@ -32,6 +32,30 @@ const hr: TranslationKeys = {
   logout: 'Odjava',
   forgot_password: 'Zaboravili ste lozinku?',
   reset_password: 'Resetiraj lozinku',
+
+  // Onboarding
+  onboarding_title: 'Uvod',
+  onboarding_welcome: 'Dobrodošli u A Pay',
+  onboarding_sign_up: 'Registracija',
+  onboarding_sign_in: 'Prijavite se u A Pay',
+  onboarding_recover_account: 'Oporavite račun',
+
+  // Recovery Flow
+  recover_account_title: 'Oporavite račun',
+  recover_account_description:
+    'Ako imate problema s pristupom svom računu, možete koristiti funkciju oporavka računa za ponovno dobivanje pristupa. To može uključivati provjeru vašeg identiteta kroz siguran proces za zaštitu vašeg računa.',
+  two_way_auth_title: 'Dvofaktorska autentifikacija',
+  two_way_auth_description:
+    'Zaštita vašeg računa je naš najveći prioritet. Molimo potvrdite svoj račun unosom autorizacijskog koda poslanog na {phone}',
+  verify_identity_title: 'Potvrdimo vaš identitet',
+  verify_identity_description:
+    'Zakonom smo obvezni provjeriti vaš identitet prije korištenja vašeg novca.',
+  verify_identity_button: 'Potvrdi identitet',
+  verifying: 'Provjeravam...',
+  code_delivery_time: 'Može potrajati minuta da primite svoj kod.',
+  resend_code: 'Pošaljite novi kod',
+  continue: 'Nastavi',
+  submit: 'Pošalji',
   email: 'E-pošta',
   password: 'Lozinka',
   confirm_password: 'Potvrdi lozinku',
@@ -179,6 +203,7 @@ const hr: TranslationKeys = {
   english: 'English',
   arabic: 'العربية',
   croatian: 'Hrvatski',
+  urdu: 'اردو',
 };
 
 export default hr;

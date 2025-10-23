@@ -6,14 +6,14 @@ import { useTheme } from '../hooks/useTheme';
 import BottomTabBarContent from '../components/BottomTabBarContent';
 
 // Import screens
-import WalletScreen from '../screens/WalletScreen';
-import SendScreen from '../screens/SendScreen';
-import HistoryScreen from '../screens/HistoryScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import WalletScreen from '../screens/MainScreens/WalletScreen';
+import SendScreen from '../screens/MainScreens/SendScreen';
+import HistoryScreen from '../screens/MainScreens/HistoryScreen';
+import ProfileScreen from '../screens/MainScreens/ProfileScreen';
 
 // Import modal screens
-import ReceiveModalScreen from '../screens/ReceiveModalScreen';
-import SwapModalScreen from '../screens/SwapModalScreen';
+import ReceiveModalScreen from '../screens/ModalScreens/ReceiveModalScreen';
+import SwapModalScreen from '../screens/ModalScreens/SwapModalScreen';
 
 const { width, height } = Dimensions.get('window');
 

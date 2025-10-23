@@ -11,12 +11,12 @@ import {
   Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { fp, rp } from '../utils/responsive';
-import { useTheme } from '../hooks/useTheme';
+import { fp, rp } from '../../utils/responsive';
+import { useTheme } from '../../hooks/useTheme';
 import { useNavigation } from '@react-navigation/native';
-import { TabStackNavigationProp } from '../navigation/navigationTypes';
+import { TabStackNavigationProp } from '../../navigation/navigationTypes';
 import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
+import { RootState } from '../../redux/store';
 
 const SwapModalScreen: React.FC = () => {
   const { theme } = useTheme();

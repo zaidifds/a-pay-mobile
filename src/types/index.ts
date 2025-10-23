@@ -30,7 +30,9 @@ export interface RootStackParamList {
 export interface AuthStackParamList {
   Login: undefined;
   Signup: undefined;
-  ForgotPassword: undefined;
+  RecoverAccount: undefined;
+  TwoWayAuthentication: undefined;
+  VerifyIdentity: undefined;
 }
 
 export interface Theme {
@@ -57,10 +59,12 @@ export interface Theme {
     textSecondary: string;
     textTertiary: string;
     textInverse: string;
+    textOnDark: string;
 
     // Border and divider colors
     border: string;
     borderLight: string;
+    borderHeader: string;
     divider: string;
 
     // Status colors
@@ -112,6 +116,7 @@ export interface Theme {
     shadow: string;
     shadowLight: string;
     shadowDark: string;
+    shadowColor: string;
   };
   spacing: {
     xs: number;

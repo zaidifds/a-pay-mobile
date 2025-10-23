@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fp, rp } from '../utils/responsive';
 import { useTheme } from '../hooks/useTheme';
 import { useTranslation } from '../localization';
+import LanguageSwitch from './LanguageSwitch';
 
 interface HeaderProps {
   title?: string;
@@ -27,6 +28,8 @@ interface HeaderProps {
   showFilterButton?: boolean;
   onFilterPress?: () => void;
   filterActive?: boolean;
+  showLanguageSwitch?: boolean; // Shows language switch button in header
+  languageSwitchVariant?: 'compact' | 'full'; // Variant for language switch display
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -40,6 +43,8 @@ const Header: React.FC<HeaderProps> = ({
   showFilterButton = false,
   onFilterPress,
   filterActive = false,
+  showLanguageSwitch = false,
+  languageSwitchVariant = 'compact',
 }) => {
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
@@ -54,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({
       paddingTop: insets.top,
       paddingBottom: rp(12),
       paddingHorizontal: rp(16),
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       shadowColor: theme.colors.shadow,
@@ -64,13 +69,14 @@ const Header: React.FC<HeaderProps> = ({
       elevation: 2,
     },
     leftSection: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       flex: 1,
     },
     backButton: {
       padding: rp(6),
-      marginRight: rp(8),
+      marginRight: isRTL ? 0 : rp(8),
+      marginLeft: isRTL ? rp(8) : 0,
       borderRadius: rp(8),
       backgroundColor: theme.colors.buttonSecondary,
       borderWidth: 1,
@@ -87,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({
       textAlign: 'right',
     },
     rightSection: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       gap: rp(8),
     },
@@ -152,6 +158,9 @@ const Header: React.FC<HeaderProps> = ({
               color={rightButton.color || theme.colors.icon}
             />
           </TouchableOpacity>
+        )}
+        {showLanguageSwitch && (
+          <LanguageSwitch variant={languageSwitchVariant} />
         )}
       </View>
     </View>

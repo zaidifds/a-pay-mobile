@@ -12,7 +12,9 @@ export type RootStackParamList = {
 export type AuthStackParamList = {
   Login: undefined;
   Signup: undefined;
-  ForgotPassword: undefined;
+  RecoverAccount: undefined;
+  TwoWayAuthentication: undefined;
+  VerifyIdentity: undefined;
 };
 
 // Bottom Tab Navigator Types

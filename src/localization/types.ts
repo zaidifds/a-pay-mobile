@@ -1,4 +1,4 @@
-export type SupportedLanguage = 'en' | 'ar' | 'hr';
+export type SupportedLanguage = 'en' | 'ar' | 'hr' | 'ur';
 
 export interface TranslationKeys {
   // Common
@@ -177,6 +177,28 @@ export interface TranslationKeys {
   english: string;
   arabic: string;
   croatian: string;
+  urdu: string;
+
+  // Onboarding
+  onboarding_title: string;
+  onboarding_welcome: string;
+  onboarding_sign_up: string;
+  onboarding_sign_in: string;
+  onboarding_recover_account: string;
+
+  // Recovery Flow
+  recover_account_title: string;
+  recover_account_description: string;
+  two_way_auth_title: string;
+  two_way_auth_description: string;
+  verify_identity_title: string;
+  verify_identity_description: string;
+  verify_identity_button: string;
+  verifying: string;
+  code_delivery_time: string;
+  resend_code: string;
+  continue: string;
+  submit: string;
 }
 
 export interface TranslationContextType {

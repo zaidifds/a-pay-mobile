@@ -32,6 +32,30 @@ const en: TranslationKeys = {
   logout: 'Logout',
   forgot_password: 'Forgot Password?',
   reset_password: 'Reset Password',
+
+  // Onboarding
+  onboarding_title: 'Onboarding',
+  onboarding_welcome: 'Welcome to A Pay',
+  onboarding_sign_up: 'Sign Up',
+  onboarding_sign_in: 'Sign In to A Pay',
+  onboarding_recover_account: 'Recover Account',
+
+  // Recovery Flow
+  recover_account_title: 'Recover Account',
+  recover_account_description:
+    'If you are having trouble accessing your account, you can use the account recovery feature to regain access. This may involve verifying your identity through a secure process to protect your account.',
+  two_way_auth_title: 'Two Way Authentication',
+  two_way_auth_description:
+    'Protecting your account is our top priority. Please confirm your account by entering the authorization code sent to {phone}',
+  verify_identity_title: "Let's Verify your Identity",
+  verify_identity_description:
+    'We are required by the law to verify your identity before we use your money.',
+  verify_identity_button: 'Verify Identity',
+  verifying: 'Verifying...',
+  code_delivery_time: 'It may take a minute to receive your code.',
+  resend_code: 'Resend a new code',
+  continue: 'Continue',
+  submit: 'Submit',
   email: 'Email',
   password: 'Password',
   confirm_password: 'Confirm Password',
@@ -179,6 +203,7 @@ const en: TranslationKeys = {
   english: 'English',
   arabic: 'العربية',
   croatian: 'Hrvatski',
+  urdu: 'اردو',
 };
 
 export default en;

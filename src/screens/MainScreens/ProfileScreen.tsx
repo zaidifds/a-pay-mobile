@@ -13,31 +13,34 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Header from '../components/Header';
-import { useTheme } from '../hooks/useTheme';
-import { useImagePicker } from '../hooks/useImagePicker';
-import { useTranslation } from '../localization';
-import LanguageSelector from '../components/LanguageSelector';
+import Header from '../../components/Header';
+import { useTheme } from '../../hooks/useTheme';
+import { useImagePicker } from '../../hooks/useImagePicker';
+import { useTranslation } from '../../localization';
+import LanguageSelector from '../../components/LanguageSelector';
 import {
   logoutUser,
   setUser,
   updateUserProfilePicture,
-} from '../redux/slices/authSlice';
+} from '../../redux/slices/authSlice';
 import {
   updateNotifications,
   updatePrivacy,
-} from '../redux/slices/settingsSlice';
-import { toggleTheme } from '../redux/slices/themeSlice';
-import { useAppDispatch, useAppSelector } from '../redux/store';
-import { fp, rp } from '../utils/responsive';
-import { UserPreferences } from '../utils/userPreferences';
+} from '../../redux/slices/settingsSlice';
+import { toggleTheme } from '../../redux/slices/themeSlice';
+import { RootState, useAppDispatch, useAppSelector } from '../../redux/store';
+import { fp, rp } from '../../utils/responsive';
+import { UserPreferences } from '../../utils/userPreferences';
 
 const ProfileScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector(state => state.auth);
-  const { isDark } = useAppSelector(state => state.theme);
-  const { language, notifications, privacy } = useAppSelector(
-    state => state.settings,
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { isDark } = useAppSelector((state: RootState) => state.theme);
+  const { notifications, privacy } = useAppSelector(
+    (state: RootState) => state.settings,
+  );
+  const { language, isRTL } = useAppSelector(
+    (state: RootState) => state.localization,
   );
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -369,6 +372,8 @@ const ProfileScreen: React.FC = () => {
               ? t('english')
               : language === 'ar'
               ? t('arabic')
+              : language === 'ur'
+              ? t('urdu')
               : t('croatian')}
           </Text>
           <Icon name="arrow-drop-down" size={18} color={theme.colors.primary} />
@@ -650,13 +655,13 @@ const ProfileScreen: React.FC = () => {
     </Modal>
   );
 
-  const styles = createStyles(theme);
+  const styles = createStyles(theme, isRTL);
 
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      <Header titleKey="profile" />
+      <Header titleKey="profile" showLanguageSwitch={true} />
 
       <ScrollView
         style={styles.scrollView}
@@ -677,7 +682,7 @@ const ProfileScreen: React.FC = () => {
   );
 };
 
-const createStyles = (theme: any) =>
+const createStyles = (theme: any, isRTL: boolean) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -706,14 +711,16 @@ const createStyles = (theme: any) =>
       fontWeight: '600',
       marginBottom: rp(8),
       letterSpacing: 0.2,
+      textAlign: isRTL ? 'right' : 'left',
     },
     profileHeader: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       marginBottom: rp(20),
     },
     profileImageContainer: {
-      marginRight: rp(16),
+      marginRight: isRTL ? 0 : rp(16),
+      marginLeft: isRTL ? rp(16) : 0,
     },
     profileImageWrapper: {
       position: 'relative',
@@ -754,27 +761,30 @@ const createStyles = (theme: any) =>
       fontSize: fp(18),
       fontWeight: '700',
       marginBottom: rp(4),
+      textAlign: isRTL ? 'right' : 'left',
     },
     userEmail: {
       fontSize: fp(14),
       marginBottom: rp(8),
+      textAlign: isRTL ? 'right' : 'left',
     },
     verificationBadge: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
     },
     verifiedText: {
       fontSize: fp(12),
       fontWeight: '600',
-      marginLeft: rp(4),
+      marginLeft: isRTL ? 0 : rp(4),
+      marginRight: isRTL ? rp(4) : 0,
     },
     profileActions: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       gap: rp(12),
     },
     actionButton: {
       flex: 1,
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       justifyContent: 'center',
       paddingVertical: rp(10),
@@ -793,9 +803,10 @@ const createStyles = (theme: any) =>
       fontSize: fp(12),
       fontWeight: '500',
       marginBottom: rp(4),
+      textAlign: isRTL ? 'right' : 'left',
     },
     inputWrapper: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       borderRadius: rp(8),
       borderWidth: 1,
@@ -803,12 +814,14 @@ const createStyles = (theme: any) =>
       height: rp(40),
     },
     inputIcon: {
-      marginRight: rp(8),
+      marginRight: isRTL ? 0 : rp(8),
+      marginLeft: isRTL ? rp(8) : 0,
     },
     inputField: {
       flex: 1,
       fontSize: fp(14),
       fontWeight: '400',
+      textAlign: isRTL ? 'right' : 'left',
     },
     buttonRow: {
       flexDirection: 'row',
@@ -825,7 +838,7 @@ const createStyles = (theme: any) =>
       borderRadius: rp(8),
     },
     infoItem: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingVertical: rp(12),
@@ -833,24 +846,27 @@ const createStyles = (theme: any) =>
       borderBottomColor: theme.colors.border,
     },
     infoLeft: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       flex: 1,
     },
     infoContent: {
-      marginLeft: rp(12),
+      marginLeft: isRTL ? 0 : rp(12),
+      marginRight: isRTL ? rp(12) : 0,
     },
     infoLabel: {
       fontSize: fp(13),
       fontWeight: '600',
       marginBottom: rp(2),
+      textAlign: isRTL ? 'right' : 'left',
     },
     infoValue: {
       fontSize: fp(12),
       fontWeight: '400',
+      textAlign: isRTL ? 'right' : 'left',
     },
     settingItem: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingVertical: rp(12),
@@ -858,26 +874,29 @@ const createStyles = (theme: any) =>
       borderBottomColor: theme.colors.border,
     },
     settingLeft: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       flex: 1,
     },
     settingLabel: {
       fontSize: fp(13),
       fontWeight: '600',
-      marginLeft: rp(12),
+      marginLeft: isRTL ? 0 : rp(12),
+      marginRight: isRTL ? rp(12) : 0,
+      textAlign: isRTL ? 'right' : 'left',
     },
     languageButton: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
     },
     languageText: {
       fontSize: fp(13),
       fontWeight: '600',
-      marginRight: rp(4),
+      marginRight: isRTL ? 0 : rp(4),
+      marginLeft: isRTL ? rp(4) : 0,
     },
     logoutButton: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       justifyContent: 'center',
       height: rp(44),
@@ -892,7 +911,7 @@ const createStyles = (theme: any) =>
       flex: 1,
     },
     modalHeader: {
-      flexDirection: 'row',
+      flexDirection: isRTL ? 'row-reverse' : 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingHorizontal: rp(16),
@@ -902,6 +921,7 @@ const createStyles = (theme: any) =>
     modalTitle: {
       fontSize: fp(18),
       fontWeight: '700',
+      textAlign: isRTL ? 'right' : 'left',
     },
     saveButton: {
       fontSize: fp(16),
@@ -947,6 +967,7 @@ const createStyles = (theme: any) =>
     changePhotoText: {
       fontSize: fp(14),
       marginTop: rp(8),
+      textAlign: isRTL ? 'right' : 'left',
     },
   });
 

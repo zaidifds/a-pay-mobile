@@ -11,11 +11,11 @@ import {
   Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { fp, rp } from '../utils/responsive';
-import { useTheme } from '../hooks/useTheme';
+import { fp, rp } from '../../utils/responsive';
+import { useTheme } from '../../hooks/useTheme';
 import { useNavigation } from '@react-navigation/native';
-import { TabStackNavigationProp } from '../navigation/navigationTypes';
-import { useTranslation } from '../localization';
+import { TabStackNavigationProp } from '../../navigation/navigationTypes';
+import { useTranslation } from '../../localization';
 
 const ReceiveModalScreen: React.FC = () => {
   const { theme } = useTheme();
@@ -27,7 +27,6 @@ const ReceiveModalScreen: React.FC = () => {
   const [cardNumber, setCardNumber] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvc, setCvc] = useState('');
-  const [qrCodeVisible, setQrCodeVisible] = useState(false);
 
   const currencies = ['BTC', 'ETH', 'USDT'];
   const fadeAnim = useMemo(() => new Animated.Value(0), []);
@@ -51,7 +50,6 @@ const ReceiveModalScreen: React.FC = () => {
 
   useEffect(() => {
     if (amount && currency) {
-      setQrCodeVisible(true);
       Animated.spring(qrScaleAnim, {
         toValue: 1,
         tension: 100,
@@ -59,7 +57,6 @@ const ReceiveModalScreen: React.FC = () => {
         useNativeDriver: true,
       }).start();
     } else {
-      setQrCodeVisible(false);
       qrScaleAnim.setValue(0);
     }
   }, [amount, currency, qrScaleAnim]);

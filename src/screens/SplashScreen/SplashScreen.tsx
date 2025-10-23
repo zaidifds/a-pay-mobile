@@ -77,7 +77,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onAnimationFinish }) => {
           </Animated.View>
 
           {/* orby. text */}
-          <Text style={styles.orbyText}>orby.</Text>
+          <Text style={styles.orbyText}>A Pay.</Text>
 
           {/* Progress bar */}
           <View style={styles.progressContainer}>

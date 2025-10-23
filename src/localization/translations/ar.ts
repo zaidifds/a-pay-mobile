@@ -88,7 +88,6 @@ const ar: TranslationKeys = {
   create_account: 'إنشاء حساب',
   signup_subtitle: 'سجل للبدء في استخدام A-Pay',
   enter_full_name: 'أدخل اسمك الكامل',
-  email_address: 'عنوان البريد الإلكتروني',
   enter_email: 'أدخل بريدك الإلكتروني',
   confirm_password_placeholder: 'أكد كلمة المرور',
   already_have_account: 'هل لديك حساب بالفعل؟',
@@ -204,6 +203,119 @@ const ar: TranslationKeys = {
   arabic: 'العربية',
   croatian: 'Hrvatski',
   urdu: 'اردو',
+
+  // Signup Flow
+  account_type_description:
+    'يمكنك إنشاء حسابات شخصية وتجارية على Orby. الحساب الشخصي لإدارة الشؤون المالية الشخصية. والحساب التجاري للشركات المصرفية.',
+  personal_account: 'حساب شخصي',
+  personal_account_description:
+    'خدمات مصرفية مريحة وآمنة للاستخدام الشخصي. سهولة الوصول إلى المعلومات المالية، المعاملات الفعالة، دعم العملاء على مدار الساعة.',
+  business_account: 'حساب تجاري',
+  business_account_description:
+    'فصل الشؤون المالية الشخصية والتجارية. الوصول إلى الخدمات المالية، تحسين حفظ السجلات، المصداقية والاحترافية.',
+  get_started: 'ابدأ الآن',
+  learn_more: 'اعرف المزيد',
+  personal_account_subtitle:
+    'يمكنك أيضًا إنشاء حساب تجاري لاحقًا إذا احتجت إليه.',
+
+  // Form Fields
+  title: 'اللقب',
+  email_address: 'عنوان البريد الإلكتروني',
+  gender: 'الجنس',
+  date_of_birth: 'تاريخ الميلاد',
+  country: 'البلد',
+  state: 'الولاية',
+  city: 'المدينة',
+  address: 'العنوان',
+  postcode: 'الرمز البريدي',
+
+  // Business Account Flow
+  business_account_intro_subtitle:
+    'يمكنك أيضًا إنشاء حساب شخصي لاحقًا إذا احتجت إليه.',
+  business_account_intro_description:
+    'يرجى ملاحظة أنك ستحتاج على الأرجح إلى تقديم تفاصيل حول شركتك. قد يشمل ذلك معلومات مثل اسم الشركة والعنوان ورقم التعريف الضريبي ونوع النشاط التجاري وما إلى ذلك. تقديم هذه التفاصيل ضروري لضمان فتح الحساب لشركة مشروعة والامتثال للمتطلبات القانونية والتنظيمية. إذا طُلب منك تقديم تفاصيل حول شركتك، تأكد من أن لديك المعلومات اللازمة في متناول اليد واتبع التعليمات المقدمة لإكمال عملية إعداد الحساب.',
+  business_account_terms_1: 'أؤكد أنني قرأت وفهمت',
+  terms_and_conditions: 'الشروط والأحكام',
+  business_account_terms_2: 'التي تحكم استخدام Orby، وأوافق على الالتزام بها.',
+  business_account_terms_description_1: 'أفهم أن',
+  business_account_terms_description_2:
+    'قد يتم تحديثها من وقت لآخر، وأنه من مسؤوليتي مراجعتها بانتظام للبقاء على اطلاع بأي تغييرات. بتحقق هذا المربع، أقر بأنني أتيحت لي الفرصة لمراجعة وطرح أسئلة حول',
+  user_agreement: 'اتفاقية المستخدم',
+  business_account_terms_description_3: 'وأنني أوافق طوعًا على الالتزام بها.',
+
+  // Business Account Contact
+  country_of_incorporation: 'بلد التأسيس',
+  country_of_incorporation_description:
+    'أخبرنا أين تم تأسيس شركتك حتى نتمكن من مساعدتك في فتح الحساب.',
+  select_country: 'اختر البلد',
+  select_city: 'اختر المدينة',
+  first_name: 'الاسم الأول',
+  last_name: 'الاسم الأخير',
+  email_description:
+    'أدخل عنوان البريد الإلكتروني الذي تريد استخدامه لفتح حساب أو تسجيل الدخول.',
+  phone_number_description: 'أدخل رقم هاتفك. سنرسل لك رمز التحقق.',
+
+  // Business Account Verification
+  enter_6_digit_code: 'أدخل الرمز المكون من 6 أرقام',
+  verification_code_sent_to: 'أدخل الرمز الذي أرسلناه على',
+  verification_code_help: 'قد يستغرق الأمر دقيقة واحدة لتلقي الرمز الخاص بك.',
+  havent_received_code: 'لم تستلمه؟',
+  resend_new_code: 'إعادة إرسال رمز جديد',
+  sending: 'جاري الإرسال...',
+  invalid_code: 'رمز غير صحيح',
+  please_enter_correct_code: 'يرجى إدخال رمز التحقق الصحيح.',
+  incomplete_code: 'رمز غير مكتمل',
+  please_enter_6_digit_code: 'يرجى إدخال الرمز المكون من 6 أرقام بالكامل.',
+  code_sent: 'تم إرسال الرمز',
+  verification_code_sent: 'تم إرسال رمز التحقق إلى هاتفك.',
+
+  // Business Account Personal Info
+  personal_information: 'المعلومات الشخصية',
+  personal_information_description:
+    'الشخص الذي تم منحه إذن للوصول إلى معلومات معينة والتعامل مع الشؤون المالية للمنظمة.',
+
+  // Business Account Address
+  personal_address: 'العنوان الشخصي',
+  personal_address_description: 'نحتاج عنوان منزلك لفتح حسابك.',
+  zip_code: 'الرمز البريدي',
+
+  // Business Account Details
+  tell_us_about_business: 'أخبرنا عن عملك',
+  business_details_description: 'نحتاج تفاصيل عملك لفتح حسابك.',
+  business_name: 'اسم العمل',
+  business_trade_name: 'اسم التجارة',
+  registration_number: 'رقم التسجيل',
+  date: 'التاريخ',
+  select_company_type: 'اختر نوع الشركة',
+
+  // Business Account Registered Address
+  registered_address: 'العنوان المسجل',
+  registered_address_description:
+    'العنوان الرسمي المسجل لدى الهيئة الحكومية. يمكن أن يكون مختلفًا عن العنوان الذي يوجد فيه عملك أو مساحة العمل المشتركة.',
+
+  // Business Account Purpose
+  what_would_you_like_to_do_with_orby_business:
+    'ماذا تريد أن تفعل مع Orby Business',
+  receive_payments_from_customers: 'استلام المدفوعات من العملاء',
+  make_everyday_purchases: 'إجراء المشتريات اليومية',
+  pay_suppliers_and_employees: 'دفع الموردين والموظفين',
+  manage_multiple_currencies: 'إدارة عملات متعددة',
+  to_pay_salaries: 'لدفع الرواتب',
+  for_expense_management: 'لإدارة المصروفات',
+  for_invoice_issuance: 'لإصدار الفواتير',
+
+  // Business Account Role
+  tell_us_about_your_role_in_company: 'أخبرنا عن دورك في الشركة',
+  i_am_only_director_and_significant_shareholder:
+    'أنا المدير الوحيد والمساهم الرئيسي',
+  only_director_description:
+    'أنت المدير الوحيد والمالك الوحيد لأكثر من 25% من العمل',
+  i_am_one_of_several_director_or_significant_shareholder:
+    'أنا واحد من عدة مديرين أو مساهمين رئيسيين',
+  one_of_several_description: 'هناك مديرون أو مساهمون آخرون يملكون أكثر من 25%',
+  i_am_neither_director_nor_significant_shareholder:
+    'أنا لست مديرًا ولا مساهمًا رئيسيًا',
+  neither_director_description: 'أنت تتقدم نيابة عن صاحب العمل أو العميل',
 };
 
 export default ar;

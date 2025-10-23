@@ -24,7 +24,7 @@ const OnboardingScreen: React.FC = () => {
   const { t, isRTL } = useTranslation();
 
   const handleSignUp = () => {
-    navigation.navigate('Signup');
+    navigation.navigate('AccountType');
   };
 
   const handleSignIn = () => {

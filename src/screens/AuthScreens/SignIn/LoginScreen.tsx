@@ -11,13 +11,13 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Formik } from 'formik';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useTheme } from '../../hooks/useTheme';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { loginUser } from '../../redux/slices/authSlice';
-import AuthInput from '../../components/AuthInput';
-import AuthButton from '../../components/AuthButton';
-import { buildLoginSchema } from '../../utils/validationSchemas';
-import { useTranslation } from '../../localization';
+import { useTheme } from '../../../hooks/useTheme';
+import { useAppDispatch, useAppSelector } from '../../../redux/store';
+import { loginUser } from '../../../redux/slices/authSlice';
+import AuthInput from '../../../components/AuthInput';
+import AuthButton from '../../../components/AuthButton';
+import { buildLoginSchema } from '../../../utils/validationSchemas';
+import { useTranslation } from '../../../localization';
 
 interface LoginScreenProps {
   navigation: any;

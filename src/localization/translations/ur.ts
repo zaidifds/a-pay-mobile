@@ -88,7 +88,6 @@ const ur: TranslationKeys = {
   create_account: 'اکاؤنٹ بنائیں',
   signup_subtitle: 'اے پے استعمال شروع کرنے کے لیے سائن اپ کریں',
   enter_full_name: 'اپنا پورا نام درج کریں',
-  email_address: 'ای میل ایڈریس',
   enter_email: 'اپنی ای میل درج کریں',
   confirm_password_placeholder: 'اپنا پاس ورڈ تصدیق کریں',
   already_have_account: 'پہلے سے اکاؤنٹ موجود ہے؟',
@@ -203,6 +202,127 @@ const ur: TranslationKeys = {
   arabic: 'عربی',
   croatian: 'کروشین',
   urdu: 'اردو',
+
+  // Signup Flow
+  account_type_description:
+    'آپ Orby پر ذاتی اور کاروباری دونوں اکاؤنٹس بنا سکتے ہیں۔ ذاتی اکاؤنٹ ذاتی مالیات کے انتظام کے لیے ہے۔ اور کاروباری اکاؤنٹ بینکنگ کے کاروبار کے لیے ہے۔',
+  personal_account: 'ذاتی اکاؤنٹ',
+  personal_account_description:
+    'ذاتی استعمال کے لیے آسان اور محفوظ بینکنگ۔ مالی معلومات تک آسان رسائی، موثر لین دین، 24/7 کسٹمر سپورٹ۔',
+  business_account: 'کاروباری اکاؤنٹ',
+  business_account_description:
+    'ذاتی اور کاروباری مالیات کی علیحدگی۔ مالی خدمات تک رسائی، بہتر ریکارڈ کیپنگ، اعتبار اور پیشہ ورانہ پن۔',
+  get_started: 'شروع کریں',
+  learn_more: 'مزید جانیں',
+  personal_account_subtitle:
+    'آپ بعد میں کاروباری اکاؤنٹ بھی بنا سکتے ہیں اگر آپ کو ضرورت ہو۔',
+
+  // Form Fields
+  title: 'خطاب',
+  email_address: 'ای میل ایڈریس',
+  gender: 'جنس',
+  date_of_birth: 'تاریخ پیدائش',
+  country: 'ملک',
+  state: 'ریاست',
+  city: 'شہر',
+  address: 'پتہ',
+  postcode: 'پوسٹ کوڈ',
+
+  // Business Account Flow
+  business_account_intro_subtitle:
+    'آپ بعد میں ذاتی اکاؤنٹ بھی بنا سکتے ہیں اگر آپ کو ضرورت ہو۔',
+  business_account_intro_description:
+    'براہ کرم نوٹ کریں کہ آپ کو اپنی کمپنی کے بارے میں تفصیلات فراہم کرنے کی ضرورت ہوگی۔ اس میں کمپنی کا نام، پتہ، ٹیکس شناختی نمبر، اور کاروبار کی قسم وغیرہ جیسی معلومات شامل ہو سکتی ہیں۔ ان تفصیلات کو فراہم کرنا ضروری ہے تاکہ یہ یقینی بنایا جا سکے کہ اکاؤنٹ ایک جائز کاروبار کے لیے کھولا جا رہا ہے اور قانونی اور ضابطہ جات کی ضروریات کو پورا کیا جا رہا ہے۔ اگر آپ سے اپنی کمپنی کے بارے میں تفصیلات فراہم کرنے کو کہا جائے تو یقینی بنائیں کہ آپ کے پاس ضروری معلومات ہاتھ میں ہوں اور اکاؤنٹ سیٹ اپ کے عمل کو مکمل کرنے کے لیے دی گئی ہدایات پر عمل کریں۔',
+  business_account_terms_1: 'میں تصدیق کرتا ہوں کہ میں نے پڑھا اور سمجھا ہے',
+  terms_and_conditions: 'شرائط و ضوابط',
+  business_account_terms_2:
+    'جو Orby کے استعمال کو کنٹرول کرتے ہیں، اور میں ان کی پابندی کرنے پر رضامند ہوں۔',
+  business_account_terms_description_1: 'میں سمجھتا ہوں کہ',
+  business_account_terms_description_2:
+    'وقتاً فوقتاً اپڈیٹ ہو سکتے ہیں، اور یہ میری ذمہ داری ہے کہ میں انہیں باقاعدگی سے دیکھتا رہوں تاکہ کسی بھی تبدیلی سے آگاہ رہوں۔ اس باکس کو چیک کرکے، میں تسلیم کرتا ہوں کہ مجھے',
+  user_agreement: 'صارف معاہدہ',
+  business_account_terms_description_3:
+    'کے بارے میں سوالات پوچھنے اور ان کا جائزہ لینے کا موقع ملا ہے، اور میں رضاکارانہ طور پر ان کی پابندی کرنے پر رضامند ہوں۔',
+
+  // Business Account Contact
+  country_of_incorporation: 'انکارپوریشن کا ملک',
+  country_of_incorporation_description:
+    'ہمیں بتائیں کہ آپ کی کمپنی کہاں انکارپوریٹڈ ہے تاکہ ہم آپ کی اکاؤنٹ کھولنے میں مدد کر سکیں۔',
+  select_country: 'ملک منتخب کریں',
+  select_city: 'شہر منتخب کریں',
+  first_name: 'پہلا نام',
+  last_name: 'آخری نام',
+  email_description:
+    'وہ ای میل ایڈریس درج کریں جسے آپ اکاؤنٹ کھولنے یا لاگ ان کرنے کے لیے استعمال کرنا چاہتے ہیں۔',
+  phone_number_description:
+    'اپنا فون نمبر درج کریں۔ ہم آپ کو تصدیقی کوڈ بھیجیں گے۔',
+
+  // Business Account Verification
+  enter_6_digit_code: '6 ہندسوں کا کوڈ درج کریں',
+  verification_code_sent_to: 'وہ کوڈ درج کریں جو ہم نے بھیجا ہے',
+  verification_code_help: 'آپ کا کوڈ موصول ہونے میں ایک منٹ لگ سکتا ہے۔',
+  havent_received_code: 'نہیں ملا؟',
+  resend_new_code: 'نیا کوڈ بھیجیں',
+  sending: 'بھیجا جا رہا ہے...',
+  invalid_code: 'غلط کوڈ',
+  please_enter_correct_code: 'براہ کرم صحیح تصدیقی کوڈ درج کریں۔',
+  incomplete_code: 'نامکمل کوڈ',
+  please_enter_6_digit_code: 'براہ کرم مکمل 6 ہندسوں کا کوڈ درج کریں۔',
+  code_sent: 'کوڈ بھیجا گیا',
+  verification_code_sent: 'تصدیقی کوڈ آپ کے فون پر بھیج دیا گیا ہے۔',
+
+  // Business Account Personal Info
+  personal_information: 'ذاتی معلومات',
+  personal_information_description:
+    'وہ فرد جسے کچھ معلومات تک رسائی اور تنظیم کے مالیات کو سنبھالنے کی اجازت دی گئی ہے۔',
+
+  // Business Account Address
+  personal_address: 'ذاتی پتہ',
+  personal_address_description:
+    'آپ کا اکاؤنٹ کھولنے کے لیے ہمیں آپ کا گھر کا پتہ چاہیے۔',
+  zip_code: 'زپ کوڈ',
+
+  // Business Account Details
+  tell_us_about_business: 'ہمیں اپنے کاروبار کے بارے میں بتائیں',
+  business_details_description:
+    'آپ کا اکاؤنٹ کھولنے کے لیے ہمیں آپ کے کاروبار کی تفصیلات چاہیے۔',
+  business_name: 'کاروبار کا نام',
+  business_trade_name: 'کاروباری تجارتی نام',
+  registration_number: 'رجسٹریشن نمبر',
+  date: 'تاریخ',
+  select_company_type: 'کمپنی کی قسم منتخب کریں',
+
+  // Business Account Registered Address
+  registered_address: 'رجسٹرڈ پتہ',
+  registered_address_description:
+    'حکومتی ادارے کے ساتھ رجسٹرڈ سرکاری پتہ۔ یہ اس پتے سے مختلف ہو سکتا ہے جہاں آپ کا کاروبار یا کو ورکنگ اسپیس ہے۔',
+
+  // Business Account Purpose
+  what_would_you_like_to_do_with_orby_business:
+    'آپ Orby Business کے ساتھ کیا کرنا چاہتے ہیں',
+  receive_payments_from_customers: 'کسٹمرز سے ادائیگیاں وصول کریں',
+  make_everyday_purchases: 'روزانہ کی خریداری کریں',
+  pay_suppliers_and_employees: 'سپلائرز اور ملازمین کو ادائیگی کریں',
+  manage_multiple_currencies: 'متعدد کرنسیوں کا انتظام کریں',
+  to_pay_salaries: 'تنخواہوں کی ادائیگی کے لیے',
+  for_expense_management: 'اخراجات کے انتظام کے لیے',
+  for_invoice_issuance: 'انوائس جاری کرنے کے لیے',
+
+  // Business Account Role
+  tell_us_about_your_role_in_company:
+    'ہمیں کمپنی میں اپنے کردار کے بارے میں بتائیں',
+  i_am_only_director_and_significant_shareholder:
+    'میں واحد ڈائریکٹر اور اہم شیئر ہولڈر ہوں',
+  only_director_description:
+    'آپ واحد ڈائریکٹر اور کاروبار کے 25% سے زیادہ کے واحد مالک ہیں',
+  i_am_one_of_several_director_or_significant_shareholder:
+    'میں متعدد ڈائریکٹرز یا اہم شیئر ہولڈرز میں سے ایک ہوں',
+  one_of_several_description:
+    'دوسرے ڈائریکٹرز یا شیئر ہولڈرز ہیں جن کا 25% سے زیادہ ملکیت ہے',
+  i_am_neither_director_nor_significant_shareholder:
+    'میں نہ تو ڈائریکٹر ہوں اور نہ ہی اہم شیئر ہولڈر',
+  neither_director_description:
+    'آپ اپنے آجر یا کلائنٹ کی جانب سے درخواست دے رہے ہیں',
 };
 
 export default ur;

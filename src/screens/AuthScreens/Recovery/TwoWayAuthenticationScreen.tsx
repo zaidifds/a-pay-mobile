@@ -3,17 +3,18 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { AuthStackParamList } from '../../navigation/AuthNavigator';
-import { useTheme } from '../../hooks/useTheme';
-import useTranslation from '../../localization/useTranslation';
+import { AuthStackParamList } from '../../../navigation/AuthNavigator';
+import { useTheme } from '../../../hooks/useTheme';
+import useTranslation from '../../../localization/useTranslation';
+import CodeInput from '../../../components/CodeInput';
 
 type TwoWayAuthenticationScreenNavigationProp =
   StackNavigationProp<AuthStackParamList>;
@@ -70,14 +71,6 @@ const TwoWayAuthenticationScreen: React.FC = () => {
     }
   };
 
-  const handleCodeFocus = (index: number) => {
-    setFocusedIndex(index);
-  };
-
-  const handleCodeBlur = () => {
-    setFocusedIndex(null);
-  };
-
   const validateCode = () => {
     const isComplete = code.every(digit => digit !== '');
     if (!isComplete) {
@@ -101,29 +94,6 @@ const TwoWayAuthenticationScreen: React.FC = () => {
   const handleResend = () => {
     // Handle resend logic
     console.log('Resend code');
-  };
-
-  // Dynamic styles for better performance and readability
-  const getCodeInputFocusStyles = (index: number) => {
-    const isFocused = focusedIndex === index;
-    const hasValue = code[index] !== '';
-    return {
-      borderColor: errors.code
-        ? theme.colors.error
-        : isFocused
-        ? theme.colors.primary
-        : hasValue
-        ? theme.colors.primary
-        : theme.colors.inputBorder,
-      shadowColor: isFocused ? theme.colors.primary : theme.colors.shadowColor,
-      shadowOffset: {
-        width: 0,
-        height: isFocused ? 2 : 1,
-      },
-      shadowOpacity: isFocused ? 0.15 : 0.05,
-      shadowRadius: isFocused ? 4 : 2,
-      elevation: isFocused ? 3 : 1,
-    };
   };
 
   const getSubmitButtonStyles = () => {
@@ -196,34 +166,14 @@ const TwoWayAuthenticationScreen: React.FC = () => {
             ) : null}
 
             {/* Code Input Fields */}
-            <View
-              style={[styles.codeContainer, isRTL && styles.codeContainerRTL]}
-            >
-              {code.map((digit, index) => (
-                <TextInput
-                  key={index}
-                  ref={ref => {
-                    if (ref) inputRefs.current[index] = ref;
-                  }}
-                  style={[
-                    styles.codeInput,
-                    {
-                      backgroundColor: theme.colors.input,
-                      color: theme.colors.text,
-                      ...getCodeInputFocusStyles(index),
-                    },
-                  ]}
-                  value={digit}
-                  onChangeText={value => handleCodeChange(value, index)}
-                  onFocus={() => handleCodeFocus(index)}
-                  onBlur={handleCodeBlur}
-                  keyboardType="numeric"
-                  maxLength={1}
-                  textAlign="center"
-                  selectTextOnFocus
-                  caretHidden={false}
-                />
-              ))}
+            <View style={styles.codeInputWrapper}>
+              <CodeInput
+                length={6}
+                value={code}
+                onChangeText={handleCodeChange}
+                error={errors.code}
+                autoFocus={true}
+              />
             </View>
           </View>
 
@@ -320,7 +270,6 @@ const styles = StyleSheet.create({
   centerSection: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     paddingHorizontal: 24,
   },
   bottomSection: {
@@ -330,14 +279,19 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: 'left',
     letterSpacing: 0.5,
   },
   description: {
     fontSize: 16,
     lineHeight: 24,
-    textAlign: 'center',
-    paddingHorizontal: 8,
+    textAlign: 'left',
+    paddingHorizontal: 0,
+    marginBottom: 40,
+  },
+  codeInputWrapper: {
+    alignItems: 'center',
+    marginBottom: 40,
   },
   codeContainer: {
     flexDirection: 'row',

@@ -26,7 +26,7 @@ interface UseImagePickerReturn {
   error: string | null;
 }
 
-export const useImagePicker = (
+const useImagePicker = (
   onImageSelected: (uri: string) => void,
   options: ImagePickerOptions = {},
 ): UseImagePickerReturn => {
@@ -143,3 +143,4 @@ export const useImagePicker = (
     error,
   };
 };
+export default useImagePicker;

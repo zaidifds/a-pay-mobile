@@ -1,22 +1,20 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import { DatePicker, FormDropdown, FormInput } from '@/components/forms';
+import { DynamicHeader, StandardButton } from '@/components/ui';
+import { useTheme } from '@/hooks';
+import useTranslation from '@/localization/useTranslation';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useState } from 'react';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import PhoneInput, { ICountry } from 'react-native-international-phone-number';
 import { AuthStackParamList } from '../../../../navigation/AuthNavigator';
-import { useTheme } from '../../../../hooks/useTheme';
-import useTranslation from '../../../../localization/useTranslation';
-import FormInput from '../../../../components/FormInput';
-import FormDropdown from '../../../../components/FormDropdown';
 
 type PersonalSignupScreenNavigationProp =
   StackNavigationProp<AuthStackParamList>;
@@ -161,32 +159,21 @@ const PersonalSignupScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      {/* Header */}
-      <View
-        style={[
-          styles.header,
-          { borderBottomColor: theme.colors.borderHeader },
-          isRTL && styles.headerRTL,
-        ]}
-      >
-        <TouchableOpacity
-          style={[styles.backButton, isRTL && styles.backButtonRTL]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={[styles.backIcon, { color: theme.colors.icon }]}>←</Text>
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
-          {t('personal_account')}
-        </Text>
-        <TouchableOpacity onPress={handleSignIn}>
-          <Text style={[styles.signInLink, { color: theme.colors.primary }]}>
-            {t('sign_in')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <DynamicHeader
+        title={t('personal_account')}
+        showBackButton
+        backButtonIcon="←"
+        showRightButton
+        rightButtonText={t('sign_in')}
+        onBackPress={() => {
+          console.log('Back button pressed');
+          navigation.goBack();
+        }}
+        onRightPress={handleSignIn}
+      />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -218,7 +205,9 @@ const PersonalSignupScreen: React.FC = () => {
                   placeholder={t('title')}
                   options={titleOptions}
                   selectedValue={formData.title}
-                  onSelect={value => handleInputChange('title', value)}
+                  onSelect={(value: string) =>
+                    handleInputChange('title', value)
+                  }
                   error={errors.title}
                 />
               </View>
@@ -226,7 +215,9 @@ const PersonalSignupScreen: React.FC = () => {
                 <FormInput
                   placeholder={t('full_name')}
                   value={formData.fullName}
-                  onChangeText={value => handleInputChange('fullName', value)}
+                  onChangeText={(value: string) =>
+                    handleInputChange('fullName', value)
+                  }
                   error={errors.fullName}
                   onFocus={() => setFocusedInput('fullName')}
                   onBlur={() => setFocusedInput(null)}
@@ -238,7 +229,9 @@ const PersonalSignupScreen: React.FC = () => {
             <FormInput
               placeholder={t('email_address')}
               value={formData.email}
-              onChangeText={value => handleInputChange('email', value)}
+              onChangeText={(value: string) =>
+                handleInputChange('email', value)
+              }
               error={errors.email}
               keyboardType="email-address"
               onFocus={() => setFocusedInput('email')}
@@ -273,7 +266,7 @@ const PersonalSignupScreen: React.FC = () => {
                   ],
                   flagContainer: {
                     paddingHorizontal: 16,
-                    paddingVertical: 12,
+                    height: 56,
                     backgroundColor: theme.colors.backgroundSecondary,
                     borderTopLeftRadius: 12,
                     borderBottomLeftRadius: 12,
@@ -300,7 +293,7 @@ const PersonalSignupScreen: React.FC = () => {
                   divider: {
                     backgroundColor: theme.colors.inputBorder,
                     width: 1,
-                    height: 32,
+                    height: 40,
                     marginHorizontal: 8,
                   },
                   input: {
@@ -309,7 +302,7 @@ const PersonalSignupScreen: React.FC = () => {
                     fontWeight: '400',
                     textAlign: isRTL ? 'right' : 'left',
                     paddingHorizontal: 16,
-                    paddingVertical: 12,
+                    height: 56,
                     flex: 1,
                     letterSpacing: 0.3,
                   },
@@ -329,28 +322,20 @@ const PersonalSignupScreen: React.FC = () => {
                   placeholder={t('gender')}
                   options={genderOptions}
                   selectedValue={formData.gender}
-                  onSelect={value => handleInputChange('gender', value)}
+                  onSelect={(value: string) =>
+                    handleInputChange('gender', value)
+                  }
                   error={errors.gender}
                 />
               </View>
               <View style={styles.halfWidth}>
-                <FormInput
+                <DatePicker
                   placeholder={t('date_of_birth')}
                   value={formData.dateOfBirth}
-                  onChangeText={value =>
+                  onChangeText={(value: string) =>
                     handleInputChange('dateOfBirth', value)
                   }
                   error={errors.dateOfBirth}
-                  rightIcon={
-                    <Text
-                      style={[
-                        styles.calendarIcon,
-                        { color: theme.colors.iconSecondary },
-                      ]}
-                    >
-                      📅
-                    </Text>
-                  }
                   onFocus={() => setFocusedInput('dateOfBirth')}
                   onBlur={() => setFocusedInput(null)}
                 />
@@ -362,7 +347,7 @@ const PersonalSignupScreen: React.FC = () => {
               placeholder={t('country')}
               options={countryOptions}
               selectedValue={formData.country}
-              onSelect={value => handleInputChange('country', value)}
+              onSelect={(value: string) => handleInputChange('country', value)}
               error={errors.country}
             />
 
@@ -373,7 +358,9 @@ const PersonalSignupScreen: React.FC = () => {
                   placeholder={t('state')}
                   options={stateOptions}
                   selectedValue={formData.state}
-                  onSelect={value => handleInputChange('state', value)}
+                  onSelect={(value: string) =>
+                    handleInputChange('state', value)
+                  }
                   error={errors.state}
                 />
               </View>
@@ -382,7 +369,7 @@ const PersonalSignupScreen: React.FC = () => {
                   placeholder={t('city')}
                   options={cityOptions}
                   selectedValue={formData.city}
-                  onSelect={value => handleInputChange('city', value)}
+                  onSelect={(value: string) => handleInputChange('city', value)}
                   error={errors.city}
                 />
               </View>
@@ -392,7 +379,9 @@ const PersonalSignupScreen: React.FC = () => {
             <FormInput
               placeholder={t('address')}
               value={formData.address}
-              onChangeText={value => handleInputChange('address', value)}
+              onChangeText={(value: string) =>
+                handleInputChange('address', value)
+              }
               error={errors.address}
               onFocus={() => setFocusedInput('address')}
               onBlur={() => setFocusedInput(null)}
@@ -402,7 +391,9 @@ const PersonalSignupScreen: React.FC = () => {
             <FormInput
               placeholder={t('postcode')}
               value={formData.postcode}
-              onChangeText={value => handleInputChange('postcode', value)}
+              onChangeText={(value: string) =>
+                handleInputChange('postcode', value)
+              }
               error={errors.postcode}
               onFocus={() => setFocusedInput('postcode')}
               onBlur={() => setFocusedInput(null)}
@@ -410,63 +401,22 @@ const PersonalSignupScreen: React.FC = () => {
           </View>
 
           {/* Create Account Button */}
-          <TouchableOpacity
-            style={[
-              styles.createButton,
-              {
-                backgroundColor: theme.colors.primary,
-                shadowColor: theme.colors.shadowColor,
-              },
-            ]}
+          <StandardButton
+            title={t('create_account')}
             onPress={handleCreateAccount}
-          >
-            <Text
-              style={[
-                styles.createButtonText,
-                { color: theme.colors.buttonText },
-              ]}
-            >
-              {t('create_account')}
-            </Text>
-          </TouchableOpacity>
+            variant="primary"
+            size="large"
+            fullWidth
+          />
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-  },
-  headerRTL: {
-    flexDirection: 'row-reverse',
-  },
-  backButton: {
-    padding: 8,
-  },
-  backButtonRTL: {
-    transform: [{ scaleX: -1 }],
-  },
-  backIcon: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  signInLink: {
-    fontSize: 16,
-    fontWeight: '500',
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -512,29 +462,16 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 48,
+    height: 56,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   errorText: {
     fontSize: 12,
     marginTop: 4,
     marginLeft: 4,
-  },
-  calendarIcon: {
-    fontSize: 16,
-  },
-  createButton: {
-    height: 56,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  createButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });
 

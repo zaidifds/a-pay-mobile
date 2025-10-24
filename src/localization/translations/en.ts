@@ -282,6 +282,7 @@ const en: TranslationKeys = {
   personal_address_description:
     'We need your home address to open your account.',
   zip_code: 'ZIP Code',
+  united_kingdom: 'United Kingdom',
 
   // Business Account Details
   tell_us_about_business: 'Tell Us About Your Business',
@@ -323,6 +324,138 @@ const en: TranslationKeys = {
     'I am neither a director nor a significant shareholder',
   neither_director_description:
     "You're applying on behalf of your employer or client",
+  // Business Account Completion
+  account_created_successfully: 'Account Created Successfully!',
+  business_account_created_description:
+    'Your business account has been created and is ready for verification.',
+  account_summary: 'Account Summary',
+  account_type: 'Account Type',
+  verification_status: 'Verification Status',
+  pending_verification: 'Pending Verification',
+  next_steps: 'Next Steps',
+  verification_required: 'Verification Required',
+  what_happens_next: 'What Happens Next?',
+  verification_process_description:
+    'We will verify your business information and documents. This process typically takes 1-3 business days.',
+  step_1_verification: 'Submit required business documents',
+  step_2_verification: 'Verify business address and contact information',
+  step_3_verification:
+    'Complete identity verification for authorized signatories',
+  complete_setup: 'Complete Setup',
+  sign_in_instead: 'Sign In Instead',
+  business_category: 'Business Category',
+  sub_category_of_business: 'Sub-Category of Business',
+  is_your_business_regulated: 'Is your business regulated?',
+  how_do_you_sell_products_services: 'How do you sell your products/services',
+  who_are_your_customers: 'Who are your customers',
+  no_of_employees: 'No. of Employees',
+  business_description: 'Business description...',
+  select_business_category: 'Select business category',
+  select_sub_category: 'Select sub-category',
+  select_regulation_status: 'Select regulation status',
+  select_sales_method: 'Select sales method',
+  select_customer_type: 'Select customer type',
+  select_employee_count: 'Select employee count',
+  enter_business_description: 'Enter business description',
+  financial_information: 'Financial Information',
+  // Financial Information Screen
+  financial_information_description:
+    'Required to assess the financial status and performance of the organization.',
+  annual_turnover: 'Annual Turnover',
+  monthly_transaction_volume: 'Monthly Transaction Volume',
+  monthly_transactions: 'Monthly Transactions',
+  max_payment_amount: 'Max. Payment Amount',
+  countries_conducting_business: 'Countries Conducting Business In',
+  countries_conducting_business_description:
+    'Add any country you may conduct activity in with Orby Business, including sales transactions.',
+  add_country: 'Add Country',
+  select_annual_turnover: 'Select annual turnover',
+  select_monthly_volume: 'Select monthly transaction volume',
+  select_monthly_transactions: 'Select monthly transactions',
+  select_max_payment: 'Select max payment amount',
+  upload_document: 'Upload Document',
+  // Proof of Nature of Business Screen
+  proof_of_nature_of_business: 'Proof of Nature of Business',
+  please_confirm_nature_of_business:
+    'Please confirm the nature of your business',
+  proof_of_business_requirements:
+    'To understand the nature of business of your company, we would require one of the following: A valid, functional website, A sales invoice confirming your services and business activities and a matching bank statement (issued in the last 6 months, A supplier invoice issued in the last 6 month. A contract with the customer / issued in the last 3 years); A supplier agreement issued in the last 3 years.',
+  recommended: 'Recommended',
+  others: 'Others',
+  website: 'Website',
+  website_description: 'Provide your business website URL',
+  sales_invoice_with_matching_bank_statement:
+    'Sales invoice with matching bank statement',
+  sales_invoice_description: 'Upload sales invoice and matching bank statement',
+  another_document_indicating_industry:
+    'Another document indicating your industry',
+  industry_document_description: 'Upload document showing your industry',
+  domain_name_ownership: 'Domain Name Ownership',
+  domain_ownership_description: 'Upload domain ownership certificate',
+  bank_statement: 'Bank Statement',
+  bank_statement_description: 'Upload recent bank statement',
+  // Directors and Shareholders
+  directors: 'Directors',
+  add_all_directors_listed_with_local_registry:
+    'Add all directors listed with local registry.',
+  no_directors_found: 'No directors found',
+  your_directors_will_appear_here: 'Your directors will appear here',
+  add_director: 'Add Director',
+  dob: 'DOB',
+  add: 'Add',
+  // Business Account Activation
+  account_activation: 'Account Activation',
+  submit_required_information_description:
+    'Submit the required information so we can identify your business.',
+  personal_identity: 'Personal Identity',
+  nature_of_business: 'Nature of Business',
+  business_purpose: 'Business Purpose',
+  business_details: 'Business Details',
+  business_address: 'Business Address',
+  directors_and_shareholders: 'Directors and Shareholders',
+  plan_and_card: 'Plan and Card',
+  requires_action: 'Requires action',
+  // Personal Identity Screen
+  personal_identity_description:
+    'Please provide your personal identification information for verification.',
+
+  enter_first_name: 'Enter your first name',
+  enter_last_name: 'Enter your last name',
+  enter_nationality: 'Enter your nationality',
+  id_type: 'ID Type',
+  id_number: 'ID Number',
+  enter_id_type: 'Enter ID type (e.g., Passport, Driver License)',
+  enter_id_number: 'Enter your ID number',
+  enter_id_expiry_date: 'Select ID expiry date',
+  // Nature of Business Screen
+  nature_of_business_description:
+    'Please provide information about your business nature and operations.',
+  business_type: 'Business Type',
+  industry: 'Industry',
+  annual_revenue: 'Annual Revenue',
+  number_of_employees: 'Number of Employees',
+  business_registration_number: 'Business Registration Number',
+  select_business_type: 'Select business type',
+  select_industry: 'Select industry',
+  enter_business_description: 'Describe your business activities',
+  enter_annual_revenue: 'Enter annual revenue',
+  enter_number_of_employees: 'Enter number of employees',
+  enter_business_registration_number: 'Enter business registration number',
+  // Business Types
+  corporation: 'Corporation',
+  llc: 'LLC',
+  partnership: 'Partnership',
+  sole_proprietorship: 'Sole Proprietorship',
+  // Industries
+  technology: 'Technology',
+  finance: 'Finance',
+  healthcare: 'Healthcare',
+  retail: 'Retail',
+  manufacturing: 'Manufacturing',
+  services: 'Services',
+  // Placeholder
+  coming_soon_description:
+    'This feature will be available soon. Please check back later.',
 };
 
 export default en;

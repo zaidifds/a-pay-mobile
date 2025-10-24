@@ -3,11 +3,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootState, useAppSelector } from '../redux/store';
-import { useTheme } from '../hooks/useTheme';
+import { useTheme } from '@/hooks';
 
 // Import navigators
 import AuthNavigator from './AuthNavigator';
-import BottomTabNavigator from './BottomTabNavigator';
 
 export type RootStackParamList = {
   Auth: undefined;
@@ -69,11 +68,7 @@ const AppNavigator: React.FC = () => {
             }),
           }}
         >
-          {isAuthenticated ? (
-            <Stack.Screen name="Main" component={BottomTabNavigator} />
-          ) : (
-            <Stack.Screen name="Auth" component={AuthNavigator} />
-          )}
+          <Stack.Screen name="Auth" component={AuthNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

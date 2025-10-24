@@ -6,12 +6,12 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../../../../navigation/AuthNavigator';
-import { useTheme } from '../../../../hooks/useTheme';
-import useTranslation from '../../../../localization/useTranslation';
+import useTheme from '@/hooks/useTheme';
+import useTranslation from '@/localization/useTranslation';
+import { DynamicHeader } from '@/components/ui';
 
 type BusinessAccountPurposeScreenNavigationProp =
   StackNavigationProp<AuthStackParamList>;
@@ -63,32 +63,19 @@ const BusinessAccountPurposeScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       {/* Header */}
-      <View
-        style={[
-          styles.header,
-          { borderBottomColor: theme.colors.borderHeader },
-          isRTL && styles.headerRTL,
-        ]}
-      >
-        <TouchableOpacity
-          style={[styles.backButton, isRTL && styles.backButtonRTL]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={[styles.backIcon, { color: theme.colors.icon }]}>←</Text>
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
-          {t('business_account')}
-        </Text>
-        <TouchableOpacity onPress={handleSignIn}>
-          <Text style={[styles.signInLink, { color: theme.colors.primary }]}>
-            {t('sign_in')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <DynamicHeader
+        title={t('business_account')}
+        showBackButton
+        backButtonIcon="←"
+        showRightButton
+        rightButtonText={t('sign_in')}
+        onBackPress={() => navigation.goBack()}
+        onRightPress={handleSignIn}
+      />
 
       <View style={styles.contentContainer}>
         <ScrollView
@@ -181,7 +168,7 @@ const BusinessAccountPurposeScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

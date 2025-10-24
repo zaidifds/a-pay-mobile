@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { FormDropdown, FormInput, DatePicker } from '@/components/forms';
+import { useTheme } from '@/hooks';
+import useTranslation from '@/localization/useTranslation';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useState } from 'react';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import PhoneInput, { ICountry } from 'react-native-international-phone-number';
 import { AuthStackParamList } from '../../../../navigation/AuthNavigator';
-import { useTheme } from '../../../../hooks/useTheme';
-import useTranslation from '../../../../localization/useTranslation';
-import FormInput from '../../../../components/FormInput';
-import FormDropdown from '../../../../components/FormDropdown';
+import { DynamicHeader, StandardButton } from '@/components/ui';
 
 type BusinessAccountContactScreenNavigationProp =
   StackNavigationProp<AuthStackParamList>;
@@ -113,32 +112,22 @@ const BusinessAccountContactScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       {/* Header */}
-      <View
-        style={[
-          styles.header,
-          { borderBottomColor: theme.colors.borderHeader },
-          isRTL && styles.headerRTL,
-        ]}
-      >
-        <TouchableOpacity
-          style={[styles.backButton, isRTL && styles.backButtonRTL]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={[styles.backIcon, { color: theme.colors.icon }]}>←</Text>
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
-          {t('business_account')}
-        </Text>
-        <TouchableOpacity onPress={handleSignIn}>
-          <Text style={[styles.signInLink, { color: theme.colors.primary }]}>
-            {t('sign_in')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <DynamicHeader
+        title={t('business_account')}
+        showBackButton
+        backButtonIcon="←"
+        showRightButton
+        rightButtonText={t('sign_in')}
+        onBackPress={() => {
+          console.log('Back button pressed');
+          navigation.goBack();
+        }}
+        onRightPress={handleSignIn}
+      />
 
       <View style={styles.contentContainer}>
         <KeyboardAvoidingView
@@ -308,28 +297,16 @@ const BusinessAccountContactScreen: React.FC = () => {
 
         {/* Continue Button - Fixed at bottom */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.continueButton,
-              {
-                backgroundColor: theme.colors.primary,
-                shadowColor: theme.colors.shadowColor,
-              },
-            ]}
+          <StandardButton
+            title={t('continue')}
             onPress={handleContinue}
-          >
-            <Text
-              style={[
-                styles.continueButtonText,
-                { color: theme.colors.buttonText },
-              ]}
-            >
-              {t('continue')}
-            </Text>
-          </TouchableOpacity>
+            variant="primary"
+            size="large"
+            fullWidth
+          />
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -425,20 +402,6 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
     paddingTop: 16,
     backgroundColor: 'transparent',
-  },
-  continueButton: {
-    height: 56,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  continueButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });
 

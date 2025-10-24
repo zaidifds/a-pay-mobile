@@ -8,14 +8,14 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../../../../navigation/AuthNavigator';
-import { useTheme } from '../../../../hooks/useTheme';
-import useTranslation from '../../../../localization/useTranslation';
-import FormInput from '../../../../components/FormInput';
-import FormDropdown from '../../../../components/FormDropdown';
+import useTheme from '@/hooks/useTheme';
+import useTranslation from '@/localization/useTranslation';
+import FormInput from '@/components/forms/FormInput';
+import FormDropdown from '@/components/forms/FormDropdown';
+import { DynamicHeader } from '@/components/ui';
 
 type BusinessAccountRegisteredAddressScreenNavigationProp =
   StackNavigationProp<AuthStackParamList>;
@@ -24,7 +24,7 @@ const BusinessAccountRegisteredAddressScreen: React.FC = () => {
   const navigation =
     useNavigation<BusinessAccountRegisteredAddressScreenNavigationProp>();
   const { theme } = useTheme();
-  const { t, isRTL } = useTranslation();
+  const { t } = useTranslation();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -36,7 +36,7 @@ const BusinessAccountRegisteredAddressScreen: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [focusedInput, setFocusedInput] = useState<string | null>(null);
+  const [_focusedInput, setFocusedInput] = useState<string | null>(null);
 
   // Dropdown options
   const countryOptions = [
@@ -103,32 +103,19 @@ const BusinessAccountRegisteredAddressScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       {/* Header */}
-      <View
-        style={[
-          styles.header,
-          { borderBottomColor: theme.colors.borderHeader },
-          isRTL && styles.headerRTL,
-        ]}
-      >
-        <TouchableOpacity
-          style={[styles.backButton, isRTL && styles.backButtonRTL]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={[styles.backIcon, { color: theme.colors.icon }]}>←</Text>
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
-          {t('business_account')}
-        </Text>
-        <TouchableOpacity onPress={handleSignIn}>
-          <Text style={[styles.signInLink, { color: theme.colors.primary }]}>
-            {t('sign_in')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <DynamicHeader
+        title={t('business_account')}
+        showBackButton
+        backButtonIcon="←"
+        showRightButton
+        rightButtonText={t('sign_in')}
+        onBackPress={() => navigation.goBack()}
+        onRightPress={handleSignIn}
+      />
 
       <View style={styles.contentContainer}>
         <KeyboardAvoidingView
@@ -165,63 +152,48 @@ const BusinessAccountRegisteredAddressScreen: React.FC = () => {
 
             {/* Form Fields */}
             <View style={styles.formContainer}>
-              {/* Country */}
-              <View style={styles.fieldContainer}>
-                <FormDropdown
-                  placeholder={t('select_country')}
-                  options={countryOptions}
-                  selectedValue={formData.country}
-                  onSelect={value => handleInputChange('country', value)}
-                  error={errors.country}
-                />
-              </View>
+              <FormDropdown
+                placeholder={t('united_kingdom')}
+                options={countryOptions}
+                selectedValue={formData.country}
+                onSelect={value => handleInputChange('country', value)}
+                error={errors.country}
+              />
 
-              {/* Address */}
-              <View style={styles.fieldContainer}>
-                <FormInput
-                  placeholder={t('address')}
-                  value={formData.address}
-                  onChangeText={value => handleInputChange('address', value)}
-                  error={errors.address}
-                  onFocus={() => setFocusedInput('address')}
-                  onBlur={() => setFocusedInput(null)}
-                />
-              </View>
+              <FormInput
+                placeholder={t('address')}
+                value={formData.address}
+                onChangeText={value => handleInputChange('address', value)}
+                error={errors.address}
+                onFocus={() => setFocusedInput('address')}
+                onBlur={() => setFocusedInput(null)}
+              />
 
-              {/* State */}
-              <View style={styles.fieldContainer}>
-                <FormDropdown
-                  placeholder={t('state')}
-                  options={stateOptions}
-                  selectedValue={formData.state}
-                  onSelect={value => handleInputChange('state', value)}
-                  error={errors.state}
-                />
-              </View>
+              <FormDropdown
+                placeholder={t('state')}
+                options={stateOptions}
+                selectedValue={formData.state}
+                onSelect={value => handleInputChange('state', value)}
+                error={errors.state}
+              />
 
-              {/* City */}
-              <View style={styles.fieldContainer}>
-                <FormDropdown
-                  placeholder={t('select_city')}
-                  options={cityOptions}
-                  selectedValue={formData.city}
-                  onSelect={value => handleInputChange('city', value)}
-                  error={errors.city}
-                />
-              </View>
+              <FormDropdown
+                placeholder={t('select_city')}
+                options={cityOptions}
+                selectedValue={formData.city}
+                onSelect={value => handleInputChange('city', value)}
+                error={errors.city}
+              />
 
-              {/* ZIP Code */}
-              <View style={styles.fieldContainer}>
-                <FormInput
-                  placeholder={t('zip_code')}
-                  value={formData.zipCode}
-                  onChangeText={value => handleInputChange('zipCode', value)}
-                  error={errors.zipCode}
-                  keyboardType="numeric"
-                  onFocus={() => setFocusedInput('zipCode')}
-                  onBlur={() => setFocusedInput(null)}
-                />
-              </View>
+              <FormInput
+                placeholder={t('zip_code')}
+                value={formData.zipCode}
+                onChangeText={value => handleInputChange('zipCode', value)}
+                error={errors.zipCode}
+                keyboardType="numeric"
+                onFocus={() => setFocusedInput('zipCode')}
+                onBlur={() => setFocusedInput(null)}
+              />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -249,7 +221,7 @@ const BusinessAccountRegisteredAddressScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -321,9 +293,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     marginBottom: 32,
-  },
-  fieldContainer: {
-    marginBottom: 20,
+    gap: 16,
   },
   buttonContainer: {
     paddingHorizontal: 24,

@@ -7,13 +7,13 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../../../../navigation/AuthNavigator';
-import { useTheme } from '../../../../hooks/useTheme';
-import useTranslation from '../../../../localization/useTranslation';
-import CodeInput from '../../../../components/CodeInput';
+import useTheme from '@/hooks/useTheme';
+import useTranslation from '@/localization/useTranslation';
+import CodeInput from '@/components/ui/CodeInput';
+import { DynamicHeader } from '@/components/ui';
 
 type BusinessAccountVerificationScreenNavigationProp =
   StackNavigationProp<AuthStackParamList>;
@@ -66,7 +66,7 @@ const BusinessAccountVerificationScreen: React.FC = () => {
     const fullCode = code.join('');
     if (fullCode.length === 6) {
       // Validate code (in real app, this would be an API call)
-      if (fullCode === '159000') {
+      if (fullCode === '123456') {
         navigation.navigate('BusinessAccountPersonalInfo');
       } else {
         Alert.alert(t('invalid_code'), t('please_enter_correct_code'));
@@ -83,32 +83,19 @@ const BusinessAccountVerificationScreen: React.FC = () => {
   const isCodeComplete = code.every(digit => digit !== '');
 
   return (
-    <SafeAreaView
+    <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       {/* Header */}
-      <View
-        style={[
-          styles.header,
-          { borderBottomColor: theme.colors.borderHeader },
-          isRTL && styles.headerRTL,
-        ]}
-      >
-        <TouchableOpacity
-          style={[styles.backButton, isRTL && styles.backButtonRTL]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={[styles.backIcon, { color: theme.colors.icon }]}>←</Text>
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
-          {t('business_account')}
-        </Text>
-        <TouchableOpacity onPress={handleSignIn}>
-          <Text style={[styles.signInLink, { color: theme.colors.primary }]}>
-            {t('sign_in')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <DynamicHeader
+        title={t('business_account')}
+        showBackButton
+        backButtonIcon="←"
+        showRightButton
+        rightButtonText={t('sign_in')}
+        onBackPress={() => navigation.goBack()}
+        onRightPress={handleSignIn}
+      />
 
       <View style={styles.contentContainer}>
         <ScrollView
@@ -211,7 +198,7 @@ const BusinessAccountVerificationScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -7,7 +7,7 @@ interface ThemeContextType {
   isDark: boolean;
 }
 
-export const useTheme = (): ThemeContextType => {
+const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
 
   if (!context) {
@@ -17,3 +17,5 @@ export const useTheme = (): ThemeContextType => {
 
   return context;
 };
+
+export default useTheme;

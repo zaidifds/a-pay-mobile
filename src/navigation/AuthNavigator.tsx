@@ -1,23 +1,29 @@
-import React from 'react';
+import { useTheme } from '@/hooks';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useTheme } from '../hooks/useTheme';
-import LoginScreen from '../screens/AuthScreens/SignIn/LoginScreen';
-import SignupScreen from '../screens/AuthScreens/SignupScreen';
+import React from 'react';
 import AccountTypeScreen from '../screens/AuthScreens/AccountTypeScreen';
-import PersonalSignupScreen from '../screens/AuthScreens/Signup/Personal/PersonalSignupScreen';
-import BusinessSignupScreen from '../screens/AuthScreens/BusinessSignupScreen';
-import BusinessAccountIntroScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountIntroScreen';
-import BusinessAccountContactScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountContactScreen';
-import BusinessAccountVerificationScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountVerificationScreen';
-import BusinessAccountPersonalInfoScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountPersonalInfoScreen';
-import BusinessAccountAddressScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountAddressScreen';
-import BusinessAccountDetailsScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountDetailsScreen';
-import BusinessAccountRegisteredAddressScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountRegisteredAddressScreen';
-import BusinessAccountPurposeScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountPurposeScreen';
-import BusinessAccountRoleScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountRoleScreen';
 import RecoverAccountScreen from '../screens/AuthScreens/Recovery/RecoverAccountScreen';
 import TwoWayAuthenticationScreen from '../screens/AuthScreens/Recovery/TwoWayAuthenticationScreen';
 import VerifyIdentityScreen from '../screens/AuthScreens/Recovery/VerifyIdentityScreen';
+import LoginScreen from '../screens/AuthScreens/SignIn/SignIn';
+import AddDirectorScreen from '../screens/AuthScreens/Signup/Business/AddDirectorScreen';
+import BusinessAccountActivationScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountActivationScreen';
+import BusinessAccountAddressScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountAddressScreen';
+import BusinessAccountContactScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountContactScreen';
+import BusinessAccountDetailsScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountDetailsScreen';
+import BusinessAccountIntroScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountIntroScreen';
+import BusinessAccountPersonalInfoScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountPersonalInfoScreen';
+import BusinessAccountPurposeScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountPurposeScreen';
+import BusinessAccountRegisteredAddressScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountRegisteredAddressScreen';
+import BusinessAccountRoleScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountRoleScreen';
+import BusinessAccountVerificationScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountVerificationScreen';
+import BusinessPurposeScreen from '../screens/AuthScreens/Signup/Business/BusinessPurposeScreen';
+import DirectorsScreen from '../screens/AuthScreens/Signup/Business/DirectorsScreen';
+import FinancialInformationScreen from '../screens/AuthScreens/Signup/Business/FinancialInformationScreen';
+import NatureOfBusinessScreen from '../screens/AuthScreens/Signup/Business/NatureOfBusinessScreen';
+import ProofOfNatureOfBusinessScreen from '../screens/AuthScreens/Signup/Business/ProofOfNatureOfBusinessScreen';
+import PersonalSignupScreen from '../screens/AuthScreens/Signup/Personal/PersonalSignupScreen';
+import SignupScreen from '../screens/AuthScreens/SignupScreen';
 import OnboardingScreen from '../screens/OnboardingScreen/OnboardingScreen';
 
 export type AuthStackParamList = {
@@ -36,6 +42,13 @@ export type AuthStackParamList = {
   BusinessAccountRegisteredAddress: undefined;
   BusinessAccountPurpose: undefined;
   BusinessAccountRole: undefined;
+  BusinessAccountActivation: undefined;
+  BusinessPurpose: undefined;
+  NatureOfBusiness: undefined;
+  FinancialInformation: undefined;
+  ProofOfNatureOfBusiness: undefined;
+  Directors: undefined;
+  AddDirector: { directorId?: string };
   RecoverAccount: undefined;
   TwoWayAuthentication: { phoneNumber?: string; email?: string };
   VerifyIdentity: undefined;
@@ -48,7 +61,7 @@ const AuthNavigator: React.FC = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="Onboarding"
+      initialRouteName="BusinessAccountActivation"
       screenOptions={{
         headerShown: false,
         cardStyle: { backgroundColor: theme.colors.background },
@@ -68,7 +81,6 @@ const AuthNavigator: React.FC = () => {
       <Stack.Screen name="Signup" component={SignupScreen} />
       <Stack.Screen name="AccountType" component={AccountTypeScreen} />
       <Stack.Screen name="PersonalSignup" component={PersonalSignupScreen} />
-      <Stack.Screen name="BusinessSignup" component={BusinessSignupScreen} />
       <Stack.Screen
         name="BusinessAccountIntro"
         component={BusinessAccountIntroScreen}
@@ -105,6 +117,25 @@ const AuthNavigator: React.FC = () => {
         name="BusinessAccountRole"
         component={BusinessAccountRoleScreen}
       />
+      <Stack.Screen
+        name="BusinessAccountActivation"
+        component={BusinessAccountActivationScreen}
+      />
+      <Stack.Screen name="BusinessPurpose" component={BusinessPurposeScreen} />
+      <Stack.Screen
+        name="NatureOfBusiness"
+        component={NatureOfBusinessScreen}
+      />
+      <Stack.Screen
+        name="FinancialInformation"
+        component={FinancialInformationScreen}
+      />
+      <Stack.Screen
+        name="ProofOfNatureOfBusiness"
+        component={ProofOfNatureOfBusinessScreen}
+      />
+      <Stack.Screen name="Directors" component={DirectorsScreen} />
+      <Stack.Screen name="AddDirector" component={AddDirectorScreen} />
       <Stack.Screen name="RecoverAccount" component={RecoverAccountScreen} />
       <Stack.Screen
         name="TwoWayAuthentication"

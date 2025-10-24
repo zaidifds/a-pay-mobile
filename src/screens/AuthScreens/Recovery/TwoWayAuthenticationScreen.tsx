@@ -12,9 +12,9 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../../../navigation/AuthNavigator';
-import { useTheme } from '../../../hooks/useTheme';
-import useTranslation from '../../../localization/useTranslation';
-import CodeInput from '../../../components/CodeInput';
+import { useTheme } from '@/hooks';
+import useTranslation from '@/localization/useTranslation';
+import { CodeInput } from '@/components';
 
 type TwoWayAuthenticationScreenNavigationProp =
   StackNavigationProp<AuthStackParamList>;

@@ -12,7 +12,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './src/redux/store';
 import { ThemeProvider } from './src/contexts/ThemeContext';
 import { TranslationProvider } from './src/localization';
-import AppInitializer from './src/components/AppInitializer';
+import AppInitializer from './src/components/common/AppInitializer';
 import AppNavigator from './src/navigation/AppNavigator';
 
 function App() {

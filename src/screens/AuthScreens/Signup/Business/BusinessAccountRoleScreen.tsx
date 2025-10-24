@@ -6,12 +6,12 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../../../../navigation/AuthNavigator';
-import { useTheme } from '../../../../hooks/useTheme';
-import useTranslation from '../../../../localization/useTranslation';
+import useTheme from '@/hooks/useTheme';
+import useTranslation from '@/localization/useTranslation';
+import { DynamicHeader, StandardButton } from '@/components/ui';
 
 type BusinessAccountRoleScreenNavigationProp =
   StackNavigationProp<AuthStackParamList>;
@@ -19,7 +19,7 @@ type BusinessAccountRoleScreenNavigationProp =
 const BusinessAccountRoleScreen: React.FC = () => {
   const navigation = useNavigation<BusinessAccountRoleScreenNavigationProp>();
   const { theme } = useTheme();
-  const { t, isRTL } = useTranslation();
+  const { t } = useTranslation();
 
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
@@ -50,10 +50,9 @@ const BusinessAccountRoleScreen: React.FC = () => {
 
   const handleContinue = () => {
     if (selectedRole) {
-      // Navigate to completion or next step
+      // Navigate directly to activation screen
       console.log('Selected role:', selectedRole);
-      // For now, just show an alert
-      navigation.navigate('Login'); // This would be replaced with actual completion flow
+      navigation.navigate('BusinessAccountActivation');
     }
   };
 
@@ -65,9 +64,7 @@ const BusinessAccountRoleScreen: React.FC = () => {
     const isSelected = selectedRole === roleId;
     return {
       borderColor: isSelected ? theme.colors.primary : theme.colors.inputBorder,
-      backgroundColor: isSelected
-        ? theme.colors.primaryLight
-        : theme.colors.input,
+      backgroundColor: isSelected ? theme.colors.primary : theme.colors.input,
       shadowColor: isSelected ? theme.colors.primary : theme.colors.shadowColor,
       shadowOffset: { width: 0, height: isSelected ? 2 : 1 },
       shadowOpacity: isSelected ? 0.15 : 0.05,
@@ -79,44 +76,38 @@ const BusinessAccountRoleScreen: React.FC = () => {
   const getIconStyles = (roleId: string) => {
     const isSelected = selectedRole === roleId;
     return {
-      color: isSelected ? theme.colors.primary : theme.colors.iconSecondary,
+      color: isSelected ? theme.colors.buttonText : theme.colors.iconSecondary,
     };
   };
 
   const getTitleStyles = (roleId: string) => {
     const isSelected = selectedRole === roleId;
     return {
-      color: isSelected ? theme.colors.primary : theme.colors.text,
+      color: isSelected ? theme.colors.buttonText : theme.colors.text,
+    };
+  };
+
+  const getDescriptionStyles = (roleId: string) => {
+    const isSelected = selectedRole === roleId;
+    return {
+      color: isSelected ? theme.colors.buttonText : theme.colors.textSecondary,
     };
   };
 
   return (
-    <SafeAreaView
+    <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       {/* Header */}
-      <View
-        style={[
-          styles.header,
-          { borderBottomColor: theme.colors.borderHeader },
-          isRTL && styles.headerRTL,
-        ]}
-      >
-        <TouchableOpacity
-          style={[styles.backButton, isRTL && styles.backButtonRTL]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={[styles.backIcon, { color: theme.colors.icon }]}>←</Text>
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
-          {t('business_account')}
-        </Text>
-        <TouchableOpacity onPress={handleSignIn}>
-          <Text style={[styles.signInLink, { color: theme.colors.primary }]}>
-            {t('sign_in')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <DynamicHeader
+        title={t('business_account')}
+        showBackButton
+        backButtonIcon="←"
+        showRightButton
+        rightButtonText={t('sign_in')}
+        onBackPress={() => navigation.goBack()}
+        onRightPress={handleSignIn}
+      />
 
       <View style={styles.contentContainer}>
         <ScrollView
@@ -155,7 +146,7 @@ const BusinessAccountRoleScreen: React.FC = () => {
                     <Text
                       style={[
                         styles.roleDescription,
-                        { color: theme.colors.textSecondary },
+                        getDescriptionStyles(option.id),
                       ]}
                     >
                       {option.description}
@@ -169,35 +160,17 @@ const BusinessAccountRoleScreen: React.FC = () => {
 
         {/* Continue Button - Fixed at bottom */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.continueButton,
-              {
-                backgroundColor: selectedRole
-                  ? theme.colors.primary
-                  : theme.colors.buttonDisabled,
-                shadowColor: theme.colors.shadowColor,
-              },
-            ]}
+          <StandardButton
+            title={t('continue')}
             onPress={handleContinue}
+            variant="primary"
+            size="large"
+            fullWidth
             disabled={!selectedRole}
-          >
-            <Text
-              style={[
-                styles.continueButtonText,
-                {
-                  color: selectedRole
-                    ? theme.colors.buttonText
-                    : theme.colors.textSecondary,
-                },
-              ]}
-            >
-              {t('continue')}
-            </Text>
-          </TouchableOpacity>
+          />
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -297,20 +270,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingHorizontal: 24,
     paddingBottom: 40,
-  },
-  continueButton: {
-    height: 56,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  continueButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });
 

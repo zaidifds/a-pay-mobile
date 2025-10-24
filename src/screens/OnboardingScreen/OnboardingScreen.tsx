@@ -11,8 +11,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../../navigation/AuthNavigator';
-import { useTheme } from '../../hooks/useTheme';
-import useTranslation from '../../localization/useTranslation';
+import { useTheme } from '@/hooks';
+import useTranslation from '@/localization/useTranslation';
 
 const { height } = Dimensions.get('window');
 

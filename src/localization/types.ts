@@ -263,6 +263,7 @@ export interface TranslationKeys {
   personal_address: string;
   personal_address_description: string;
   zip_code: string;
+  united_kingdom: string;
 
   // Business Account Details
   tell_us_about_business: string;
@@ -295,6 +296,78 @@ export interface TranslationKeys {
   one_of_several_description: string;
   i_am_neither_director_nor_significant_shareholder: string;
   neither_director_description: string;
+
+  // Business Account Activation
+  account_activation: string;
+  submit_required_information_description: string;
+  personal_identity: string;
+  personal_information: string;
+  nature_of_business: string;
+  business_purpose: string;
+  business_details: string;
+  business_address: string;
+  directors_and_shareholders: string;
+  plan_and_card: string;
+  requires_action: string;
+  verified: string;
+  sign_in_instead: string;
+  tell_us_more_about_business: string;
+  business_category: string;
+  sub_category_of_business: string;
+  is_your_business_regulated: string;
+  how_do_you_sell_products_services: string;
+  who_are_your_customers: string;
+  no_of_employees: string;
+  business_description: string;
+  select_business_category: string;
+  select_sub_category: string;
+  select_regulation_status: string;
+  select_sales_method: string;
+  select_customer_type: string;
+  select_employee_count: string;
+  enter_business_description: string;
+  financial_information: string;
+  // Financial Information Screen
+  financial_information_description: string;
+  annual_turnover: string;
+  monthly_transaction_volume: string;
+  monthly_transactions: string;
+  max_payment_amount: string;
+  countries_conducting_business: string;
+  countries_conducting_business_description: string;
+  add_country: string;
+  select_annual_turnover: string;
+  select_monthly_volume: string;
+  select_monthly_transactions: string;
+  select_max_payment: string;
+  upload_document: string;
+  // Proof of Nature of Business Screen
+  proof_of_nature_of_business: string;
+  please_confirm_nature_of_business: string;
+  proof_of_business_requirements: string;
+  recommended: string;
+  others: string;
+  website: string;
+  website_description: string;
+  sales_invoice_with_matching_bank_statement: string;
+  sales_invoice_description: string;
+  another_document_indicating_industry: string;
+  industry_document_description: string;
+  domain_name_ownership: string;
+  domain_ownership_description: string;
+  bank_statement: string;
+  bank_statement_description: string;
+  // Directors and Shareholders
+  directors: string;
+  add_all_directors_listed_with_local_registry: string;
+  no_directors_found: string;
+  your_directors_will_appear_here: string;
+  add_director: string;
+  first_name: string;
+  last_name: string;
+  gender: string;
+  dob: string;
+  add: string;
 }
 
 export interface TranslationContextType {

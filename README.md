@@ -1,97 +1,344 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# A-Pay Mobile 💳
 
-# Getting Started
+A modern React Native cryptocurrency wallet application with comprehensive authentication, multi-language support, and beautiful UI components.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 📱 Overview
 
-## Step 1: Start Metro
+A-Pay Mobile is a feature-rich cryptocurrency wallet application built with React Native, offering secure account management, transaction handling, and a seamless user experience across iOS and Android platforms.
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## ✨ Features
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 🔐 Authentication & Security
 
-```sh
-# Using npm
-npm start
+- **Multi-step Authentication Flow**
+  - Personal & Business account types
+  - Email/Phone verification
+  - Two-factor authentication
+  - Account recovery system
+- **Secure State Management**
+  - Redux Toolkit with persistence
+  - MMKV storage for sensitive data
+  - Encrypted token storage
 
-# OR using Yarn
-yarn start
+### 🌍 Internationalization
+
+- **Multi-language Support**
+  - English, Arabic, Croatian, Urdu
+  - RTL (Right-to-Left) layout support
+  - Dynamic language switching
+  - Context-aware translations
+
+### 🎨 UI/UX Features
+
+- **Dynamic Theme System**
+  - Light & Dark mode support
+  - Customizable color schemes
+  - Responsive design
+  - Beautiful animations
+- **Reusable Components**
+  - DynamicHeader with full customization
+  - Form components with validation
+  - Modal system for transactions
+  - Card-based layouts
+
+### 💰 Wallet Features
+
+- **Multi-currency Support**
+  - Real-time price tracking
+  - Balance management
+  - Transaction history
+- **Transaction Types**
+  - Send/Receive cryptocurrency
+  - Swap between currencies
+  - Buy cryptocurrency
+  - Transaction filtering
+
+## 🏗️ Architecture
+
+### Project Structure
+
+```
+src/
+├── components/           # Reusable UI components
+│   ├── ui/              # Basic UI components
+│   ├── auth/            # Authentication components
+│   ├── forms/           # Form components
+│   ├── modals/          # Modal components
+│   ├── cards/           # Card components
+│   ├── navigation/      # Navigation components
+│   ├── settings/        # Settings components
+│   └── common/          # Shared components
+├── screens/             # Screen components
+│   ├── AuthScreens/     # Authentication screens
+│   ├── OnboardingScreen/
+│   └── SplashScreen/
+├── navigation/          # Navigation configuration
+├── redux/              # State management
+│   ├── slices/         # Redux slices
+│   └── store.ts        # Store configuration
+├── localization/       # Internationalization
+│   ├── translations/   # Language files
+│   └── useTranslation.ts
+├── theme/              # Theme system
+├── hooks/              # Custom hooks
+├── utils/              # Utility functions
+├── types/              # TypeScript definitions
+├── constants/          # App constants
+└── assets/             # Images and SVGs
 ```
 
-## Step 2: Build and run your app
+### Technology Stack
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+#### Core Technologies
 
-### Android
+- **React Native** 0.82.1 - Cross-platform mobile development
+- **TypeScript** 5.8.3 - Type-safe JavaScript
+- **React** 19.1.1 - UI library
 
-```sh
-# Using npm
-npm run android
+#### State Management
 
-# OR using Yarn
-yarn android
+- **Redux Toolkit** 2.9.1 - Predictable state container
+- **Redux Persist** 5.10.0 - State persistence
+- **React Redux** 9.2.0 - React bindings
+
+#### Navigation
+
+- **React Navigation** 7.x - Navigation library
+- **Stack Navigator** - Screen transitions
+- **Bottom Tab Navigator** - Tab navigation
+
+#### UI & Styling
+
+- **React Native Vector Icons** 10.3.0 - Icon library
+- **React Native Linear Gradient** 2.8.3 - Gradient backgrounds
+- **React Native SVG** 15.14.0 - SVG support
+- **React Native Reanimated** 4.1.3 - Animations
+
+#### Forms & Validation
+
+- **Formik** 2.4.6 - Form management
+- **Yup** 1.7.1 - Schema validation
+- **React Native International Phone Number** 0.11.0 - Phone input
+
+#### Storage & Persistence
+
+- **React Native MMKV** 4.0.0 - Fast key-value storage
+- **Redux Persist** - State persistence
+
+#### Development Tools
+
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **Jest** - Testing framework
+- **Babel Module Resolver** - Path aliasing
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js >= 20
+- React Native CLI
+- Xcode (for iOS development)
+- Android Studio (for Android development)
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd a-pay-mobile
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. **iOS Setup**
+
+   ```bash
+   cd ios && pod install && cd ..
+   ```
+
+4. **Start Metro bundler**
+
+   ```bash
+   npm start
+   # or
+   yarn start
+   ```
+
+5. **Run the app**
+
+   ```bash
+   # iOS
+   npm run ios
+   # or
+   yarn ios
+
+   # Android
+   npm run android
+   # or
+   yarn android
+   ```
+
+## 📱 Available Scripts
+
+- `npm start` - Start Metro bundler
+- `npm run ios` - Run on iOS simulator
+- `npm run android` - Run on Android emulator
+- `npm run lint` - Run ESLint
+- `npm test` - Run tests
+
+## 🎨 Design System
+
+### Theme Configuration
+
+The app uses a comprehensive theme system with:
+
+- **Color Palette**: Primary, secondary, status, and semantic colors
+- **Typography**: Responsive font sizes and weights
+- **Spacing**: Consistent spacing scale
+- **Shadows**: Elevation system
+
+### Component Library
+
+- **DynamicHeader**: Highly customizable header component
+- **Form Components**: Input, dropdown with validation
+- **Modal System**: Buy, receive, swap modals
+- **Card Components**: Account and transaction cards
+
+## 🌐 Internationalization
+
+### Supported Languages
+
+- English (en)
+- Arabic (ar) - RTL support
+- Croatian (hr)
+- Urdu (ur)
+
+### Adding New Languages
+
+1. Create translation file in `src/localization/translations/`
+2. Add language to `src/localization/constants.ts`
+3. Update language selector component
+
+## 🔧 Configuration
+
+### Path Aliases
+
+The project uses path aliases for cleaner imports:
+
+```typescript
+"@/*": ["src/*"]
+"@/components/*": ["src/components/*"]
+"@/hooks/*": ["src/hooks/*"]
+// ... and more
 ```
 
-### iOS
+### Environment Configuration
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+- Development API: `https://api-dev.apay.com`
+- Production API: `https://api.apay.com`
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+## 📦 Key Dependencies
 
-```sh
-bundle install
+### Production Dependencies
+
+- `@react-navigation/native` - Navigation
+- `@reduxjs/toolkit` - State management
+- `formik` - Form handling
+- `react-native-mmkv` - Storage
+- `react-native-vector-icons` - Icons
+- `yup` - Validation
+
+### Development Dependencies
+
+- `@types/react` - TypeScript types
+- `eslint` - Linting
+- `prettier` - Formatting
+- `typescript` - Type checking
+
+## 🏛️ Architecture Patterns
+
+### State Management
+
+- **Redux Toolkit** for global state
+- **Redux Persist** for state persistence
+- **Typed hooks** for type safety
+
+### Component Organization
+
+- **Atomic Design** principles
+- **Feature-based** folder structure
+- **Reusable** component library
+
+### Navigation
+
+- **Stack-based** navigation
+- **Type-safe** navigation
+- **Conditional** routing based on auth state
+
+## 🔒 Security Features
+
+- **Secure Storage** using MMKV
+- **Token Management** with Redux Persist
+- **Input Validation** with Yup schemas
+- **Type Safety** with TypeScript
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm test -- --watch
+
+# Run tests with coverage
+npm test -- --coverage
 ```
 
-Then, and every time you update your native dependencies, run:
+## 📱 Platform Support
 
-```sh
-bundle exec pod install
-```
+- **iOS** 12.0+
+- **Android** API 21+ (Android 5.0)
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## 🤝 Contributing
 
-```sh
-# Using npm
-npm run ios
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-# OR using Yarn
-yarn ios
-```
+## 📄 License
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+This project is licensed under the MIT License.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 🆘 Support
 
-## Step 3: Modify your app
+For support and questions:
 
-Now that you have successfully run the app, let's make changes!
+- Create an issue in the repository
+- Check the documentation
+- Review the code examples
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## 🔄 Changelog
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+### Version 1.0.0
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+- Initial release
+- Authentication system
+- Multi-language support
+- Wallet functionality
+- Theme system
+- Component library
 
-## Congratulations! :tada:
+---
 
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+**Built with ❤️ using React Native**

@@ -14,8 +14,8 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import PhoneInput, { ICountry } from 'react-native-international-phone-number';
 import { AuthStackParamList } from '../../../navigation/AuthNavigator';
-import { useTheme } from '../../../hooks/useTheme';
-import useTranslation from '../../../localization/useTranslation';
+import { useTheme } from '@/hooks';
+import useTranslation from '@/localization/useTranslation';
 
 type RecoverAccountScreenNavigationProp =
   StackNavigationProp<AuthStackParamList>;

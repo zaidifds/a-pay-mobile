@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { TabStackNavigationProp } from '../navigation/navigationTypes';
 
-export const useModalNavigation = () => {
+const useModalNavigation = () => {
   const navigation = useNavigation<TabStackNavigationProp>();
 
   const openReceiveModal = () => {
@@ -23,3 +23,5 @@ export const useModalNavigation = () => {
     navigation,
   };
 };
+
+export default useModalNavigation;

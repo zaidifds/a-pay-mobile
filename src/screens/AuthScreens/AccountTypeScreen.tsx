@@ -1,17 +1,11 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../../navigation/AuthNavigator';
-import { useTheme } from '../../hooks/useTheme';
-import useTranslation from '../../localization/useTranslation';
-// import SvgIcon from '../../assets/svg/SvgIcon';
+import { useTheme } from '@/hooks';
+import useTranslation from '@/localization/useTranslation';
+import { DynamicHeader } from '@/components/ui';
 
 type AccountTypeScreenNavigationProp = StackNavigationProp<AuthStackParamList>;
 
@@ -33,32 +27,18 @@ const AccountTypeScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      {/* Header */}
-      <View
-        style={[
-          styles.header,
-          { borderBottomColor: theme.colors.borderHeader },
-          isRTL && styles.headerRTL,
-        ]}
-      >
-        <TouchableOpacity
-          style={[styles.backButton, isRTL && styles.backButtonRTL]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={[styles.backIcon, { color: theme.colors.icon }]}>←</Text>
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
-          {t('create_account')}
-        </Text>
-        <TouchableOpacity onPress={handleSignIn}>
-          <Text style={[styles.signInLink, { color: theme.colors.primary }]}>
-            {t('sign_in')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <DynamicHeader
+        title={t('create_account')}
+        showBackButton
+        backButtonIcon="←"
+        showRightButton
+        rightButtonText={t('sign_in')}
+        onBackPress={() => navigation.goBack()}
+        onRightPress={handleSignIn}
+      />
 
       {/* Content */}
       <View style={styles.content}>
@@ -68,7 +48,9 @@ const AccountTypeScreen: React.FC = () => {
         </Text>
 
         {/* Description */}
-        <Text style={[styles.description, { color: theme.colors.textSecondary }]}>
+        <Text
+          style={[styles.description, { color: theme.colors.textSecondary }]}
+        >
           {t('account_type_description')}
         </Text>
 
@@ -78,7 +60,10 @@ const AccountTypeScreen: React.FC = () => {
           <TouchableOpacity
             style={[
               styles.accountCard,
-              { backgroundColor: theme.colors.surface, shadowColor: theme.colors.shadowColor },
+              {
+                backgroundColor: theme.colors.surface,
+                shadowColor: theme.colors.shadowColor,
+              },
               isRTL && styles.accountCardRTL,
             ]}
             onPress={handlePersonalAccount}
@@ -91,7 +76,9 @@ const AccountTypeScreen: React.FC = () => {
                   { backgroundColor: theme.colors.primaryLight },
                 ]}
               >
-                <Text style={[styles.iconText, { color: theme.colors.primary }]}>
+                <Text
+                  style={[styles.iconText, { color: theme.colors.primary }]}
+                >
                   👤
                 </Text>
               </View>
@@ -99,7 +86,12 @@ const AccountTypeScreen: React.FC = () => {
                 {t('personal_account')}
               </Text>
             </View>
-            <Text style={[styles.cardDescription, { color: theme.colors.textSecondary }]}>
+            <Text
+              style={[
+                styles.cardDescription,
+                { color: theme.colors.textSecondary },
+              ]}
+            >
               {t('personal_account_description')}
             </Text>
             <View style={[styles.cardActions, isRTL && styles.cardActionsRTL]}>
@@ -110,13 +102,23 @@ const AccountTypeScreen: React.FC = () => {
                 ]}
                 onPress={handlePersonalAccount}
               >
-                <Text style={[styles.primaryButtonText, { color: theme.colors.buttonText }]}>
+                <Text
+                  style={[
+                    styles.primaryButtonText,
+                    { color: theme.colors.buttonText },
+                  ]}
+                >
                   {t('get_started')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handlePersonalAccount}>
-                <Text style={[styles.learnMoreLink, { color: theme.colors.primary }]}>
-                  {t('learn_more')} >
+                <Text
+                  style={[
+                    styles.learnMoreLink,
+                    { color: theme.colors.primary },
+                  ]}
+                >
+                  {t('learn_more')} {'>'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -126,7 +128,10 @@ const AccountTypeScreen: React.FC = () => {
           <TouchableOpacity
             style={[
               styles.accountCard,
-              { backgroundColor: theme.colors.surface, shadowColor: theme.colors.shadowColor },
+              {
+                backgroundColor: theme.colors.surface,
+                shadowColor: theme.colors.shadowColor,
+              },
               isRTL && styles.accountCardRTL,
             ]}
             onPress={handleBusinessAccount}
@@ -139,7 +144,9 @@ const AccountTypeScreen: React.FC = () => {
                   { backgroundColor: theme.colors.primaryLight },
                 ]}
               >
-                <Text style={[styles.iconText, { color: theme.colors.primary }]}>
+                <Text
+                  style={[styles.iconText, { color: theme.colors.primary }]}
+                >
                   💼
                 </Text>
               </View>
@@ -147,7 +154,12 @@ const AccountTypeScreen: React.FC = () => {
                 {t('business_account')}
               </Text>
             </View>
-            <Text style={[styles.cardDescription, { color: theme.colors.textSecondary }]}>
+            <Text
+              style={[
+                styles.cardDescription,
+                { color: theme.colors.textSecondary },
+              ]}
+            >
               {t('business_account_description')}
             </Text>
             <View style={[styles.cardActions, isRTL && styles.cardActionsRTL]}>
@@ -158,55 +170,36 @@ const AccountTypeScreen: React.FC = () => {
                 ]}
                 onPress={handleBusinessAccount}
               >
-                <Text style={[styles.primaryButtonText, { color: theme.colors.buttonText }]}>
+                <Text
+                  style={[
+                    styles.primaryButtonText,
+                    { color: theme.colors.buttonText },
+                  ]}
+                >
                   {t('get_started')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleBusinessAccount}>
-                <Text style={[styles.learnMoreLink, { color: theme.colors.primary }]}>
-                  {t('learn_more')} >
+                <Text
+                  style={[
+                    styles.learnMoreLink,
+                    { color: theme.colors.primary },
+                  ]}
+                >
+                  {t('learn_more')} {'>'}
                 </Text>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-  },
-  headerRTL: {
-    flexDirection: 'row-reverse',
-  },
-  backButton: {
-    padding: 8,
-  },
-  backButtonRTL: {
-    transform: [{ scaleX: -1 }],
-  },
-  backIcon: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  signInLink: {
-    fontSize: 16,
-    fontWeight: '500',
   },
   content: {
     flex: 1,

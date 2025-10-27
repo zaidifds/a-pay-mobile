@@ -11,6 +11,15 @@ import Exchange from './Exchange.svg';
 import Recieve from './Recieve.svg';
 import Dollar from './Dollar.svg';
 
+import Wallet from './Wallet.svg';
+import WalletSelected from './WalletSelected.svg';
+import Analytics from './Analytics.svg';
+import AnalyticsSelected from './AnalyticsSelected.svg';
+import Payments from './Payment.svg';
+import PaymentsSelected from './PaymentSelected.svg';
+import Cards from './Card.svg';
+import CardsSelected from './CardsSelected.svg';
+
 const SvgIcon = {
   FacialIdentity,
   Finger,
@@ -24,6 +33,14 @@ const SvgIcon = {
   Exchange,
   Recieve,
   Dollar,
+  Wallet,
+  WalletSelected,
+  Analytics,
+  AnalyticsSelected,
+  Payments,
+  PaymentsSelected,
+  Cards,
+  CardsSelected,
 };
 
 export default SvgIcon;

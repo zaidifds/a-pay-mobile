@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '@/hooks';
 import { useTranslation } from '@/localization';
+import SvgIcon from '@/assets/svg/SvgIcon';
 
 const BottomTabBarContent = ({
   state: tabState,
@@ -14,18 +15,22 @@ const BottomTabBarContent = ({
   const { theme } = useTheme();
   const { t } = useTranslation();
 
-  const getTabIcon = (routeName: string, color: string, size: number) => {
+  const getTabIcon = (routeName: string, isFocused: boolean) => {
     switch (routeName) {
       case 'Wallet':
-        return <Icon name="account-balance-wallet" size={size} color={color} />;
+        return isFocused ? <SvgIcon.WalletSelected /> : <SvgIcon.Wallet />;
       case 'Analytics':
-        return <Icon name="send" size={size} color={color} />;
+        return isFocused ? (
+          <SvgIcon.AnalyticsSelected />
+        ) : (
+          <SvgIcon.Analytics />
+        );
       case 'Payments':
-        return <Icon name="history" size={size} color={color} />;
+        return isFocused ? <SvgIcon.PaymentsSelected /> : <SvgIcon.Payments />;
       case 'Cards':
-        return <Icon name="person" size={size} color={color} />;
+        return isFocused ? <SvgIcon.CardsSelected /> : <SvgIcon.Cards />;
       default:
-        return <Icon name="account-balance-wallet" size={size} color={color} />;
+        return isFocused ? <SvgIcon.WalletSelected /> : <SvgIcon.Wallet />;
     }
   };
 
@@ -100,13 +105,7 @@ const BottomTabBarContent = ({
                 isFocused && dynamicStyles.iconContainerActive,
               ]}
             >
-              {getTabIcon(
-                route.name,
-                isFocused
-                  ? theme.colors.tabBarActive
-                  : theme.colors.tabBarInactive,
-                20,
-              )}
+              {getTabIcon(route.name, isFocused)}
             </View>
             <Text
               numberOfLines={1}

@@ -54,7 +54,7 @@ const AppNavigator: React.FC = () => {
         }}
       >
         <Stack.Navigator
-          initialRouteName={'Auth'}
+          initialRouteName={isAuthenticated ? 'BottomTabs' : 'Auth'}
           screenOptions={{
             headerShown: false,
             cardStyle: { backgroundColor: theme.colors.background },
@@ -69,11 +69,8 @@ const AppNavigator: React.FC = () => {
             }),
           }}
         >
-          {isAuthenticated ? (
-            <Stack.Screen name="BottomTabs" component={BottomTabNavigator} />
-          ) : (
-            <Stack.Screen name="Auth" component={AuthNavigator} />
-          )}
+          <Stack.Screen name="Auth" component={AuthNavigator} />
+          <Stack.Screen name="BottomTabs" component={BottomTabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

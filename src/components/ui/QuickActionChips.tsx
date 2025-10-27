@@ -123,7 +123,7 @@ const styles = (theme: any) =>
       justifyContent: 'space-around',
       alignItems: 'center',
       marginTop: rp(24),
-      marginHorizontal: rp(20),
+      marginHorizontal: rp(10),
       paddingBottom: rp(6),
     },
     chip: {

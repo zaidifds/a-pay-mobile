@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: rp(5),
+    paddingHorizontal: rp(10),
     overflow: 'hidden',
   },
   textContainer: {

@@ -19,6 +19,7 @@ import Payments from './Payment.svg';
 import PaymentsSelected from './PaymentSelected.svg';
 import Cards from './Card.svg';
 import CardsSelected from './CardsSelected.svg';
+import CreditCard from './CreditCard.svg';
 
 const SvgIcon = {
   FacialIdentity,
@@ -41,6 +42,7 @@ const SvgIcon = {
   PaymentsSelected,
   Cards,
   CardsSelected,
+  CreditCard,
 };
 
 export default SvgIcon;

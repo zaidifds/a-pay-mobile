@@ -5,3 +5,4 @@ export { default as StandardButton } from './StandardButton';
 export { default as QuickActionChips } from './QuickActionChips';
 export { default as PromotionalSlider } from './PromotionalSlider';
 export { default as TransactionHistory } from './TransactionHistory';
+export { default as CardCarousel, CardData } from './CardCarousel';

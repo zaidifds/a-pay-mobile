@@ -3,6 +3,19 @@ import { StackNavigationProp } from '@react-navigation/stack';
 // Root Stack Navigator Types
 export type RootStackParamList = {
   Auth: undefined;
+  Main: undefined;
+  // Account Screens
+  AccountDocumentScreen: undefined;
+  BusinessDetailsScreen: undefined;
+  BusinessAddressScreen: undefined;
+  BusinessProfileScreen: undefined;
+  BusinessStructureScreen: undefined;
+  PersonalDetailsScreen: undefined;
+  PersonalProfileScreen: undefined;
+  StatementsScreen: undefined;
+  MerchantProfileScreen?: undefined;
+  PrivacyPolicyScreen?: undefined;
+  TermsConditionsScreen?: undefined;
 };
 
 // Auth Stack Navigator Types

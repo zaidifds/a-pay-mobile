@@ -5,7 +5,6 @@ import AccountTypeScreen from '../screens/AuthScreens/AccountTypeScreen';
 import RecoverAccountScreen from '../screens/AuthScreens/Recovery/RecoverAccountScreen';
 import TwoWayAuthenticationScreen from '../screens/AuthScreens/Recovery/TwoWayAuthenticationScreen';
 import VerifyIdentityScreen from '../screens/AuthScreens/Recovery/VerifyIdentityScreen';
-import LoginScreen from '../screens/AuthScreens/SignIn/SignIn';
 import AddDirectorScreen from '../screens/AuthScreens/Signup/Business/AddDirectorScreen';
 import BusinessAccountActivationScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountActivationScreen';
 import BusinessAccountAddressScreen from '../screens/AuthScreens/Signup/Business/BusinessAccountAddressScreen';
@@ -23,12 +22,12 @@ import FinancialInformationScreen from '../screens/AuthScreens/Signup/Business/F
 import NatureOfBusinessScreen from '../screens/AuthScreens/Signup/Business/NatureOfBusinessScreen';
 import ProofOfNatureOfBusinessScreen from '../screens/AuthScreens/Signup/Business/ProofOfNatureOfBusinessScreen';
 import PersonalSignupScreen from '../screens/AuthScreens/Signup/Personal/PersonalSignupScreen';
-import SignupScreen from '../screens/AuthScreens/SignupScreen';
 import OnboardingScreen from '../screens/OnboardingScreen/OnboardingScreen';
+import SignInScreen from '@/screens/AuthScreens/SignIn/SignInScreen';
 
 export type AuthStackParamList = {
   Onboarding: undefined;
-  Login: undefined;
+  SignIn: undefined;
   Signup: undefined;
   AccountType: undefined;
   PersonalSignup: undefined;
@@ -61,7 +60,7 @@ const AuthNavigator: React.FC = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="BusinessAccountActivation"
+      initialRouteName="Onboarding"
       screenOptions={{
         headerShown: false,
         cardStyle: { backgroundColor: theme.colors.background },
@@ -77,8 +76,7 @@ const AuthNavigator: React.FC = () => {
       }}
     >
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Signup" component={SignupScreen} />
+      <Stack.Screen name="SignIn" component={SignInScreen} />
       <Stack.Screen name="AccountType" component={AccountTypeScreen} />
       <Stack.Screen name="PersonalSignup" component={PersonalSignupScreen} />
       <Stack.Screen

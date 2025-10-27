@@ -16,13 +16,13 @@ const BottomTabBarContent = ({
 
   const getTabIcon = (routeName: string, color: string, size: number) => {
     switch (routeName) {
-      case 'wallet':
+      case 'Wallet':
         return <Icon name="account-balance-wallet" size={size} color={color} />;
-      case 'send':
+      case 'Analytics':
         return <Icon name="send" size={size} color={color} />;
-      case 'history':
+      case 'Payments':
         return <Icon name="history" size={size} color={color} />;
-      case 'profile':
+      case 'Cards':
         return <Icon name="person" size={size} color={color} />;
       default:
         return <Icon name="account-balance-wallet" size={size} color={color} />;
@@ -31,14 +31,14 @@ const BottomTabBarContent = ({
 
   const getTabLabel = (routeName: string) => {
     switch (routeName) {
-      case 'wallet':
+      case 'Wallet':
         return t('wallet');
-      case 'send':
-        return t('send');
-      case 'history':
-        return t('history');
-      case 'profile':
-        return t('profile');
+      case 'Analytics':
+        return t('analytics');
+      case 'Payments':
+        return t('payments');
+      case 'Cards':
+        return t('cards');
       default:
         return t('wallet');
     }

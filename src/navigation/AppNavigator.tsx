@@ -1,16 +1,17 @@
+import { useTheme } from '@/hooks';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootState, useAppSelector } from '../redux/store';
-import { useTheme } from '@/hooks';
 
 // Import navigators
 import AuthNavigator from './AuthNavigator';
+import BottomTabNavigator from './BottomTabNavigator';
 
 export type RootStackParamList = {
   Auth: undefined;
-  Main: undefined;
+  BottomTabs: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -53,7 +54,7 @@ const AppNavigator: React.FC = () => {
         }}
       >
         <Stack.Navigator
-          initialRouteName={isAuthenticated ? 'Main' : 'Auth'}
+          initialRouteName={'Auth'}
           screenOptions={{
             headerShown: false,
             cardStyle: { backgroundColor: theme.colors.background },
@@ -68,7 +69,11 @@ const AppNavigator: React.FC = () => {
             }),
           }}
         >
-          <Stack.Screen name="Auth" component={AuthNavigator} />
+          {isAuthenticated ? (
+            <Stack.Screen name="BottomTabs" component={BottomTabNavigator} />
+          ) : (
+            <Stack.Screen name="Auth" component={AuthNavigator} />
+          )}
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

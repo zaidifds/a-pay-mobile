@@ -1,21 +1,20 @@
-import React, { useState, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ImageBackground,
-  TouchableOpacity,
-  TextInput,
-  StatusBar,
-  SafeAreaView,
-  Dimensions,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { AuthStackParamList } from '../../../navigation/AuthNavigator';
+import { StandardButton, CodeInput } from '@/components/ui';
 import { useTheme } from '@/hooks';
-import useTranslation from '@/localization/useTranslation';
-import { StandardButton } from '@/components/ui';
+import { useNavigation } from '@react-navigation/native';
+import { useAppDispatch } from '@/redux/store';
+import { loginWithPin } from '@/redux/slices/authSlice';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useState } from 'react';
+import {
+  Dimensions,
+  ImageBackground,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { AuthStackParamList } from '../../../navigation/AuthNavigator';
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,42 +22,31 @@ type SignInScreenNavigationProp = StackNavigationProp<AuthStackParamList>;
 
 const SignInScreen: React.FC = () => {
   const navigation = useNavigation<SignInScreenNavigationProp>();
+  const dispatch = useAppDispatch();
   const { theme } = useTheme();
-  const { t } = useTranslation();
 
-  const [passcode, setPasscode] = useState(['', '', '', '']);
-  const [isLoading, setIsLoading] = useState(false);
-  const inputRefs = useRef<TextInput[]>([]);
+  const [passcode, setPasscode] = useState(['', '', '', '', '', '']);
+  const passcodeComplete = passcode.every(digit => digit !== '');
 
   const handlePasscodeChange = (text: string, index: number) => {
     const newPasscode = [...passcode];
     newPasscode[index] = text;
     setPasscode(newPasscode);
-
-    // Auto-focus next input
-    if (text && index < 3) {
-      inputRefs.current[index + 1]?.focus();
-    }
   };
 
   const handleKeyPress = (key: string, index: number) => {
     if (key === 'Backspace' && !passcode[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+      const newPasscode = [...passcode];
+      newPasscode[index - 1] = '';
+      setPasscode(newPasscode);
     }
   };
 
   const handleSignIn = async () => {
     const fullPasscode = passcode.join('');
-    if (fullPasscode.length === 4) {
-      setIsLoading(true);
-
-      // Simulate API call
-      await new Promise<void>(resolve => setTimeout(resolve, 1500));
-
-      // Navigate to main app or show error
-      console.log('Signing in with passcode:', fullPasscode);
-
-      setIsLoading(false);
+    if (fullPasscode.length === 6) {
+      await dispatch(loginWithPin(fullPasscode));
+      // Navigation will be handled by AppNavigator based on auth state
     }
   };
 
@@ -68,10 +56,9 @@ const SignInScreen: React.FC = () => {
   };
 
   const handleSignUp = () => {
-    navigation.navigate('AccountType');
+    // Signup will be handled later
+    console.log('Signup functionality coming soon');
   };
-
-  const isPasscodeComplete = passcode.every(digit => digit !== '');
 
   return (
     <ImageBackground
@@ -84,7 +71,7 @@ const SignInScreen: React.FC = () => {
         backgroundColor="transparent"
         translucent
       />
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         {/* Back Button */}
         <TouchableOpacity
           style={styles.backButton}
@@ -110,33 +97,14 @@ const SignInScreen: React.FC = () => {
 
           {/* Passcode Input Fields */}
           <View style={styles.passcodeContainer}>
-            {passcode.map((digit, index) => (
-              <TextInput
-                key={index}
-                ref={ref => {
-                  if (ref) inputRefs.current[index] = ref;
-                }}
-                style={[
-                  styles.passcodeInput,
-                  {
-                    borderColor: digit
-                      ? theme.colors.primary
-                      : theme.colors.inputBorder,
-                    backgroundColor: theme.colors.input,
-                  },
-                ]}
-                value={digit}
-                onChangeText={text => handlePasscodeChange(text, index)}
-                onKeyPress={({ nativeEvent }) =>
-                  handleKeyPress(nativeEvent.key, index)
-                }
-                keyboardType="numeric"
-                maxLength={1}
-                textAlign="center"
-                secureTextEntry
-                selectTextOnFocus
-              />
-            ))}
+            <CodeInput
+              length={6}
+              value={passcode}
+              onChangeText={handlePasscodeChange}
+              onKeyPress={handleKeyPress}
+              autoFocus={true}
+              keyboardType="numeric"
+            />
           </View>
 
           {/* Sign In Button */}
@@ -146,8 +114,7 @@ const SignInScreen: React.FC = () => {
             variant="primary"
             size="large"
             fullWidth
-            disabled={!isPasscodeComplete}
-            loading={isLoading}
+            disabled={!passcodeComplete}
             style={styles.signInButton}
           />
 
@@ -179,7 +146,7 @@ const SignInScreen: React.FC = () => {
             </Text>
           </Text>
         </View>
-      </SafeAreaView>
+      </View>
     </ImageBackground>
   );
 };
@@ -269,23 +236,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   passcodeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
     marginBottom: 32,
-    gap: 12,
-  },
-  passcodeInput: {
-    width: 60,
-    height: 60,
-    borderWidth: 2,
-    borderRadius: 12,
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
   },
   signInButton: {
     marginBottom: 16,

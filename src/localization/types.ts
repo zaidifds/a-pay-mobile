@@ -25,6 +25,9 @@ export interface TranslationKeys {
   profile: string;
   history: string;
   settings: string;
+  analytics: string;
+  payments: string;
+  cards: string;
 
   // Auth
   login: string;
@@ -368,6 +371,139 @@ export interface TranslationKeys {
   gender: string;
   dob: string;
   add: string;
+
+  // Account & Document Screens
+  account_document: string;
+  profile_management: string;
+  personal_profile: string;
+  business_profile: string;
+  merchant_profile: string;
+  documents_policies: string;
+  statements: string;
+  privacy_policy: string;
+  terms_conditions: string;
+  account_actions: string;
+  close_business_account: string;
+
+  // Personal Profile
+  cara_dune: string;
+  caradune_microsoft_com: string;
+  active: string;
+  order_card: string;
+  profile: string;
+  personal_details: string;
+  role: string;
+  approvals: string;
+  organization: string;
+  manager: string;
+  finances: string;
+  transactions: string;
+
+  // Personal Details
+  full_name: string;
+  birth_date: string;
+  residential_address: string;
+  phone_no: string;
+  email: string;
+  edit: string;
+
+  // Business Profile
+  key_information: string;
+  business_details: string;
+  business_address: string;
+  type_of_business: string;
+  business_structure: string;
+  additional_information: string;
+  vat_number: string;
+
+  // Business Details
+  country_of_incorporation: string;
+  legal_name: string;
+  company_house_registration_number: string;
+  date_of_incorporation: string;
+  business_type: string;
+  trading_name: string;
+
+  // Business Address
+  registered: string;
+  primary_place_of_business: string;
+
+  // Type of Business
+  category: string;
+  website: string;
+  description: string;
+
+  // Business Structure
+  directors: string;
+  shareholders: string;
+
+  // Statements
+  monthly_statement: string;
+  monthly_statement_description: string;
+  transaction_statements: string;
+  transaction_statements_description: string;
+  statement_of_balances: string;
+  statement_of_balances_description: string;
+  account_confirmation: string;
+  account_confirmation_description: string;
+  audit_confirmation: string;
+  audit_confirmation_description: string;
+
+  // Main Settings Screen
+  microsoft_inc: string;
+  help: string;
+  account_manager: string;
+  get_in_touch_to_optimize_your_plan: string;
+  billing: string;
+  free: string;
+  account_documents: string;
+  security_privacy: string;
+  app_settings: string;
+  apis: string;
+  about_us: string;
+  logout: string;
+  upgrade: string;
+
+  // Verification Screens
+  account_created_successfully_banner: string;
+  enable_biometric: string;
+  enable_biometric_description: string;
+  enable_biometric_button: string;
+  ill_do_this_later: string;
+  create_passcode: string;
+  create_passcode_description: string;
+  enter_passcode: string;
+  confirm_passcode: string;
+  passcodes_dont_match: string;
+  proof_of_residency: string;
+  proof_of_residency_description: string;
+  prove_us_residency: string;
+  upload_residency_document: string;
+  identity_card: string;
+  identity_card_description: string;
+  upload_identity_card: string;
+  upload_id_card: string;
+  front_side: string;
+  back_side: string;
+  upload_instructions: string;
+  processing_message: string;
+  completed_status: string;
+  tap_to_upload: string;
+  focus_on_your_face: string;
+  move_head_to_side: string;
+  identity_verified_successfully: string;
+  scan_document: string;
+  take_photo: string;
+  select_from_gallery: string;
+  passport: string;
+  driving_license: string;
+  digital_document: string;
+  method_of_verification: string;
+  nationality: string;
+  change: string;
+  united_states: string;
+  canada: string;
+  australia: string;
 }
 
 export interface TranslationContextType {

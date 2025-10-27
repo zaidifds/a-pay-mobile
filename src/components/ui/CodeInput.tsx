@@ -10,6 +10,7 @@ interface CodeInputProps {
   onKeyPress?: (key: string, index: number) => void;
   error?: string;
   autoFocus?: boolean;
+  keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
 }
 
 const CodeInput: React.FC<CodeInputProps> = ({
@@ -19,6 +20,7 @@ const CodeInput: React.FC<CodeInputProps> = ({
   onKeyPress,
   error,
   autoFocus = false,
+  keyboardType = 'default',
 }) => {
   const { theme } = useTheme();
   const { isRTL } = useTranslation();
@@ -51,6 +53,7 @@ const CodeInput: React.FC<CodeInputProps> = ({
         {Array.from({ length }, (_, index) => (
           <TextInput
             key={index}
+            keyboardType={keyboardType}
             ref={ref => {
               if (ref) inputRefs.current[index] = ref;
             }}
@@ -100,7 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    gap: 12, // Proper spacing between boxes
+    gap: 20, // Proper spacing between boxes
   },
   codeContainerRTL: {
     flexDirection: 'row-reverse',

@@ -1,0 +1,10 @@
+export { default as AccountDetailsScreen } from './AccountDetailsScreen';
+export { default as AccountDocumentScreen } from './AccountDocumentScreen';
+export { default as PersonalProfileScreen } from './PersonalProfileScreen';
+export { default as PersonalDetailsScreen } from './PersonalDetailsScreen';
+export { default as BusinessProfileScreen } from './BusinessProfileScreen';
+export { default as BusinessDetailsScreen } from './BusinessDetailsScreen';
+export { default as BusinessAddressScreen } from './BusinessAddressScreen';
+export { default as TypeOfBusinessScreen } from './TypeOfBusinessScreen';
+export { default as BusinessStructureScreen } from './BusinessStructureScreen';
+export { default as StatementsScreen } from './StatementsScreen';

@@ -1,7 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { User, AuthState } from '../../types';
-import { mockUsers, mockCredentials } from '../../mocks/user';
-import { UserPreferences } from '../../utils/userPreferences';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AuthState, User } from '../../types';
 
 const initialState: AuthState = {
   user: null,
@@ -11,73 +9,32 @@ const initialState: AuthState = {
   error: null,
 };
 
-// Login user
-export const loginUser = createAsyncThunk(
-  'auth/loginUser',
-  async (
-    credentials: { email: string; password: string },
-    { rejectWithValue },
-  ) => {
+// Login with PIN
+export const loginWithPin = createAsyncThunk(
+  'auth/loginWithPin',
+  async (pin: string, { rejectWithValue }) => {
     try {
       // Simulate API delay
       await new Promise<void>(resolve => setTimeout(resolve, 1000));
 
-      const { email, password } = credentials;
-      const user = mockUsers.find(u => u.email === email);
-
-      if (!user) {
-        return rejectWithValue('User not found');
+      // Hardcoded PIN for now: 123456
+      if (pin !== '123456') {
+        return rejectWithValue('Invalid PIN');
       }
 
-      if (mockCredentials[email] !== password) {
-        return rejectWithValue('Invalid password');
-      }
+      // Mock user
+      const user: User = {
+        id: '1',
+        email: 'user@apay.com',
+        name: 'A Pay User',
+        avatar: `https://via.placeholder.com/100x100/007AFF/FFFFFF?text=U`,
+        createdAt: new Date().toISOString(),
+      };
 
       const token = 'mock-jwt-token-' + Date.now();
       return { user, token };
     } catch {
       return rejectWithValue('Login failed');
-    }
-  },
-);
-
-// Signup user
-export const signupUser = createAsyncThunk(
-  'auth/signupUser',
-  async (
-    userData: { email: string; password: string; name: string },
-    { rejectWithValue },
-  ) => {
-    try {
-      // Simulate API delay
-      await new Promise<void>(resolve => setTimeout(resolve, 1000));
-
-      const { email, name } = userData;
-
-      // Check if user already exists
-      if (mockUsers.find(u => u.email === email)) {
-        return rejectWithValue('User already exists');
-      }
-
-      // Create new user
-      const newUser: User = {
-        id: (mockUsers.length + 1).toString(),
-        email,
-        name,
-        avatar: `https://via.placeholder.com/100x100/007AFF/FFFFFF?text=${name
-          .charAt(0)
-          .toUpperCase()}`,
-        createdAt: new Date().toISOString(),
-      };
-
-      // In a real app, this would be sent to the server
-      mockUsers.push(newUser);
-      mockCredentials[email] = userData.password;
-
-      const token = 'mock-jwt-token-' + Date.now();
-      return { user: newUser, token };
-    } catch {
-      return rejectWithValue('Signup failed');
     }
   },
 );
@@ -115,38 +72,19 @@ const authSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      // Login
-      .addCase(loginUser.pending, state => {
+      // Login with PIN
+      .addCase(loginWithPin.pending, state => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
+      .addCase(loginWithPin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
         state.error = null;
       })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-        state.isAuthenticated = false;
-        state.user = null;
-        state.token = null;
-      })
-      // Signup
-      .addCase(signupUser.pending, state => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(signupUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-        state.error = null;
-      })
-      .addCase(signupUser.rejected, (state, action) => {
+      .addCase(loginWithPin.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
         state.isAuthenticated = false;

@@ -28,7 +28,7 @@ const OnboardingScreen: React.FC = () => {
   };
 
   const handleSignIn = () => {
-    navigation.navigate('Login');
+    navigation.navigate('SignIn');
   };
 
   const handleRecoverAccount = () => {

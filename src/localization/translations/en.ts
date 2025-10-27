@@ -25,6 +25,9 @@ const en: TranslationKeys = {
   profile: 'Profile',
   history: 'History',
   settings: 'Settings',
+  analytics: 'Analytics',
+  payments: 'Payments',
+  cards: 'Cards',
 
   // Auth
   login: 'Login',
@@ -456,6 +459,148 @@ const en: TranslationKeys = {
   // Placeholder
   coming_soon_description:
     'This feature will be available soon. Please check back later.',
+
+  // Account & Document Screens
+  account_document: 'Account & Document',
+  profile_management: 'Profile Management',
+  personal_profile: 'Personal Profile',
+  business_profile: 'Business Profile',
+  merchant_profile: 'Merchant Profile',
+  documents_policies: 'Documents & Policies',
+  statements: 'Statements',
+  privacy_policy: 'Privacy Policy',
+  terms_conditions: 'Terms & Conditions',
+  account_actions: 'Account Actions',
+  close_business_account: 'Close Business Account',
+
+  // Personal Profile
+  cara_dune: 'Cara Dune',
+  caradune_microsoft_com: 'caradune@microsoft.com',
+  active: 'Active',
+  order_card: 'Order Card',
+  profile: 'Profile',
+  personal_details: 'Personal Details',
+  role: 'Role',
+  approvals: 'Approvals',
+  organization: 'Organization',
+  manager: 'Manager',
+  finances: 'Finances',
+  transactions: 'Transactions',
+
+  // Personal Details
+  full_name: 'Full Name',
+  birth_date: 'Birth Date',
+  residential_address: 'Residential Address',
+  phone_no: 'Phone No.',
+  email: 'Email',
+  edit: 'Edit',
+
+  // Business Profile
+  key_information: 'Key Information',
+  business_details: 'Business Details',
+  business_address: 'Business Address',
+  type_of_business: 'Type of Business',
+  business_structure: 'Business Structure',
+  additional_information: 'Additional Information',
+  vat_number: 'VAT Number',
+
+  // Business Details
+  country_of_incorporation: 'Country of Incorporation',
+  legal_name: 'Legal Name',
+  company_house_registration_number: 'Company House Registration Number',
+  date_of_incorporation: 'Date of Incorporation',
+  business_type: 'Business Type',
+  trading_name: 'Trading Name',
+
+  // Business Address
+  registered: 'Registered',
+  primary_place_of_business: 'Primary place of business',
+
+  // Type of Business
+  category: 'Category',
+  website: 'Website',
+  description: 'Description',
+
+  // Business Structure
+  directors: 'Directors',
+  shareholders: 'Shareholders',
+
+  // Statements
+  monthly_statement: 'Monthly Statement',
+  monthly_statement_description:
+    'Summary of financial activity from a single account',
+  transaction_statements: 'Transaction Statements',
+  transaction_statements_description:
+    'Filter and export selected transactions only',
+  statement_of_balances: 'Statement of Balances',
+  statement_of_balances_description:
+    'Confirmation of funds held with Orby Business',
+  account_confirmation: 'Account Confirmation',
+  account_confirmation_description: 'Summary of your account details',
+  audit_confirmation: 'Audit Confirmation',
+  audit_confirmation_description: 'Orby reference letter to auditors',
+
+  // Main Settings Screen
+  microsoft_inc: 'Microsoft Inc.',
+  help: 'Help',
+  account_manager: 'Account Manager',
+  get_in_touch_to_optimize_your_plan: 'Get in touch to optimize your plan',
+  billing: 'Billing',
+  free: 'Free',
+  account_documents: 'Account & Documents',
+  security_privacy: 'Security & Privacy',
+  app_settings: 'App Settings',
+  apis: 'APIs',
+  about_us: 'About Us',
+  logout: 'Logout',
+  upgrade: 'Upgrade',
+
+  // Verification Screens
+  account_created_successfully_banner: 'Account Created Successfully!',
+  enable_biometric: 'Enable Biometric',
+  enable_biometric_description:
+    'Login quickly and securely with fingerprint or face recognition stored on this device.',
+  enable_biometric_button: 'Enable Biometric',
+  ill_do_this_later: "I'll do this later",
+  create_passcode: 'Choose Passcode',
+  create_passcode_description:
+    'Choosing a strong passcode or PIN is an essential step in securing your accounts and personal information. Avoid using easily guessable information such as birthdays, or simple number sequences.',
+  enter_passcode: 'Enter Passcode',
+  confirm_passcode: 'Confirm Passcode',
+  passcodes_dont_match: 'Passcodes do not match',
+  proof_of_residency: 'Proof of Residency',
+  proof_of_residency_description:
+    'In order to access certain services or benefits, it may be necessary to provide proof of residency.',
+  prove_us_residency: 'Prove that you live in the United States.',
+  upload_residency_document: 'Upload Residency Document',
+  identity_card: 'Identity Card',
+  identity_card_description:
+    'Upload your government-issued identity card for verification.',
+  upload_identity_card: 'Upload Identity Card',
+  upload_id_card: 'Upload ID Card',
+  front_side: 'Front Side',
+  back_side: 'Back Side',
+  upload_instructions:
+    'Uploading pictures of your ID card helps to ensure that the account or service is being accessed by the rightful owner and prevents unauthorized access. This can be done by uploading pictures of your ID card, including both the **front** and **back**. Be sure to follow the instructions provided and ensure that the pictures are clear and legible.',
+  processing_message:
+    'Processing! This can take a minute, We appreciate your patience.',
+  completed_status: 'Completed!',
+  tap_to_upload: 'Tap to Upload',
+  focus_on_your_face: 'Focus on your face',
+  move_head_to_side: 'Move your head to the side and back',
+  identity_verified_successfully: 'Identity Verified Successfully!',
+  scan_document: 'Scan Document',
+  take_photo: 'Take Photo',
+  select_from_gallery: 'Select from Gallery',
+  passport: 'Passport',
+  driving_license: 'Driving License',
+  digital_document: 'Digital Document',
+  method_of_verification: 'Method of Verification',
+  nationality: 'Nationality',
+  change: 'Change',
+  united_states: 'United States',
+  canada: 'Canada',
+  australia: 'Australia',
 };
 
 export default en;

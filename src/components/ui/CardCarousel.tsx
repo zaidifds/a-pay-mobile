@@ -7,6 +7,7 @@ import {
   ViewStyle,
   useWindowDimensions,
   FlatList,
+  Platform,
 } from 'react-native';
 import Animated, {
   AnimatedSensor,
@@ -184,14 +185,39 @@ function AnimatedWrapper({
 }: AnimatedWrapperProps) {
   const config = getVariationConfig(variation);
 
+  // const rotateY = useDerivedValue(() => {
+  //   const { roll } = sensor.sensor.value;
+  //   const angle = clamp(roll, config.rotateYRange[0], config.rotateYRange[1]);
+  //   return withSpring(-angle, { damping: config.damping });
+  // });
+
+  // const rotateX = useDerivedValue(() => {
+  //   const { pitch } = sensor.sensor.value;
+  //   const angle =
+  //     clamp(pitch, config.rotateXRange[0], config.rotateXRange[1]) -
+  //     40 * (Math.PI / 180);
+  //   return withSpring(-angle, { damping: config.damping });
+  // });
+
   const rotateY = useDerivedValue(() => {
-    const { roll } = sensor.sensor.value;
+    // let { roll } = sensor.sensor.value;
+    const hasSensorData = !!sensor.sensor.value;
+    if (!hasSensorData) {
+      console.warn('Rotation sensor not available on this device');
+    }
+
+    const rotation = sensor.sensor.value;
+    if (!rotation) return withSpring(0, { damping: config.damping });
+    let { roll } = rotation;
+
+    if (Platform.OS === 'android') roll = -roll; // fix inverted axis
     const angle = clamp(roll, config.rotateYRange[0], config.rotateYRange[1]);
     return withSpring(-angle, { damping: config.damping });
   });
 
   const rotateX = useDerivedValue(() => {
-    const { pitch } = sensor.sensor.value;
+    let { pitch } = sensor.sensor.value;
+    if (Platform.OS === 'android') pitch = -pitch; // fix inversion
     const angle =
       clamp(pitch, config.rotateXRange[0], config.rotateXRange[1]) -
       40 * (Math.PI / 180);

@@ -12,8 +12,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fp, rp } from '@/utils/responsive';
 import { useTheme } from '@/hooks';
-import { BalanceCard, CardCarousel, CardData } from '@/components';
 import useTranslation from '@/localization/useTranslation';
+import BalanceCard from '@/components/cards/BalanceCard';
+import CardCarousel from '@/components/ui/CardCarousel';
+import { CardData } from '@/components/ui/CardCarousel';
+import AnimatedCardCarousel from '@/components/ui/AnimatedCardCarousel';
 
 export default function CardsScreen() {
   const { theme } = useTheme();
@@ -155,7 +158,8 @@ export default function CardsScreen() {
         </View>
 
         {/* Card Carousel */}
-        <CardCarousel cards={cards} onCardChange={handleCardChange} />
+        {/* <CardCarousel cards={cards} onCardChange={handleCardChange} /> */}
+        <AnimatedCardCarousel />
 
         {/* Create Card Button */}
         <TouchableOpacity
@@ -248,8 +252,7 @@ const styles = (theme: any) =>
     },
     sectionContainer: {
       paddingHorizontal: rp(20),
-      marginTop: rp(24),
-      marginBottom: rp(20),
+      marginTop: rp(10),
     },
     sectionTitle: {
       fontSize: fp(22),

@@ -1,10 +1,11 @@
-import { StandardButton, CodeInput } from '@/components/ui';
+import StandardButton from '@/components/ui/StandardButton';
+import CodeInput from '@/components/ui/CodeInput';
 import { useTheme } from '@/hooks';
 import { useNavigation } from '@react-navigation/native';
-import { useAppDispatch } from '@/redux/store';
-import { loginWithPin } from '@/redux/slices/authSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
+import { loginWithPin, clearError } from '@/redux/slices/authSlice';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dimensions,
   ImageBackground,
@@ -24,9 +25,34 @@ const SignInScreen: React.FC = () => {
   const navigation = useNavigation<SignInScreenNavigationProp>();
   const dispatch = useAppDispatch();
   const { theme } = useTheme();
+  const { isLoading, error, isAuthenticated } = useAppSelector(
+    state => state.auth,
+  );
 
-  const [passcode, setPasscode] = useState(['', '', '', '', '', '']);
+  const [passcode, setPasscode] = useState(['', '', '', '']);
   const passcodeComplete = passcode.every(digit => digit !== '');
+
+  // Clear error when component mounts or passcode changes
+  useEffect(() => {
+    if (error) {
+      dispatch(clearError());
+    }
+  }, [dispatch, error, passcode]);
+
+  // Log authentication state changes
+  useEffect(() => {
+    console.log(
+      'Auth state changed - isAuthenticated:',
+      isAuthenticated,
+      'isLoading:',
+      isLoading,
+    );
+    if (isAuthenticated) {
+      console.log(
+        'User is now authenticated, navigation should happen automatically',
+      );
+    }
+  }, [isAuthenticated, isLoading]);
 
   const handlePasscodeChange = (text: string, index: number) => {
     const newPasscode = [...passcode];
@@ -44,9 +70,17 @@ const SignInScreen: React.FC = () => {
 
   const handleSignIn = async () => {
     const fullPasscode = passcode.join('');
-    if (fullPasscode.length === 6) {
-      await dispatch(loginWithPin(fullPasscode));
-      // Navigation will be handled by AppNavigator based on auth state
+    console.log('Attempting sign in with passcode:', fullPasscode);
+    if (fullPasscode.length === 4) {
+      try {
+        await dispatch(loginWithPin(fullPasscode)).unwrap();
+        console.log('Sign in successful!');
+        // Navigation will be handled by AppNavigator based on auth state
+      } catch (error) {
+        console.error('Sign in failed:', error);
+      }
+    } else {
+      console.log('Passcode incomplete, length:', fullPasscode.length);
     }
   };
 
@@ -98,7 +132,7 @@ const SignInScreen: React.FC = () => {
           {/* Passcode Input Fields */}
           <View style={styles.passcodeContainer}>
             <CodeInput
-              length={6}
+              length={4}
               value={passcode}
               onChangeText={handlePasscodeChange}
               onKeyPress={handleKeyPress}
@@ -107,6 +141,13 @@ const SignInScreen: React.FC = () => {
             />
           </View>
 
+          {/* Error Display */}
+          {error && (
+            <Text style={[styles.errorText, { color: theme.colors.error }]}>
+              {error}
+            </Text>
+          )}
+
           {/* Sign In Button */}
           <StandardButton
             title="Sign In"
@@ -114,7 +155,8 @@ const SignInScreen: React.FC = () => {
             variant="primary"
             size="large"
             fullWidth
-            disabled={!passcodeComplete}
+            disabled={!passcodeComplete || isLoading}
+            loading={isLoading}
             style={styles.signInButton}
           />
 
@@ -246,6 +288,12 @@ const styles = StyleSheet.create({
   },
   forgotPasscodeText: {
     fontSize: 16,
+    fontWeight: '500',
+  },
+  errorText: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 16,
     fontWeight: '500',
   },
   signUpContainer: {

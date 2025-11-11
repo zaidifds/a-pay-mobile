@@ -15,14 +15,7 @@ import reducers from './reducers/reducers';
 const persistConfig = {
   key: 'root',
   storage: require('../utils/mmkvStorage').reduxStorage,
-  whitelist: [
-    'auth',
-    'wallet',
-    'settings',
-    'theme',
-    'transactions',
-    'localization',
-  ],
+  whitelist: ['auth', 'card', 'theme', 'localization'],
 };
 
 type PersistedState = ReturnType<typeof reducers>;

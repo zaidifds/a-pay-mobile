@@ -1,37 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
-  StatusBar,
+  Alert,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fp, rp } from '@/utils/responsive';
 import { useTheme } from '@/hooks';
-import {
-  BalanceCard,
-  QuickActionChips,
-  PromotionalSlider,
-  TransactionHistory,
-} from '@/components';
-import { TopSheet } from '@/components/modals';
+import BalanceCard from '@/components/cards/BalanceCard';
+import QuickActionChips from '@/components/ui/QuickActionChips';
+import PromotionalSlider from '@/components/ui/PromotionalSlider';
+import TransactionHistory from '@/components/ui/TransactionHistory';
+import { BottomSheet, TopSheet } from '@/components/modals';
+import { ProfileHeader } from '@/components/ui';
+import { logoutUser } from '@/redux/slices/authSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/store';
+
+type WalletScreenNavigationProp = StackNavigationProp<
+  { AddMoney: undefined },
+  'AddMoney'
+>;
 
 export default function WalletScreen() {
   const { theme } = useTheme();
-  const insets = useSafeAreaInsets();
-  const [notificationVisible, setNotificationVisible] = useState(false);
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<WalletScreenNavigationProp>();
 
-  const currentTime = new Date().getHours();
-  const greeting =
-    currentTime < 12
-      ? 'Good Morning'
-      : currentTime < 18
-      ? 'Good Afternoon'
-      : 'Good Evening';
+  // Redux state
+  const { isLoading: authLoading } = useAppSelector(state => state.auth);
+
+  // Local state
+  const [notificationVisible, setNotificationVisible] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const handleNotificationPress = () => {
     setNotificationVisible(true);
@@ -46,46 +51,76 @@ export default function WalletScreen() {
     // Add navigation or business logic here
   };
 
-  const handleViewAllPress = () => {
+  const handleViewAllPress = useCallback(() => {
     console.log('View all transactions pressed');
     // Add navigation to full transaction list
-  };
+  }, []);
+
+  const handleAddMoneyPress = useCallback(() => {
+    navigation.navigate('AddMoney');
+  }, [navigation]);
+
+  const handleMenuPress = useCallback(() => {
+    setMenuVisible(true);
+  }, []);
+
+  const handleCloseMenu = useCallback(() => {
+    setMenuVisible(false);
+  }, []);
+
+  const handleTransactionsPress = useCallback(() => {
+    console.log('Transactions pressed');
+    setMenuVisible(false);
+    // Add navigation to transactions
+  }, []);
+
+  const handleExchangePress = useCallback(() => {
+    console.log('Exchange pressed');
+    setMenuVisible(false);
+    // Add navigation to exchange
+  }, []);
+
+  const handleAccountDetailsPress = useCallback(() => {
+    console.log('Account Details pressed');
+    setMenuVisible(false);
+    // Add navigation to account details
+  }, []);
+
+  const handleLogoutPress = useCallback(() => {
+    setMenuVisible(false);
+
+    // Show confirmation dialog
+    Alert.alert(
+      'Confirm Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: () => {
+            dispatch(logoutUser());
+          },
+        },
+      ],
+      { cancelable: true },
+    );
+  }, [dispatch]);
 
   return (
     <View style={styles(theme).container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-
-      {/* Header */}
-      <View style={[styles(theme).header, { paddingTop: insets.top + rp(12) }]}>
-        <View style={styles(theme).headerLeft}>
-          <Image
-            source={{
-              uri: 'https://i.pravatar.cc/100?img=12',
-            }}
-            style={styles(theme).avatar}
-          />
-          <View style={styles(theme).headerGreeting}>
-            <Text style={styles(theme).greetingText}>{greeting}</Text>
-            <Text style={styles(theme).userName}>Cara Dune</Text>
-          </View>
-        </View>
-        <View style={styles(theme).headerActions}>
-          <TouchableOpacity
-            onPress={handleNotificationPress}
-            style={styles(theme).iconButton}
-          >
-            <Icon
-              name="notifications-none"
-              size={rp(26)}
-              color={theme.colors.text}
-            />
-            <View style={styles(theme).notificationBadge} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles(theme).iconButton}>
-            <Icon name="more-vert" size={rp(26)} color={theme.colors.text} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      {/* Profile Header */}
+      <ProfileHeader
+        userName="Cara Dune"
+        profileImage="https://i.pravatar.cc/100?img=12"
+        showNotificationBadge={true}
+        showMenuButton={true}
+        onNotificationPress={handleNotificationPress}
+        onMenuPress={handleMenuPress}
+      />
 
       {/* Main Content */}
       <ScrollView
@@ -100,7 +135,7 @@ export default function WalletScreen() {
         />
 
         {/* Quick Action Chips */}
-        <QuickActionChips />
+        <QuickActionChips onAddPress={handleAddMoneyPress} />
 
         {/* Promotional Slider */}
         <PromotionalSlider />
@@ -117,7 +152,121 @@ export default function WalletScreen() {
         visible={notificationVisible}
         onClose={handleCloseNotification}
         title="Notifications"
-      />
+      >
+        <Text style={[styles(theme).menuTitle, { color: theme.colors.text }]}>
+          No new notifications
+        </Text>
+      </TopSheet>
+
+      {/* Menu Bottom Sheet */}
+      <BottomSheet
+        visible={menuVisible}
+        onClose={handleCloseMenu}
+        height="50%"
+        showHandle={true}
+        enableBackdropClose={true}
+        enablePanGesture={true}
+      >
+        <View style={styles(theme).menuContainer}>
+          {/* Transactions */}
+          <TouchableOpacity
+            style={styles(theme).menuItem}
+            onPress={handleTransactionsPress}
+          >
+            <View style={styles(theme).menuIconContainer}>
+              <Icon
+                name="sync-alt"
+                size={rp(24)}
+                color={theme.colors.primary}
+              />
+            </View>
+            <View style={styles(theme).menuTextContainer}>
+              <Text style={styles(theme).menuTitle}>Transactions</Text>
+              <Text style={styles(theme).menuSubtitle}>View transactions</Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Exchange */}
+          <TouchableOpacity
+            style={styles(theme).menuItem}
+            onPress={handleExchangePress}
+          >
+            <View style={styles(theme).menuIconContainer}>
+              <Icon
+                name="currency-exchange"
+                size={rp(24)}
+                color={theme.colors.primary}
+              />
+            </View>
+            <View style={styles(theme).menuTextContainer}>
+              <Text style={styles(theme).menuTitle}>Exchange</Text>
+              <Text style={styles(theme).menuSubtitle}>Exchange currency</Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Account Details */}
+          <TouchableOpacity
+            style={styles(theme).menuItem}
+            onPress={handleAccountDetailsPress}
+          >
+            <View style={styles(theme).menuIconContainer}>
+              <Icon name="person" size={rp(24)} color={theme.colors.primary} />
+            </View>
+            <View style={styles(theme).menuTextContainer}>
+              <Text style={styles(theme).menuTitle}>Account Details</Text>
+              <Text style={styles(theme).menuSubtitle}>
+                View your account details
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Separator */}
+          <View style={styles(theme).separator} />
+
+          {/* Logout */}
+          <TouchableOpacity
+            style={[
+              styles(theme).menuItem,
+              authLoading && styles(theme).menuItemDisabled,
+            ]}
+            onPress={handleLogoutPress}
+            disabled={authLoading}
+          >
+            <View style={styles(theme).menuIconContainer}>
+              {authLoading ? (
+                <Icon
+                  name="hourglass-empty"
+                  size={rp(24)}
+                  color={theme.colors.textSecondary}
+                />
+              ) : (
+                <Icon
+                  name="logout"
+                  size={rp(24)}
+                  color={theme.colors.error || '#FF5252'}
+                />
+              )}
+            </View>
+            <View style={styles(theme).menuTextContainer}>
+              <Text
+                style={[
+                  styles(theme).menuTitle,
+                  {
+                    color: authLoading
+                      ? theme.colors.textSecondary
+                      : theme.colors.error || '#FF5252',
+                  },
+                ]}
+              >
+                {authLoading ? 'Logging out...' : 'Logout'}
+              </Text>
+              <Text style={styles(theme).menuSubtitle}>
+                Sign out of your account
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </BottomSheet>
     </View>
   );
 }
@@ -128,58 +277,59 @@ const styles = (theme: any) =>
       flex: 1,
       backgroundColor: theme.colors.background,
     },
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: rp(20),
-      paddingBottom: rp(16),
-      backgroundColor: theme.colors.background,
-    },
-    headerLeft: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      flex: 1,
-    },
-    avatar: {
-      width: rp(44),
-      height: rp(44),
-      borderRadius: rp(22),
-      marginRight: rp(12),
-    },
-    headerGreeting: {
-      flex: 1,
-    },
-    greetingText: {
-      fontSize: fp(13),
-      color: theme.colors.textSecondary,
-      marginBottom: rp(3),
-    },
-    userName: {
-      fontSize: fp(17),
-      fontWeight: '700',
-      color: theme.colors.text,
-    },
-    headerActions: {
-      flexDirection: 'row',
-      gap: rp(12),
-    },
-    iconButton: {
-      padding: rp(6),
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'relative',
-    },
-    notificationBadge: {
-      position: 'absolute',
-      top: rp(4),
-      right: rp(4),
-      width: rp(10),
-      height: rp(10),
-      borderRadius: rp(5),
-      backgroundColor: theme.colors.primary,
-    },
     scrollView: {
       flex: 1,
+    },
+    menuContainer: {
+      paddingTop: rp(10),
+    },
+    menuItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: rp(16),
+      paddingHorizontal: rp(16),
+      backgroundColor: theme.colors.surface,
+      borderRadius: rp(12),
+      marginBottom: rp(12),
+      shadowColor: theme.colors.shadowColor || '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    menuItemDisabled: {
+      opacity: 0.6,
+      backgroundColor: theme.colors.background,
+    },
+    menuIconContainer: {
+      width: rp(40),
+      height: rp(40),
+      borderRadius: rp(20),
+      backgroundColor: theme.colors.background,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: rp(12),
+    },
+    menuTextContainer: {
+      flex: 1,
+    },
+    menuTitle: {
+      fontSize: fp(16),
+      fontWeight: '600',
+      color: theme.colors.text,
+      marginBottom: rp(2),
+    },
+    menuSubtitle: {
+      fontSize: fp(13),
+      color: theme.colors.textSecondary,
+    },
+    separator: {
+      height: 1,
+      backgroundColor: theme.colors.border,
+      marginVertical: rp(8),
+      marginHorizontal: rp(16),
     },
   });

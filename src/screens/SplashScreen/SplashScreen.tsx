@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
   Animated,
   ImageBackground,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 
 interface SplashScreenProps {

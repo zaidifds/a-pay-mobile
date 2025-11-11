@@ -17,8 +17,8 @@ export const loginWithPin = createAsyncThunk(
       // Simulate API delay
       await new Promise<void>(resolve => setTimeout(resolve, 1000));
 
-      // Hardcoded PIN for now: 123456
-      if (pin !== '123456') {
+      // Hardcoded PIN for now: 1234
+      if (pin !== '1234') {
         return rejectWithValue('Invalid PIN');
       }
 

@@ -89,6 +89,99 @@ export interface TranslationKeys {
   verified: string;
   unverified: string;
 
+  // Cards
+  add_card: string;
+  card_details: string;
+  card_number: string;
+  card_holder_name: string;
+  expiry_date: string;
+  cvv: string;
+  save_card_name: string;
+  save_card_for_future: string;
+  card_added_successfully: string;
+  deposit_by_card: string;
+  no_card_added: string;
+  cards_will_show_here: string;
+  add_card_description: string;
+  deposit_by_card_description: string;
+  adding_card: string;
+  card_validation_error: string;
+  default: string;
+
+  // Add Money
+  account_top_up: string;
+  add_funds_description: string;
+
+  // Deposit by Bank
+  deposit_by_bank: string;
+  deposit_by_bank_description: string;
+  for_faster_payments: string;
+  faster_payments_subtitle: string;
+  for_international_payments: string;
+  international_payments_subtitle: string;
+  account_name: string;
+  account_no: string;
+  sort_code: string;
+  iban: string;
+  bic_swift: string;
+  bank_name: string;
+  bank_address: string;
+  name: string;
+  copy: string;
+  copied_to_clipboard: string;
+  bank_details: string;
+
+  // Deposit Cash
+  deposit_cash: string;
+  deposit_cash_description: string;
+  generate_qr_code: string;
+  generate_barcode: string;
+  generating_code: string;
+  qr_code_description: string;
+  barcode_description: string;
+  find_nearest_retailer: string;
+  please_enter_valid_amount: string;
+  error_generating_barcode: string;
+
+  // Find Retailer
+  your_location: string;
+  current_location: string;
+  location_error: string;
+  location_permission_denied: string;
+  map_view_changed: string;
+
+  // Receive Salary
+  receive_salary: string;
+  receive_salary_description: string;
+
+  // Deposit Crypto
+  deposit_crypto: string;
+  deposit_crypto_description: string;
+  crypto_deposit_instructions: string;
+  wallet_address_copied: string;
+  transaction_id_instruction: string;
+  enter_transaction_id: string;
+  please_enter_transaction_id: string;
+  transaction_submitted: string;
+  transaction_processing_message: string;
+  continue: string;
+
+  // Payment Options
+  good_morning: string;
+  good_afternoon: string;
+  good_evening: string;
+  payment_options: string;
+  payment_options_description: string;
+  move_money_between_accounts: string;
+  send_money_to_other_users: string;
+  international_payments: string;
+  buy_and_sell_crypto: string;
+  split_bill: string;
+
+  // Move Money
+  move_money: string;
+  authentication: string;
+
   // Profile
   edit_profile: string;
   security: string;

@@ -1,234 +1,282 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useRef, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
+  Modal,
   TouchableOpacity,
   Animated,
-  Modal,
-  TouchableWithoutFeedback,
-  ScrollView,
+  Dimensions,
+  PanResponder,
+  StatusBar,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { fp, rp } from '@/utils/responsive';
 import { useTheme } from '@/hooks';
 
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  time: string;
-  read: boolean;
-}
+const { height: screenHeight } = Dimensions.get('window');
 
 interface TopSheetProps {
   visible: boolean;
   onClose: () => void;
-  title: string;
+  title?: string;
+  children: React.ReactNode;
+  height?: number | string;
+  showCloseButton?: boolean;
+  enableBackdropClose?: boolean;
+  enablePanGesture?: boolean;
 }
 
-const TopSheet: React.FC<TopSheetProps> = ({ visible, onClose, title }) => {
-  const insets = useSafeAreaInsets();
+const TopSheet: React.FC<TopSheetProps> = ({
+  visible,
+  onClose,
+  title,
+  children,
+  height = '40%',
+  showCloseButton = true,
+  enableBackdropClose = true,
+  enablePanGesture = true,
+}) => {
   const { theme } = useTheme();
-  const slideAnim = useRef(new Animated.Value(-300)).current;
+  const insets = useSafeAreaInsets();
 
-  // Mock notifications
-  const notifications: Notification[] = [
-    {
-      id: '1',
-      title: 'Payment Received',
-      message: 'You received £671.00 from PayPal',
-      time: '2 mins ago',
-      read: false,
-    },
-    {
-      id: '2',
-      title: 'Bill Paid',
-      message: 'Your Netflix subscription has been renewed',
-      time: '1 hour ago',
-      read: false,
-    },
-    {
-      id: '3',
-      title: 'Transaction Complete',
-      message: 'Your crypto purchase is completed',
-      time: '3 hours ago',
-      read: true,
-    },
-  ];
+  // Animation values
+  const backdropOpacity = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(-screenHeight)).current;
 
-  useEffect(() => {
-    if (visible) {
-      Animated.spring(slideAnim, {
-        toValue: 0,
-        useNativeDriver: true,
-        tension: 50,
-        friction: 10,
-      }).start();
-    } else {
-      Animated.timing(slideAnim, {
-        toValue: -300,
+  // Calculate sheet height
+  const sheetHeight =
+    typeof height === 'string'
+      ? screenHeight * (parseInt(height, 10) / 100)
+      : height;
+
+  // Pan responder for drag gestures
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => enablePanGesture,
+    onMoveShouldSetPanResponder: (_, gestureState) => {
+      return enablePanGesture && Math.abs(gestureState.dy) > 10;
+    },
+    onPanResponderMove: (_, gestureState) => {
+      if (gestureState.dy < 0) {
+        translateY.setValue(gestureState.dy);
+      }
+    },
+    onPanResponderRelease: (_, gestureState) => {
+      const shouldClose =
+        gestureState.dy < -sheetHeight * 0.3 || gestureState.vy < -0.5;
+
+      if (shouldClose) {
+        closeSheet();
+      } else {
+        // Snap back to position
+        Animated.spring(translateY, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start();
+      }
+    },
+  });
+
+  const openSheet = useCallback(() => {
+    Animated.parallel([
+      Animated.timing(backdropOpacity, {
+        toValue: 1,
         duration: 300,
         useNativeDriver: true,
-      }).start();
-    }
-  }, [visible]);
+      }),
+      Animated.spring(translateY, {
+        toValue: 0,
+        tension: 100,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [backdropOpacity, translateY]);
 
-  const renderNotification = (notification: Notification) => (
-    <TouchableOpacity
-      key={notification.id}
-      style={[
-        styles(theme, insets).notificationItem,
-        !notification.read && styles(theme, insets).notificationUnread,
-      ]}
-    >
-      <View style={styles(theme, insets).notificationIcon}>
-        <Icon name="notifications" size={rp(24)} color={theme.colors.primary} />
-      </View>
-      <View style={styles(theme, insets).notificationContent}>
-        <Text style={styles(theme, insets).notificationTitle}>
-          {notification.title}
-        </Text>
-        <Text style={styles(theme, insets).notificationMessage}>
-          {notification.message}
-        </Text>
-        <Text style={styles(theme, insets).notificationTime}>
-          {notification.time}
-        </Text>
-      </View>
-      {!notification.read && <View style={styles(theme, insets).unreadDot} />}
-    </TouchableOpacity>
-  );
+  const closeSheet = useCallback(() => {
+    Animated.parallel([
+      Animated.timing(backdropOpacity, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.timing(translateY, {
+        toValue: -sheetHeight,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      onClose();
+    });
+  }, [backdropOpacity, translateY, sheetHeight, onClose]);
+
+  const handleBackdropPress = useCallback(() => {
+    if (enableBackdropClose) {
+      closeSheet();
+    }
+  }, [enableBackdropClose, closeSheet]);
+
+  // Handle visibility changes
+  useEffect(() => {
+    if (visible) {
+      // Reset position
+      translateY.setValue(-sheetHeight);
+      openSheet();
+    } else {
+      // Reset values for next open
+      backdropOpacity.setValue(0);
+      translateY.setValue(-sheetHeight);
+    }
+  }, [visible, openSheet, sheetHeight, backdropOpacity, translateY]);
+
+  if (!visible) {
+    return null;
+  }
 
   return (
     <Modal
       visible={visible}
       transparent
       animationType="none"
-      onRequestClose={onClose}
+      statusBarTranslucent
+      onRequestClose={closeSheet}
+      style={styles.modal}
     >
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles(theme, insets).overlay} />
-      </TouchableWithoutFeedback>
+      <StatusBar
+        backgroundColor={theme.colors.backdrop || 'rgba(0, 0, 0, 0.5)'}
+        barStyle="light-content"
+      />
+
+      {/* Backdrop */}
       <Animated.View
         style={[
-          styles(theme, insets).container,
+          styles.backdrop,
           {
-            transform: [{ translateY: slideAnim }],
+            opacity: backdropOpacity,
+            backgroundColor: theme.colors.backdrop || 'rgba(0, 0, 0, 0.5)',
           },
         ]}
       >
-        <View style={styles(theme, insets).handle} />
-        <View style={styles(theme, insets).header}>
-          <Text style={styles(theme, insets).title}>{title}</Text>
-          <TouchableOpacity onPress={onClose}>
-            <Icon name="close" size={rp(28)} color={theme.colors.text} />
-          </TouchableOpacity>
-        </View>
-        <ScrollView
-          style={styles(theme, insets).content}
-          showsVerticalScrollIndicator={false}
+        <TouchableOpacity
+          style={styles.backdropTouchable}
+          activeOpacity={1}
+          onPress={handleBackdropPress}
+        />
+      </Animated.View>
+
+      {/* Top Sheet */}
+      <Animated.View
+        style={[
+          styles.container,
+          {
+            transform: [{ translateY }],
+            height: sheetHeight,
+          },
+        ]}
+        {...(enablePanGesture ? panResponder.panHandlers : {})}
+      >
+        <View
+          style={[
+            styles.sheet,
+            {
+              backgroundColor: theme.colors.surface,
+              shadowColor: theme.colors.shadowColor || '#000',
+            },
+          ]}
         >
-          {notifications.map(renderNotification)}
-        </ScrollView>
+          {/* Header */}
+          <View
+            style={[
+              styles.header,
+              {
+                borderBottomColor: theme.colors.border,
+                paddingTop: Math.max(insets.top, rp(16)),
+              },
+            ]}
+          >
+            {title && (
+              <Text style={[styles.title, { color: theme.colors.text }]}>
+                {title}
+              </Text>
+            )}
+
+            {showCloseButton && (
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={closeSheet}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Icon name="close" size={rp(24)} color={theme.colors.text} />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Content */}
+          <View style={styles.content}>{children}</View>
+        </View>
       </Animated.View>
     </Modal>
   );
 };
 
-const styles = (theme: any, insets: any) =>
-  StyleSheet.create({
-    overlay: {
-      flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+const styles = StyleSheet.create({
+  modal: {
+    margin: 0,
+    padding: 0,
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 999999,
+    elevation: 999999,
+  },
+  backdropTouchable: {
+    flex: 1,
+  },
+  container: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000000,
+    elevation: 1000000,
+    margin: 0,
+    padding: 0,
+  },
+  sheet: {
+    flex: 1,
+    borderBottomLeftRadius: rp(24),
+    borderBottomRightRadius: rp(24),
+    shadowOffset: {
+      width: 0,
+      height: 4,
     },
-    container: {
-      backgroundColor: theme.colors.surface,
-      borderTopLeftRadius: 0,
-      borderTopRightRadius: 0,
-      borderBottomLeftRadius: rp(24),
-      borderBottomRightRadius: rp(24),
-      position: 'absolute',
-      top: insets.top,
-      left: 0,
-      right: 0,
-      height: '50%',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.2,
-      shadowRadius: 12,
-      elevation: 10,
-    },
-    handle: {
-      backgroundColor: theme.colors.border,
-      width: rp(40),
-      height: rp(4),
-      borderRadius: rp(2),
-      alignSelf: 'center',
-      marginTop: rp(8),
-      marginBottom: rp(12),
-    },
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: rp(20),
-      paddingBottom: rp(16),
-    },
-    title: {
-      fontSize: fp(20),
-      fontWeight: '700',
-      color: theme.colors.text,
-    },
-    content: {
-      flex: 1,
-      paddingHorizontal: rp(20),
-    },
-    notificationItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingVertical: rp(16),
-      borderBottomWidth: 1,
-      borderBottomColor: theme.colors.border,
-    },
-    notificationUnread: {
-      backgroundColor: theme.colors.backgroundSecondary,
-    },
-    notificationIcon: {
-      width: rp(48),
-      height: rp(48),
-      borderRadius: rp(24),
-      backgroundColor: `${theme.colors.primary}15`,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginRight: rp(12),
-    },
-    notificationContent: {
-      flex: 1,
-    },
-    notificationTitle: {
-      fontSize: fp(16),
-      fontWeight: '600',
-      color: theme.colors.text,
-      marginBottom: rp(4),
-    },
-    notificationMessage: {
-      fontSize: fp(14),
-      color: theme.colors.textSecondary,
-      marginBottom: rp(4),
-    },
-    notificationTime: {
-      fontSize: fp(12),
-      color: theme.colors.textTertiary,
-    },
-    unreadDot: {
-      width: rp(8),
-      height: rp(8),
-      borderRadius: rp(4),
-      backgroundColor: theme.colors.primary,
-      marginLeft: rp(8),
-    },
-  });
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: rp(20),
+    paddingBottom: rp(16),
+    borderBottomWidth: 1,
+  },
+  title: {
+    fontSize: fp(18),
+    fontWeight: '700',
+    flex: 1,
+  },
+  closeButton: {
+    padding: rp(4),
+    marginLeft: rp(16),
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: rp(20),
+    paddingVertical: rp(16),
+  },
+});
 
 export default TopSheet;

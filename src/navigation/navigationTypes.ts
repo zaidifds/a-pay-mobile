@@ -1,9 +1,39 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+
+import type { AuthStackParamList } from './AuthNavigator';
+import type { VerificationNavigatorParamList } from './VerificationNavigator';
+import type { BusinessAcoountNavigatorParamList } from './BusinessAcoountNavigator';
 
 // Root Stack Navigator Types
 export type RootStackParamList = {
-  Auth: undefined;
-  Main: undefined;
+  FlowExplorer: undefined;
+  Auth: NavigatorScreenParams<AuthStackParamList> | undefined;
+  BottomTabs: undefined;
+  // Wallet Screens
+  AddMoney: undefined;
+  DepositByCard: undefined;
+  DepositByBank: undefined;
+  DepositCash: undefined;
+  DepositCrypto: undefined;
+  ReceiveSalary: undefined;
+  FindNearestRetailer: undefined;
+  AddCard: undefined;
+  // Move Money Screens
+  MoveMoney: undefined;
+  MoveMoneyAuthentication: {
+    fromAmount: string;
+    toAmount: string;
+    fromCurrency: string;
+    toCurrency: string;
+    transactionFee: string;
+  };
+  Verification:
+    | NavigatorScreenParams<VerificationNavigatorParamList>
+    | undefined;
+  BusinessAccount:
+    | NavigatorScreenParams<BusinessAcoountNavigatorParamList>
+    | undefined;
   // Account Screens
   AccountDocumentScreen: undefined;
   BusinessDetailsScreen: undefined;

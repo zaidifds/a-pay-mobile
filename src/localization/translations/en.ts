@@ -141,10 +141,113 @@ const en: TranslationKeys = {
   order_summary: 'Order Summary',
   total: 'Total',
   fee: 'Fee',
+  // Cards
+  add_card: 'Add Card',
   card_details: 'Card Details',
   card_number: 'Card Number',
-  expiry_date: 'Expiry Date',
+  card_holder_name: 'Card Holder Name',
+  expiry_date: 'Exp. Date',
   cvv: 'CVV',
+  save_card_name: 'Save Card Name',
+  save_card_for_future: 'Save this card for future',
+  card_added_successfully: 'Card Added Successfully!',
+  deposit_by_card: 'Deposit By Card',
+  no_card_added: 'No Card Added',
+  cards_will_show_here: 'Your cards will show here when you add',
+  add_card_description:
+    'You will need to enter the required information for your card, such as the card number, expiration date, CVV code. You may also need to authenticate the card using a one-time password or other verification method for security procedures.',
+  deposit_by_card_description:
+    'You can deposit funds through a card to Orby. You can add debit and credit card by filling the details.',
+  adding_card: 'Adding Card...',
+  card_validation_error: 'Please fill in all required fields correctly.',
+  default: 'Default',
+
+  // Add Money
+  account_top_up: 'Account Top-Up',
+  add_funds_description:
+    'Add funds to your account. Here are some method you can select to top-up your account.',
+
+  // Deposit by Bank
+  deposit_by_bank: 'Deposit By Bank',
+  deposit_by_bank_description:
+    "It's important to note that bank transfers may take a bit longer to process than other payment methods, so be sure to allow for sufficient processing time.",
+  for_faster_payments: 'For Faster Payments',
+  faster_payments_subtitle: 'You can deposit using (GBP - £)',
+  for_international_payments: 'For International Payments',
+  international_payments_subtitle: 'You can deposit using (EUR - € / USD - $)',
+  account_name: 'Account Name',
+  account_no: 'Account No',
+  sort_code: 'Sort Code',
+  iban: 'IBAN',
+  bic_swift: 'BIC/SWIFT',
+  bank_name: 'Bank Name',
+  bank_address: 'Bank Address',
+  name: 'Name',
+  copy: 'Copy',
+  copied_to_clipboard: 'copied to clipboard',
+  bank_details: 'Bank Details',
+
+  // Deposit Cash
+  deposit_cash: 'Deposit Cash',
+  deposit_cash_description:
+    'Orby offers the ability to deposit cash into your account using QR or barcodes.\nYou will enter the amount of cash you wish to deposit. The app will generate a unique QR code or barcode that can be scanned at a participating retailer or ATM.',
+  generate_qr_code: 'Generate QR Code',
+  generate_barcode: 'Generate Barcode',
+  generating_code: 'Generating code...',
+  qr_code_description:
+    'Show this QR Code at your preferred cash top-up location. For easy use, you can take screenshot of this QR Code.',
+  barcode_description:
+    'Show this Barcode at your preferred cash top-up location. For easy use, you can take screenshot of this Barcode.',
+  find_nearest_retailer: 'Find the nearest retailer',
+  please_enter_valid_amount: 'Please enter a valid amount',
+  error_generating_barcode: 'Error generating barcode. Please try again.',
+
+  // Find Retailer
+  your_location: 'Your Location',
+  current_location: 'Current Location',
+  location_error: 'Location Error',
+  location_permission_denied:
+    'Location permission denied. Please enable location services in settings.',
+  map_view_changed: 'Map view changed',
+
+  // Receive Salary
+  receive_salary: 'Receive Salary',
+  receive_salary_description:
+    'If your employer offers direct deposit for your salary, you can easily receive your paychecks directly into your banking app account. To set up direct deposit, you will need to provide your employer with your account and routing number.',
+
+  // Deposit Crypto
+  deposit_crypto: 'Deposit Crypto',
+  deposit_crypto_description:
+    'You can deposit cryptocurrency into your account.',
+  crypto_deposit_instructions:
+    'Copy the address or scan the QR Code below. Send only {{crypto}} ({{symbol}}) to this address, sending any other asset will result in loss of your deposit.',
+  wallet_address_copied: 'Wallet address copied to clipboard',
+  transaction_id_instruction:
+    "If you've made the deposit, please enter transaction ID below. (You can copy-paste it to box below)",
+  enter_transaction_id: 'Enter Transaction ID',
+  please_enter_transaction_id: 'Please enter transaction ID',
+  transaction_submitted: 'Transaction Submitted',
+  transaction_processing_message:
+    'Your crypto deposit has been submitted successfully. We will process it and credit your account within 1-3 business days.',
+  continue: 'Continue',
+
+  // Payment Options
+  good_morning: 'Good Morning',
+  good_afternoon: 'Good Afternoon',
+  good_evening: 'Good Evening',
+  payment_options: 'Payment Options',
+  payment_options_description:
+    'Orby pay offers various payment options to its users, which may include:',
+  move_money_between_accounts: 'Move Money\nBetween Accounts',
+  send_money_to_other_users: 'Send Money\nTo other Users',
+  international_payments: 'International\nPayments',
+  buy_and_sell_crypto: 'Buy and Sell\nCrypto',
+  split_bill: 'Split Bill',
+
+  // Move Money
+  move_money: 'Move Money',
+  authentication: 'Authentication',
+
   cardholder_name: 'Cardholder Name',
   bank_transfer: 'Bank Transfer',
   credit_debit_card: 'Credit/Debit Card',

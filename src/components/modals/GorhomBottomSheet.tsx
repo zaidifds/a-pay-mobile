@@ -19,9 +19,13 @@ import { useTheme } from '@/hooks';
 interface GorhomBottomSheetProps {
   visible: boolean;
   onClose: () => void;
-  title: string;
+  title?: string;
   children: React.ReactNode;
   snapPoints?: string[];
+  index?: number;
+  enablePanDownToClose?: boolean;
+  backdropOpacity?: number;
+  style?: any;
 }
 
 const GorhomBottomSheet: React.FC<GorhomBottomSheetProps> = ({
@@ -29,14 +33,18 @@ const GorhomBottomSheet: React.FC<GorhomBottomSheetProps> = ({
   onClose,
   title,
   children,
-  snapPoints = ['70%', '85%', '95%'],
+  snapPoints = ['25%', '50%', '90%'],
+  index = 1,
+  enablePanDownToClose = true,
+  backdropOpacity = 0.5,
+  style,
 }) => {
-  const insets = useSafeAreaInsets();
   const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  // Memoize snap points to prevent unnecessary re-renders
-  const memoizedSnapPoints = useMemo(() => snapPoints, [snapPoints]);
+  // Memoize snap points
+  const snapPointsMemo = useMemo(() => snapPoints, [snapPoints]);
 
   // Handle sheet changes
   const handleSheetChanges = useCallback(
@@ -55,11 +63,11 @@ const GorhomBottomSheet: React.FC<GorhomBottomSheetProps> = ({
         {...props}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
-        opacity={0.5}
+        opacity={backdropOpacity}
         onPress={onClose}
       />
     ),
-    [onClose],
+    [backdropOpacity, onClose],
   );
 
   // Show/hide bottom sheet
@@ -67,24 +75,92 @@ const GorhomBottomSheet: React.FC<GorhomBottomSheetProps> = ({
     if (visible) {
       // Small delay to ensure smooth animation
       setTimeout(() => {
-        bottomSheetRef.current?.snapToIndex(0);
+        bottomSheetRef.current?.snapToIndex(index);
       }, 100);
     } else {
       bottomSheetRef.current?.close();
     }
-  }, [visible]);
+  }, [visible, index]);
 
-  const styles = StyleSheet.create({
+  if (!visible) {
+    return null;
+  }
+
+  return (
+    <KeyboardAvoidingView
+      style={styles(theme, insets).container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1} // Start closed
+        snapPoints={snapPointsMemo}
+        onChange={handleSheetChanges}
+        backdropComponent={renderBackdrop}
+        enablePanDownToClose={enablePanDownToClose}
+        handleIndicatorStyle={[
+          styles(theme, insets).handleIndicator,
+          { backgroundColor: theme.colors.border },
+        ]}
+        backgroundStyle={[
+          styles(theme, insets).background,
+          { backgroundColor: theme.colors.surface },
+          style,
+        ]}
+        style={[
+          styles(theme, insets).bottomSheet,
+          {
+            shadowColor: theme.colors.shadowColor,
+          },
+        ]}
+      >
+        <BottomSheetView style={styles(theme, insets).contentContainer}>
+          {title && (
+            <View style={styles(theme, insets).header}>
+              <Text style={styles(theme, insets).title}>{title}</Text>
+              <TouchableOpacity onPress={onClose}>
+                <Icon name="close" size={rp(24)} color={theme.colors.text} />
+              </TouchableOpacity>
+            </View>
+          )}
+          {children}
+        </BottomSheetView>
+      </BottomSheet>
+    </KeyboardAvoidingView>
+  );
+};
+
+const styles = (theme: any, insets: any) =>
+  StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: 'white',
+    },
+    bottomSheet: {
+      shadowOffset: {
+        width: 0,
+        height: -4,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 12,
+      elevation: 16,
+    },
+    background: {
+      borderTopLeftRadius: 24,
+      borderTopRightRadius: 24,
+    },
+    handleIndicator: {
+      width: 48,
+      height: 4,
+      borderRadius: 2,
+      alignSelf: 'center',
+      marginVertical: 12,
     },
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: rp(20),
-      paddingVertical: rp(16),
+      paddingBottom: rp(16),
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.border,
     },
@@ -93,63 +169,11 @@ const GorhomBottomSheet: React.FC<GorhomBottomSheetProps> = ({
       fontWeight: '700',
       color: theme.colors.text,
     },
-    closeButton: {
-      padding: rp(8),
-      borderRadius: rp(20),
-      backgroundColor: theme.colors.backgroundSecondary,
-    },
-    content: {
+    contentContainer: {
       flex: 1,
-      paddingHorizontal: rp(20),
-      paddingBottom: insets.bottom + rp(20),
-    },
-    keyboardView: {
-      flex: 1,
-    },
-    handle: {
-      backgroundColor: theme.colors.border,
-      width: rp(40),
-      height: rp(4),
-      borderRadius: rp(2),
-      alignSelf: 'center',
-      marginTop: rp(8),
+      paddingHorizontal: 16,
+      paddingBottom: 16,
     },
   });
-
-  if (!visible) return null;
-
-  return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={0}
-      snapPoints={memoizedSnapPoints}
-      onChange={handleSheetChanges}
-      backdropComponent={renderBackdrop}
-      enablePanDownToClose
-      handleIndicatorStyle={styles.handle}
-      backgroundStyle={styles.container}
-    >
-      <BottomSheetView style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{title}</Text>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Icon
-              name="close"
-              size={rp(20)}
-              color={theme.colors.textSecondary}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardView}
-        >
-          {children}
-        </KeyboardAvoidingView>
-      </BottomSheetView>
-    </BottomSheet>
-  );
-};
 
 export default GorhomBottomSheet;
